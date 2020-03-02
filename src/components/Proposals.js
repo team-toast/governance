@@ -47,13 +47,15 @@ class Proposals extends Component {
     let proposals = [];
 
     this.state.proposals.forEach(proposal => {
-      proposals.push(
-        <Proposal
-          title={proposal.title}
-          description={proposal.description} 
-          key={proposals.id}
-        />
-      );
+      if(proposal.title.length > 0) {
+        proposals.push(
+          <Proposal
+            title={proposal.title}
+            description={proposal.description} 
+            key={proposals.id}
+          />
+        );
+      } 
     });
 
     return (
