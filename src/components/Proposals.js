@@ -51,7 +51,9 @@ class Proposals extends Component {
           <Proposal
             title={proposal.title}
             description={proposal.description} 
-            key={proposals.id}
+            key={proposal.id}
+            id={proposal.id}
+            {...this.props}
           />
         );
       } 
