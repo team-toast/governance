@@ -1,6 +1,16 @@
 import React, {Component} from 'react';
 
+import Proposal from './Proposal';
+
 class Proposals extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      proposals: []
+    }
+  }
+
   componentDidMount = () => {
     this.getProposals()
   }
@@ -23,14 +33,31 @@ class Proposals extends Component {
       // TODO: Query mainnet api
       this.xhr("https://api.compound.finance/api/v2/governance/proposals?network=ropsten", (res) => {
         const data = JSON.parse(res);
-        console.log(data.proposals);
+        if(this.state.proposals !== data.proposals) {
+          this.setState({proposals: data.proposals});
+        }
+        console.log(this.state.proposals);
       });
     }
   }
 
   render() {
+    let proposals = [];
+
+    this.state.proposals.forEach(proposal => {
+      proposals.push(
+        <Proposal
+          title={proposal.title}
+          description={proposal.description} 
+          key={proposals.id}
+        />
+      );
+    });
+
     return (
-      <h1>Proposals</h1>
+      <section className="proposals">
+        {proposals}
+      </section>
     );
   }
 }
