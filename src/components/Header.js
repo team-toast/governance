@@ -7,8 +7,7 @@ class Header extends Component {
     return(
       <section className="header">
         <h1 className="header__title">
-          {/* TODO: Conditionally render 'active' or 'ended' */}
-          Active Governance Proposals
+          Compound Governance Proposals
         </h1>
         <p className="header__balance">
           {/* TODO: Render balance */}
