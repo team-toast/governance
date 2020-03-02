@@ -31,16 +31,15 @@ class Proposals extends Component {
   }
 
   getProposals = async () => {
-    if(this.props.openCheck === true) {
-      // TODO: Query mainnet api
-      this.xhr("https://api.compound.finance/api/v2/governance/proposals?network=ropsten", (res) => {
-        const data = JSON.parse(res);
-        if(this.state.proposals !== data.proposals) {
-          this.setState({proposals: data.proposals});
-        }
-        console.log(this.state.proposals);
-      });
-    }
+    // TODO: Query mainnet api
+    this.xhr(
+      "https://api.compound.finance/api/v2/governance/proposals?network=ropsten", 
+    (res) => {
+      const data = JSON.parse(res);
+      if(this.state.proposals !== data.proposals) {
+        this.setState({proposals: data.proposals});
+      }
+    });
   }
 
   render() {

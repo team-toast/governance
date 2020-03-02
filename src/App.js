@@ -7,20 +7,13 @@ import Proposals from './components/Proposals';
 import './layout/config/_base.sass';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    
-    this.state = {
-      openCheck: true,
-      closedCheck: false
-    }
-  }
-
   render() {
     return (
       <div className="app">
         <Nav />
-        <Header {...this.state} />
+        <Header 
+          {...this.state}
+        />
         <Proposals {...this.state} />
       </div>
     );
