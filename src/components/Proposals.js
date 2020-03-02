@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 
 import Proposal from './Proposal';
 
+import '../layout/components/proposals.sass';
+
 class Proposals extends Component {
   constructor(props) {
     super(props);
