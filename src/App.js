@@ -58,7 +58,7 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <Nav />
+        <Nav {...this.state} />
         <Header 
           {...this.state}
         />

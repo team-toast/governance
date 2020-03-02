@@ -14,6 +14,9 @@ class Nav extends Component {
             Compound Governance
           </h1>
         </a>
+        <p className="nav__account">
+          {this.props.account ? `${this.props.account.slice(0, 4)}...${this.props.account.slice(this.props.account.length - 4, this.props.account.length)}` : 'Connect Metamask'}
+        </p>
       </nav>
     );
   }
