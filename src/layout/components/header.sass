@@ -22,6 +22,7 @@
 
 .header__label
   font-size: 16px
+  position: relative
 
 .header__label--open
   color: $color-green
@@ -29,7 +30,40 @@
 .header__label--closed
   color: $color-purple
 
+.header__label-title--open
+  margin-left: 24px
+
+.header__label-title--closed
+  margin-right: 24px
+
 .header__checkbox
+  position: absolute
+  opacity: 0
+  cursor: pointer
+  height: 0
+  width: 0
+
+.header__checkmark
+  position: absolute
+  top: 0
+  height: 16px
+  width: 16px
+  cursor: pointer
+  transition: 0.2s background
+
+.header__checkmark--open
+  border: 2px solid $color-green
+  left: 0
+
+.header__checkmark--closed
+  border: 2px solid $color-purple
+  right: 0
+
+.header__checkbox--open:checked ~ .header__checkmark--open
+  background: $color-green
+
+.header__checkbox--closed:checked ~ .header__checkmark--closed
+  background: $color-purple
 
 .header__balance
   color: $color-grey

@@ -27,20 +27,26 @@ class Header extends Component {
               checked={this.state.openCheck} 
               // TODO: Add check handler
             />
-            Open Proposals
+            <span 
+              className="header__checkmark header__checkmark--open">
+            </span>
+            <span className="header__label-title--open">Open Proposals</span>
           </label>
           <p className="header__balance">
             {/* TODO: Render balance */}
             COMP Balance: 297
           </p>
           <label className="header__label header__label--closed">
-            Closed Proposals
+            <span className="header__label-title--closed">Closed Proposals</span>
             <input
               type="checkbox"
               className="header__checkbox header__checkbox--closed"
               checked={this.state.closedCheck} 
               // TODO: Add check handler
             />
+            <span 
+              className="header__checkmark header__checkmark--closed">
+            </span>
           </label>
         </div>
       </section>
