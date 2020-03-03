@@ -39,26 +39,33 @@ class Proposal extends Component {
   }
 
   render() {
+    let arrows;
+
+    if(this.props.end > this.props.latestBlock) {
+      arrows = 
+        <div className="proposal__arrows">
+          <img 
+            src={upvote} 
+            alt="Vote for" 
+            className="proposal__arrow"
+            onClick={this.handleVoteFor}
+          />
+          <img 
+            src={downvote} 
+            alt="Vote against" 
+            className="proposal__arrow" 
+            onClick={this.handleVoteAgainst}
+          />
+        </div>;
+    }
+    
     return (
       <div className="proposal">
         <h4 className="proposal__title">
           {this.props.title}
         </h4>
         <div className="proposal__bottom">
-          <div className="proposal__arrows">
-            <img 
-              src={upvote} 
-              alt="Vote for" 
-              className="proposal__arrow"
-              onClick={this.handleVoteFor}
-            />
-            <img 
-              src={downvote} 
-              alt="Vote against" 
-              className="proposal__arrow" 
-              onClick={this.handleVoteAgainst}
-            />
-          </div>
+          {arrows}
           <p className="proposal__description">
             {this.props.description}
           </p>

@@ -40,6 +40,7 @@ class Proposals extends Component {
             description={proposal.description} 
             key={proposal.id}
             id={proposal.id}
+            end={proposal.states[1].end_time}
             {...this.props}
           />
         );
