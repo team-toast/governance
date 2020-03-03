@@ -38,7 +38,6 @@ class Proposal extends Component {
         <h4 className="proposal__title">
           {this.props.title}
         </h4>
-        <div className="proposal__hr"></div>
         <div className="proposal__bottom">
           <div className="proposal__arrows">
             <img 

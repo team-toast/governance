@@ -1,5 +1,6 @@
 @import ../config/_colors
 @import ../config/_variables
+@import ../config/_breakpoints
   
 .header
   height: $header-height
@@ -15,6 +16,12 @@
   color: $color-white
   font-weight: 500
   margin-bottom: 48px
+  max-width: 95vw
+  text-align: center
+
+  +media($breakpoint-sm)
+    font-size: 28px
+    margin-bottom: 32px
 
 .header__utils
   display: flex
