@@ -11,7 +11,7 @@ class Header extends Component {
         </h1>
         <p className="header__balance">
           {/* TODO: Render balance */}
-          COMP Balance: 297
+          {/* COMP Balance: 297 */}
         </p>
       </section>
     );
