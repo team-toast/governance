@@ -9,26 +9,32 @@ class Proposal extends Component {
   handleVoteFor = () => {
     this.props.contract.methods.castVote(this.props.id, true)
       .send({from: this.props.account}, (err, transactionHash) => {
-        console.log('Transaction Pending...', transactionHash);
+        this.props.setMessage('Transaction Pending...', transactionHash);
       }).on('confirmation', (number, receipt) => {
         if(number === 0) {
-          console.log('Transaction Confirmed!', receipt.transactionHash);
+          this.props.setMessage('Transaction Confirmed!', receipt.transactionHash);
         }
+        setTimeout(() => {
+          this.props.clearMessage();
+        }, 5000);
       }).on('error', (err, receipt) => {
-        console.log('Transaction Failed.', receipt ? receipt.transactionHash : null);
+        this.props.setMessage('Transaction Failed.', receipt ? receipt.transactionHash : null);
       });
   }
 
   handleVoteAgainst = () => {
     this.props.contract.methods.castVote(this.props.id, false)
       .send({from: this.props.account}, (err, transactionHash) => {
-        console.log('Transaction Pending...', transactionHash);
+        this.props.setMessage('Transaction Pending...', transactionHash);
       }).on('confirmation', (number, receipt) => {
         if(number === 0) {
-          console.log('Transaction Confirmed!', receipt.transactionHash);
+          this.props.setMessage('Transaction Confirmed!', receipt.transactionHash);
         }
+        setTimeout(() => {
+          this.props.clearMessage();
+        }, 5000);
       }).on('error', (err, receipt) => {
-        console.log('Transaction Failed.', receipt ? receipt.transactionHash : null);
+        this.props.setMessage('Transaction Failed.', receipt ? receipt.transactionHash : null);
       });
   }
 

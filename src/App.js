@@ -6,6 +6,7 @@ import Nav from './components/Nav';
 import Header from './components/Header';
 import Proposals from './components/Proposals';
 import Footer from './components/Footer';
+import Message from './components/Message';
 
 import './layout/config/_base.sass';
 
@@ -20,7 +21,9 @@ class App extends Component {
       account: null,
       latestBlock: '',
       network: null,
-      balance: 0
+      balance: 0,
+      message: null,
+      txHash: null
     }
   }
 
@@ -118,15 +121,35 @@ class App extends Component {
     });
   }
 
+  setMessage = (newMessage, txHash) => {
+    this.setState({
+      message: newMessage,
+      txHash
+    });
+    console.log(this.state.message);
+    console.log(this.state.txHash);
+  }
+
+  clearMessage = () => {
+    this.setState({
+      message: null,
+      txHash: null
+    });
+  }
+
   render() {
     return (
       <div className="app">
         <Nav {...this.state} />
-        <Header 
-          {...this.state}
+        <Header {...this.state} />
+        <Proposals 
+          {...this.state} 
+          xhr={this.xhr}
+          setMessage={this.setMessage} 
+          clearMessage={this.clearMessage} 
         />
-        <Proposals {...this.state} xhr={this.xhr} />
         <Footer {...this.state} />
+        <Message {...this.state} />
       </div>
     );
   }
