@@ -5,6 +5,7 @@ import contract from './contracts/GovernorAlpha.json';
 import Nav from './components/Nav';
 import Header from './components/Header';
 import Proposals from './components/Proposals';
+import Footer from './components/Footer';
 
 import './layout/config/_base.sass';
 
@@ -16,7 +17,9 @@ class App extends Component {
       web3: null, 
       contract: null, 
       accounts: null,
-      account: null
+      account: null,
+      latestBlock: '',
+      network: null
     }
   }
 
@@ -44,7 +47,8 @@ class App extends Component {
       console.error(error);
     }
 
-    this.accountInterval = setInterval(async () => {
+    this.interval = setInterval(async () => {
+      this.getLatestBlock();
       const accounts = await this.state.web3.eth.getAccounts();
       if (accounts[0] !== this.state.account) {
         this.setState({
@@ -53,6 +57,33 @@ class App extends Component {
         console.log(this.state.account);
       }
     }, 1000);
+    this.getNetwork();
+  }
+
+  getLatestBlock = async () => {
+    const block = await this.state.web3.eth.getBlock('latest');
+    this.setState({latestBlock: block.number});
+  }
+
+  getNetwork = async () => {
+    const id = await this.state.web3.eth.net.getId();
+    this.getNetworkName(id);
+  }
+
+  getNetworkName = (id) => {
+    if(id === 1) {
+      this.setState({network: 'Mainnet'});
+    } else if(id === 3) {
+      this.setState({network: 'Ropsten'});
+    } else if(id === 4) {
+      this.setState({network: 'Rinkeby'});
+    } else if(id === 5) {
+      this.setState({network: 'Goerli'});
+    } else if(id === 42) {
+      this.setState({network: 'Kovan'});
+    } else {
+      this.setState({network: 'Unknown Network'});
+    }
   }
 
   render() {
@@ -63,6 +94,7 @@ class App extends Component {
           {...this.state}
         />
         <Proposals {...this.state} />
+        <Footer {...this.state} />
       </div>
     );
   }

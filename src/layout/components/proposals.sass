@@ -1,4 +1,5 @@
 @import ../config/_colors
+@import ../config/_variables
 
 .proposals
   display: flex
@@ -8,6 +9,7 @@
   max-width: 90vw
   margin: auto
   margin-top: -58px
+  min-height: calc(100vh - #{$nav-height + $header-height + $footer-height - 58px})
 
 .proposal
   width: 100%
