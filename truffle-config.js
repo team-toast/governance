@@ -12,19 +12,19 @@ module.exports = {
     },
     ropsten: {
       provider: () => {
-        return new HDWalletProvider(keys.privKey, "https://ropsten.infura.io/v3/37c378bac13f456ba63d4126c8237c38");
+        return new HDWalletProvider(keys.privKey, keys.ropstenInfura);
       },
       network_id: 3
     },
     rinkeby: {
       provider: () => {
-        return new HDWalletProvider(keys.privKey, "https://rinkeby.infura.io/v3/37c378bac13f456ba63d4126c8237c38");
+        return new HDWalletProvider(keys.privKey, keys.rinkebyInfura);
       },
       network_id: 4
     },
     mainnet: {
       provider: () => {
-        return new HDWalletProvider(keys.privKey, "https://mainnet.infura.io/v3/37c378bac13f456ba63d4126c8237c38");
+        return new HDWalletProvider(keys.privKey, keys.mainnetInfura);
       },
       network_id: 1
     }
