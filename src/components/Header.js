@@ -10,8 +10,7 @@ class Header extends Component {
           Compound Governance Proposals
         </h1>
         <p className="header__balance">
-          {/* TODO: Render balance */}
-          {/* COMP Balance: 297 */}
+          {`COMP Balance: ${this.props.balance}`}
         </p>
       </section>
     );

@@ -16,23 +16,10 @@ class Proposals extends Component {
   componentDidMount = () => {
     this.getProposals()
   }
-  
-  xhr = (api, callback) => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.open('GET', `${api}`, true);
-    xhr.send();
-
-    xhr.onreadystatechange = (e) => {
-      if(xhr.readyState === 4 && xhr.status === 200) {
-        callback(xhr.responseText);
-      }
-    }
-  }
 
   getProposals = async () => {
     // TODO: Query mainnet api
-    this.xhr(
+    this.props.xhr(
       "https://api.compound.finance/api/v2/governance/proposals?network=ropsten", 
     (res) => {
       const data = JSON.parse(res);

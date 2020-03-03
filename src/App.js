@@ -19,7 +19,8 @@ class App extends Component {
       accounts: null,
       account: null,
       latestBlock: '',
-      network: null
+      network: null,
+      balance: 0
     }
   }
 
@@ -49,15 +50,23 @@ class App extends Component {
 
     this.interval = setInterval(async () => {
       this.getLatestBlock();
-      const accounts = await this.state.web3.eth.getAccounts();
-      if (accounts[0] !== this.state.account) {
-        this.setState({
-          account: accounts[0]
-        });
-        console.log(this.state.account);
-      }
+      this.getAccount();
     }, 1000);
+
+    await this.getAccount();
+    this.getLatestBlock();
     this.getNetwork();
+    this.getTokenBalance();
+  }
+
+  getAccount = async () => {
+    const accounts = await this.state.web3.eth.getAccounts();
+    if (accounts[0] !== this.state.account) {
+      this.setState({
+        account: accounts[0]
+      });
+      console.log(this.state.account);
+    }
   }
 
   getLatestBlock = async () => {
@@ -86,6 +95,29 @@ class App extends Component {
     }
   }
 
+  xhr = (api, callback) => {
+    const xhr = new XMLHttpRequest();
+
+    xhr.open('GET', `${api}`, true);
+    xhr.send();
+
+    xhr.onreadystatechange = (e) => {
+      if(xhr.readyState === 4 && xhr.status === 200) {
+        callback(xhr.responseText);
+      }
+    }
+  }
+
+  getTokenBalance = () => {
+    this.xhr(
+      `https://api-ropsten.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x1Fe16De955718CFAb7A44605458AB023838C2793&address=${this.state.account}`, 
+    (res) => {
+      const data = JSON.parse(res);
+      const balance = this.state.web3.utils.fromWei(data.result);
+      this.setState({balance});
+    });
+  }
+
   render() {
     return (
       <div className="app">
@@ -93,7 +125,7 @@ class App extends Component {
         <Header 
           {...this.state}
         />
-        <Proposals {...this.state} />
+        <Proposals {...this.state} xhr={this.xhr} />
         <Footer {...this.state} />
       </div>
     );
