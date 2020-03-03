@@ -7,7 +7,7 @@ class Footer extends Component {
     return (
       <section className="footer">
         <p className="footer__block">
-          {`Latest Block: ${this.props.latestBlock}`} 
+          {this.props.latestBlock ? `Latest Block: ${this.props.latestBlock}` : 'Connect Metamask'} 
         </p>
         <p className="footer__network">
           {this.props.network}
