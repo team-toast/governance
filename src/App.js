@@ -6,7 +6,6 @@ import Nav from './components/Nav';
 import Header from './components/Header';
 import Proposals from './components/Proposals';
 import Footer from './components/Footer';
-import Message from './components/Message';
 
 import './layout/config/_base.sass';
 
@@ -149,7 +148,6 @@ class App extends Component {
           clearMessage={this.clearMessage} 
         />
         <Footer {...this.state} />
-        <Message {...this.state} />
       </div>
     );
   }
