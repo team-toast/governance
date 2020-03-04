@@ -49,7 +49,7 @@ class Proposals extends Component {
 
     return (
       <section className="proposals">
-        {proposals}
+        {proposals.reverse()}
       </section>
     );
   }
