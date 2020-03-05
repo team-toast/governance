@@ -57,7 +57,7 @@ class App extends Component {
 
     await this.getAccount();
     this.getLatestBlock();
-    this.getNetwork();
+    await this.getNetwork();
     this.getTokenBalance();
   }
 
@@ -111,13 +111,33 @@ class App extends Component {
   }
 
   getTokenBalance = () => {
-    this.xhr(
-      `https://api-ropsten.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x1Fe16De955718CFAb7A44605458AB023838C2793&address=${this.state.account}`, 
-    (res) => {
-      const data = JSON.parse(res);
-      const balance = this.state.web3.utils.fromWei(data.result);
-      this.setState({balance});
-    });
+    if(this.state.network === 'Mainnet') {
+      this.xhr(
+        `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xc00e94cb662c3520282e6f5717214004a7f26888&address=${this.state.account}`, 
+      (res) => {
+        const data = JSON.parse(res);
+        const balance = this.state.web3.utils.fromWei(data.result);
+        this.setState({balance});
+      });
+    } else if(this.state.network === 'Ropsten') {
+      this.xhr(
+        `https://api-ropsten.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x1Fe16De955718CFAb7A44605458AB023838C2793&address=${this.state.account}`, 
+      (res) => {
+        const data = JSON.parse(res);
+        const balance = this.state.web3.utils.fromWei(data.result);
+        this.setState({balance});
+      });
+    } else {
+      // Default to Ropsten for now
+      // TODO: Default to mainnet once it's populated with proposals
+      this.xhr(
+        `https://api-ropsten.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x1Fe16De955718CFAb7A44605458AB023838C2793&address=${this.state.account}`, 
+      (res) => {
+        const data = JSON.parse(res);
+        const balance = this.state.web3.utils.fromWei(data.result);
+        this.setState({balance});
+      });
+    }
   }
 
   setMessage = (newMessage, txHash) => {
