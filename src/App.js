@@ -141,12 +141,14 @@ class App extends Component {
       <div className="app">
         <Nav {...this.state} />
         <Header {...this.state} />
-        <Proposals 
-          {...this.state} 
-          xhr={this.xhr}
-          setMessage={this.setMessage} 
-          clearMessage={this.clearMessage} 
-        />
+        {this.state.network &&
+          <Proposals 
+            {...this.state} 
+            xhr={this.xhr}
+            setMessage={this.setMessage} 
+            clearMessage={this.clearMessage}
+          />
+        }
         <Footer {...this.state} />
       </div>
     );

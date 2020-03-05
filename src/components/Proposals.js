@@ -14,19 +14,40 @@ class Proposals extends Component {
   }
 
   componentDidMount = () => {
-    this.getProposals()
+    this.getProposals();
   }
 
   getProposals = async () => {
-    // TODO: Query mainnet api
-    this.props.xhr(
-      "https://api.compound.finance/api/v2/governance/proposals?network=ropsten", 
-    (res) => {
-      const data = JSON.parse(res);
-      if(this.state.proposals !== data.proposals) {
-        this.setState({proposals: data.proposals});
-      }
-    });
+    if(this.props.network === 'Mainnet') {
+      this.props.xhr(
+        "https://api.compound.finance/api/v2/governance/proposals", 
+      (res) => {
+        const data = JSON.parse(res);
+        if(this.state.proposals !== data.proposals) {
+          this.setState({proposals: data.proposals});
+        }
+      });
+    } else if(this.props.network === 'Ropsten') {
+      this.props.xhr(
+        "https://api.compound.finance/api/v2/governance/proposals?network=ropsten", 
+      (res) => {
+        const data = JSON.parse(res);
+        if(this.state.proposals !== data.proposals) {
+          this.setState({proposals: data.proposals});
+        }
+      });
+    } else {
+      // Default to Ropsten for now
+      // TODO: Default to mainnet once it's populated with proposals
+      this.props.xhr(
+        "https://api.compound.finance/api/v2/governance/proposals?network=ropsten", 
+      (res) => {
+        const data = JSON.parse(res);
+        if(this.state.proposals !== data.proposals) {
+          this.setState({proposals: data.proposals});
+        }
+      });
+    }
   }
 
   render() {
