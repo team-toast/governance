@@ -68,16 +68,6 @@ class Proposals extends Component {
       } 
     });
 
-    if(proposals.length === 0) {
-      return(
-        <section className="proposals">
-          <p className="proposals__message">
-            No proposals yet :(
-          </p>
-        </section>
-      );
-    }
-
     return (
       <section className="proposals">
         {proposals.reverse()}
