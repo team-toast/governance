@@ -41,7 +41,7 @@ class Proposal extends Component {
   render() {
     let arrows;
 
-    if(this.props.end > this.props.latestBlock) {
+    if(this.props.account && this.props.end > this.props.latestBlock) {
       arrows = 
         <div className="proposal__arrows">
           <img 
