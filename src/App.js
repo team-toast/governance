@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import getWeb3 from "./utils/getWeb3";
+import Web3 from 'web3';
+import Web3Connect from 'web3connect';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+import Portis from '@portis/web3';
+import Fortmatic from 'fortmatic';
+import Torus from '@toruslabs/torus-embed';
+import Authereum from 'authereum';
+
 import contract from './contracts/GovernorAlpha.json';
 
 import Nav from './components/Nav';
@@ -7,9 +14,66 @@ import Header from './components/Header';
 import Proposals from './components/Proposals';
 import Footer from './components/Footer';
 
+import keys from './keys';
+
 import './layout/config/_base.sass';
 
+const providerOptions = {
+  walletconnect: {
+    package: WalletConnectProvider,
+    options: {
+      infuraId: keys.infura
+    }
+  },
+  portis: {
+    package: Portis,
+    options: {
+      id: keys.portis
+    }
+  },
+  fortmatic: {
+    package: Fortmatic,
+    options: {
+      key: keys.fortmatic
+    }
+  },
+  torus: {
+    package: Torus,
+    options: {
+      enableLogging: false,
+      buttonPosition: "bottom-left",
+      buildEnv: "production",
+      showTorusButton: true,
+      enabledVerifiers: {
+        google: false
+      }
+    }
+  },
+  authereum: {
+    package: Authereum,
+    options: {}
+  }
+};
+
+function initWeb3(provider) {
+  const web3 = new Web3(provider)
+
+  web3.eth.extend({
+    methods: [
+      {
+        name: 'chainId',
+        call: 'eth_chainId',
+        outputFormatter: web3.utils.hexToNumber
+      }
+    ]
+  })
+
+  return web3
+}
+
 class App extends Component {
+  web3Connect;
+
   constructor(props) {
     super(props);
 
@@ -22,43 +86,91 @@ class App extends Component {
       network: null,
       balance: 0,
       message: null,
-      txHash: null
+      txHash: null,
+      provider: null,
+      connected: null,
+      chainId: null,
+      networkId: null
     }
+
+    this.web3Connect = new Web3Connect.Core({
+      network: "mainnet",
+      cacheProvider: true,
+      providerOptions
+    });
   }
 
   componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
-
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = contract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        contract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
-
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance });
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      console.error(error);
+    if (this.web3Connect.cachedProvider) {
+      this.onConnect()
     }
+  }
+
+  onConnect = async () => {
+    const provider = await this.web3Connect.connect();
+    await this.subscribeProvider(provider);
+    const web3 = initWeb3(provider);
+
+    const accounts = await web3.eth.getAccounts();
+    const account = accounts[0];
+    const networkId = await web3.eth.net.getId();
+    const chainId = await web3.eth.chainId();
+
+    // Get the contract instance.
+    const deployedNetwork = contract.networks[networkId];
+    const instance = new web3.eth.Contract(
+      contract.abi,
+      deployedNetwork && deployedNetwork.address,
+    );
+
+    await this.setState({
+      web3,
+      provider,
+      connected: true,
+      account,
+      chainId,
+      networkId,
+      contract: instance
+    });
 
     this.interval = setInterval(async () => {
       this.getLatestBlock();
-      this.getAccount();
-    }, 1000);
+      this.getNetworkName();
+    }, 2000);
 
     await this.getAccount();
     this.getLatestBlock();
-    await this.getNetwork();
+    await this.getNetworkName();
     this.getTokenBalance();
+  }
+
+  subscribeProvider = async (provider) => {
+    provider.on('close', () => this.disconnect());
+
+    provider.on('accountsChanged', async (accounts) => {
+      await this.setState({ address: accounts[0] });
+    });
+
+    provider.on('chainChanged', async (chainId) => {
+      const { web3 } = this.state
+      const networkId = await web3.eth.net.getId()
+      await this.setState({ chainId, networkId });
+    });
+
+    provider.on('networkChanged', async (networkId) => {
+      const { web3 } = this.state;
+      const chainId = await web3.eth.chainId();
+      await this.setState({ chainId, networkId });
+    });
+  }
+
+  disconnect = async () => {
+    const { web3 } = this.state
+    if (web3 && web3.currentProvider && web3.currentProvider.close) {
+      await web3.currentProvider.close()
+    }
+    await this.web3Connect.clearCachedProvider();
+    this.setState({connected: false, account: null});
   }
 
   getAccount = async () => {
@@ -76,21 +188,18 @@ class App extends Component {
     this.setState({latestBlock: block.number});
   }
 
-  getNetwork = async () => {
-    const id = await this.state.web3.eth.net.getId();
-    this.getNetworkName(id);
-  }
+  getNetworkName = () => {
+    const {networkId} = this.state;
 
-  getNetworkName = (id) => {
-    if(id === 1) {
+    if(networkId === 1) {
       this.setState({network: 'Mainnet'});
-    } else if(id === 3) {
+    } else if(networkId === 3) {
       this.setState({network: 'Ropsten'});
-    } else if(id === 4) {
+    } else if(networkId === 4) {
       this.setState({network: 'Rinkeby'});
-    } else if(id === 5) {
+    } else if(networkId === 5) {
       this.setState({network: 'Goerli'});
-    } else if(id === 42) {
+    } else if(networkId === 42) {
       this.setState({network: 'Kovan'});
     } else {
       this.setState({network: 'Unknown Network'});
@@ -117,7 +226,9 @@ class App extends Component {
       (res) => {
         const data = JSON.parse(res);
         const balance = this.state.web3.utils.fromWei(data.result);
-        this.setState({balance});
+        if(balance > 0) {
+          this.setState({balance});
+        }
       });
     } else if(this.state.network === 'Ropsten') {
       this.xhr(
@@ -125,7 +236,9 @@ class App extends Component {
       (res) => {
         const data = JSON.parse(res);
         const balance = this.state.web3.utils.fromWei(data.result);
-        this.setState({balance});
+        if(balance > 0) {
+          this.setState({balance});
+        }
       });
     } else {
       // Default to Ropsten for now
@@ -135,7 +248,9 @@ class App extends Component {
       (res) => {
         const data = JSON.parse(res);
         const balance = this.state.web3.utils.fromWei(data.result);
-        this.setState({balance});
+        if(balance > 0) {
+          this.setState({balance});
+        }
       });
     }
   }
@@ -159,16 +274,18 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        <Nav {...this.state} />
+        <Nav 
+          {...this.state}
+          onConnect={this.onConnect}
+          disconnect={this.disconnect}
+        />
         <Header {...this.state} />
-        {this.state.network &&
-          <Proposals 
-            {...this.state} 
-            xhr={this.xhr}
-            setMessage={this.setMessage} 
-            clearMessage={this.clearMessage}
-          />
-        }
+        <Proposals 
+          {...this.state} 
+          xhr={this.xhr}
+          setMessage={this.setMessage} 
+          clearMessage={this.clearMessage}
+        />
         <Footer {...this.state} />
       </div>
     );

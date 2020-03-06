@@ -14,8 +14,11 @@ class Nav extends Component {
       button = <Message {...this.props} />
     } else {
       button = 
-        <p className="nav__account">
-          {this.props.account ? `${this.props.account.slice(0, 4)}...${this.props.account.slice(this.props.account.length - 4, this.props.account.length)}` : 'Connect Metamask'}
+        <p 
+          className="nav__account"
+          onClick={this.props.connected ? this.props.disconnect : this.props.onConnect}
+        >
+          {this.props.account ? `${this.props.account.slice(0, 4)}...${this.props.account.slice(this.props.account.length - 4, this.props.account.length)}` : 'Connect Wallet'}
         </p>
     }
 
