@@ -20,8 +20,6 @@ class Proposals extends Component {
   }
 
   getProposals = async () => {
-    console.log(this.props.network);
-
     if(this.props.network === 'Mainnet') {
       this.props.xhr(
         "https://api.compound.finance/api/v2/governance/proposals", 
