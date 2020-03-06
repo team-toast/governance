@@ -14,7 +14,9 @@ class Proposals extends Component {
   }
 
   componentDidMount = () => {
-    this.getProposals();
+    setInterval(() => {
+      this.getProposals();
+    }, 2000);
   }
 
   getProposals = async () => {
