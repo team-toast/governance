@@ -26,7 +26,7 @@ class Nav extends Component {
       return(
         <div className="nav__wrapper">
           <p className="nav__network">
-            {`Note: You are currently connected to the ${this.props.network} Testnet`}
+            {`Note: You are currently connected to ${this.props.network}`}
           </p>  
           <nav className="nav">
             <a className="nav__brand" href="/">
