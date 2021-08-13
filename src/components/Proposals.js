@@ -29,7 +29,7 @@ class Proposals extends Component {
         eventDetail = await this.getProposalEventParameters(web3, parseInt(proposalObjs[i]['startBlock']) - 1, proposalObjs[i]['id']);
         console.log(eventDetail);
         // Title, description, id (key), id, end_time
-        tmpProposals.push(['tmp Title',eventDetail[8], eventDetail[0], eventDetail[0],  eventDetail[7]]);
+        tmpProposals.push(['Proposal ' + parseInt(eventDetail[0]),eventDetail[8], eventDetail[0], eventDetail[0],  eventDetail[7]]);
       };
       console.log("Proposal array: ", tmpProposals);
       this.setState({proposals: tmpProposals});
@@ -41,7 +41,7 @@ class Proposals extends Component {
 
   getAllProposalObjects = async (web3) => {
     try {
-      const govAlpha = new web3.eth.Contract(contract.abi, "0x0d573c4b5DBb1633FE3ca722510898Fd5a0D49A9");
+      const govAlpha = new web3.eth.Contract(contract.abi, contract['networks']['137']['address']);
       let numOfProposals = await govAlpha.methods.proposalCount().call();
 
       let proposals = [];
@@ -55,20 +55,19 @@ class Proposals extends Component {
           console.log(element);
       });
       return proposals;
-      
+
     } catch (error) {
       console.error("Error in getAllProposalObjects: ", error);
     }
   }
 
   getProposalEventParameters = async (web3, blockNumber, Id) => {
-    const govAlpha = new web3.eth.Contract(contract.abi, "0x0d573c4b5DBb1633FE3ca722510898Fd5a0D49A9");
+    const govAlpha = new web3.eth.Contract(contract.abi, contract['networks']['137']['address']);
     let found = await govAlpha.getPastEvents(0xda95691a, // method id
           { 
             filter: {id: Id},
             fromBlock: blockNumber-10, toBlock: blockNumber });
     let rawData = found[0]['raw']['data'];
-    //console.log(found[0]['raw']['data']);
     let decoded = web3.eth.abi.decodeParameters(['uint256', 'address', 'address[]', 'uint256[]', 'string[]', 'bytes[]', 'uint256', 'uint256', 'string'], rawData);
 
     return decoded
@@ -80,7 +79,6 @@ class Proposals extends Component {
     setInterval(() => {
         this.getProposals();
     }, 3000);
-    //setTimeout(this.getProposals, 1000);
   }
 
   getProposals = async () => {
@@ -105,8 +103,6 @@ class Proposals extends Component {
 
     {this.state.proposals[0] !== undefined && this.state.proposals.forEach(proposal => {
       if(proposal[0].length > 0) {
-        //console.log("proposal end times:", proposal.states[0].end_time);
-        //console.log("proposal end times:", proposal.states[0].end_time);
         proposals.push(
           <Proposal
             title={proposal[0]}
@@ -114,7 +110,6 @@ class Proposals extends Component {
             key={proposal[2]}
             id={proposal[3]}
             end={proposal[4]}
-            //end={proposal.states[0].end_time} // switching from state[1] to state[0] on mainnet avoids crash
             {...this.props}
           />
         );

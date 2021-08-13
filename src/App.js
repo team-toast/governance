@@ -18,44 +18,6 @@ import Footer from './components/Footer';
 
 import './layout/config/_base.sass';
 
-const providerOptions = {
-  walletconnect: {
-    package: WalletConnectProvider,
-    options: {
-      //infuraId: keys.infura
-      infuraId: "80c9b77d70f64a5d94ea177acb67a008"
-    }
-  },
-  // portis: {
-  //   package: Portis,
-  //   options: {
-  //     id: keys.portis
-  //   }
-  // },
-  // fortmatic: {
-  //   package: Fortmatic,
-  //   options: {
-  //     key: keys.fortmatic
-  //   }
-  // },
-  torus: {
-    package: Torus,
-    options: {
-      enableLogging: false,
-      buttonPosition: "bottom-left",
-      buildEnv: "production",
-      showTorusButton: true,
-      enabledVerifiers: {
-        google: false
-      }
-    }
-  },
-  authereum: {
-    package: Authereum,
-    options: {}
-  }
-};
-
 function initWeb3(provider) {
   const web3 = new Web3(provider)
 
@@ -231,40 +193,8 @@ class App extends Component {
   }
 
   getTokenBalance = async () => {
-    if(this.state.network === 'Mainnet') {
-      this.xhr(
-        `https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0xc00e94cb662c3520282e6f5717214004a7f26888&address=${this.state.account}`, 
-      (res) => {
-        const data = JSON.parse(res);
-        const balance = this.state.web3.utils.fromWei(data.result);
-        if(balance > 0) {
-          this.setState({balance});
-        }
-      });
-    } else if(this.state.network === 'Ropsten') {
-      this.xhr(
-        `https://api-ropsten.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x1Fe16De955718CFAb7A44605458AB023838C2793&address=${this.state.account}`, 
-      (res) => {
-        const data = JSON.parse(res);
-        const balance = this.state.web3.utils.fromWei(data.result);
-        if(balance > 0) {
-          this.setState({balance});
-        }
-      });
-    } else {
-      // Default to Ropsten for now
-      // TODO: Default to mainnet once it's populated with proposals
-      // this.xhr(
-      //   `https://api-ropsten.etherscan.io/api?module=account&action=tokenbalance&contractaddress=0x1Fe16De955718CFAb7A44605458AB023838C2793&address=${this.state.account}`, 
-      // (res) => {
-      //   const data = JSON.parse(res);
-      //   const balance = this.state.web3.utils.fromWei(data.result);
-      //   if(balance > 0) {
-      //     this.setState({balance});
-      //   }
-      // });
+    if(this.state.network === 'Matic') {
       const minABI = [
-        // balanceOf
         {
           constant: true,
           inputs: [{ name: "_owner", type: "address" }],
@@ -273,13 +203,16 @@ class App extends Component {
           type: "function",
         },
       ];
-      const tokenAddress = "0xE87d02cC91d16C20297B6D6ceA855202aE2F95c8";
+      const tokenAddress = contract.contractAddresses['token']['address'];
       const tokenContract = new this.state.web3.eth.Contract(minABI, tokenAddress);
+      try {
+        const balance = await tokenContract.methods.balanceOf(this.state.account).call();
       
-      const balance = await tokenContract.methods.balanceOf(this.state.account).call();
-      
-      if(balance > 0) {
-        this.setState({balance});
+        if(balance > 0) {
+          this.setState({balance});
+        }
+      } catch (error) {
+        console.error("Error setting token balance: ", error);
       }
     }
   }

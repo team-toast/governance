@@ -8,4 +8,10 @@
     "137": {
       "address": "0x0d573c4b5DBb1633FE3ca722510898Fd5a0D49A9"
     }
-  }}
+  },
+  "contractAddresses": {
+    "token": {
+      "address": "0xE87d02cC91d16C20297B6D6ceA855202aE2F95c8"
+    }
+  }
+}
