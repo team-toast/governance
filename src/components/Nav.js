@@ -22,11 +22,11 @@ class Nav extends Component {
         </p>
     }
 
-    if(this.props.network && this.props.network !== 'Mainnet') {
+    if(this.props.network && this.props.network !== 'Matic') {
       return(
         <div className="nav__wrapper">
           <p className="nav__network">
-            {`Note: You are currently connected to ${this.props.network}`}
+            {`Note: Please connect to the Matic network`}
           </p>  
           <nav className="nav">
             <a className="nav__brand" href="/">

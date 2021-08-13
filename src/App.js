@@ -68,69 +68,8 @@ function initWeb3(provider) {
       }
     ]
   })
-  //genericExamleFunction(web3);
   return web3
 }
-
-async function genericExamleFunction(web3) {
-  let proposalObjs = await getAllProposalObjects(web3);
-
-  let eventDetail = await getProposalEventParameters(web3, parseInt(proposalObjs[0]['startBlock']) - 1, proposalObjs[0]['id']);
-  console.log(eventDetail);
-  // const govAlpha = new web3.eth.Contract(contract.abi, "0xD3b1e8F2bDe0a2DdfC9F6e2EB6e2589e5Ba955b6");
-  // let numOfProposals = await govAlpha.methods.proposalCount().call();
-  // let proposal1 = await govAlpha.methods.proposals(1).call();
-
-  // let latest_block = await web3.eth.getBlockNumber();
-  // console.log("Latest block: ", latest_block);
-
-  // let found = await govAlpha.getPastEvents('allEvents',
-  //       { fromBlock: 17868660, toBlock: 17868660 });
-  // let rawData = found[0]['raw']['data'];
-  // //console.log(found[0]['raw']['data']);
-  // let decoded = web3.eth.abi.decodeParameters(['uint256', 'address', 'address[]', 'uint256[]', 'string[]', 'bytes[]', 'uint256', 'uint256', 'string'], rawData);
-  
-  // console.log("Proposal Object: ");
-  // console.log(proposal1);
-  // console.log("Decoded Proposal Event: ");
-  // console.log(decoded);
-  // console.log("------------------");
-}
-
-async function getAllProposalObjects(web3) {
-  const govAlpha = new web3.eth.Contract(contract.abi, "0xD3b1e8F2bDe0a2DdfC9F6e2EB6e2589e5Ba955b6");
-  let numOfProposals = await govAlpha.methods.proposalCount().call();
-
-  let proposals = [];
-  let tmpProposal;
-  for(let i = 0; i < numOfProposals; i++) {
-    tmpProposal = await govAlpha.methods.proposals(i+1).call();
-    proposals.push(tmpProposal);
-  }
-  proposals.forEach(element => {
-    console.log("Proposal Object: ");
-    console.log(element);
-  });
-  
-  return proposals;
-}
-
-async function getProposalEventParameters(web3, blockNumber, Id) {
-  const govAlpha = new web3.eth.Contract(contract.abi, "0xD3b1e8F2bDe0a2DdfC9F6e2EB6e2589e5Ba955b6");
-  let found = await govAlpha.getPastEvents('allEvents', 
-        { 
-          filter: {id: Id},
-          fromBlock: blockNumber, toBlock: blockNumber });
-  let rawData = found[0]['raw']['data'];
-  //console.log(found[0]['raw']['data']);
-  let decoded = web3.eth.abi.decodeParameters(['uint256', 'address', 'address[]', 'uint256[]', 'string[]', 'bytes[]', 'uint256', 'uint256', 'string'], rawData);
-
-  return decoded
-}
-
-// async function buildProposalsArrayForUI(proposals, proposalEvents) {
-
-// }
 
 class App extends Component {
   web3Connect;
@@ -178,11 +117,13 @@ class App extends Component {
     const chainId = await web3.eth.chainId();
 
     // Get the contract instance.
-    const deployedNetwork = 137;//contract.networks[networkId];
+    const deployedNetwork = contract.networks[137];
     const instance = new web3.eth.Contract(
       contract.abi,
       deployedNetwork && deployedNetwork.address,
     );
+
+    console.log("CONTRACT ADDRESS: ", deployedNetwork.address);
 
     await this.setState({
       web3,
@@ -245,8 +186,13 @@ class App extends Component {
   }
 
   getLatestBlock = async () => {
-    const block = await this.state.web3.eth.getBlock('latest');
-    this.setState({latestBlock: block.number});
+    try {
+      const block = await this.state.web3.eth.getBlock('latest');
+      this.setState({latestBlock: block.number});
+    } catch (error) {
+      console.error("Error executing getLatestBlock");
+    }
+    
   }
 
   getNetworkName = () => {
