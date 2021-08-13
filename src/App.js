@@ -1,20 +1,11 @@
 import React, {Component} from 'react';
 import Web3 from 'web3';
 import Web3Connect from 'web3connect';
-import WalletConnectProvider from '@walletconnect/web3-provider';
-import Portis from '@portis/web3';
-import Fortmatic from 'fortmatic';
-import Torus from '@toruslabs/torus-embed';
-import Authereum from 'authereum';
-
 import contract from './contracts/GovernorAlpha.json';
-
 import Nav from './components/Nav';
 import Header from './components/Header';
 import Proposals from './components/Proposals';
 import Footer from './components/Footer';
-
-//import keys from './keys';
 
 import './layout/config/_base.sass';
 
