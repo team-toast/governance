@@ -85,7 +85,7 @@ class Proposals extends Component {
 
   componentDidMount = () => {
     let id = setInterval(() => {
-        if(this.state.loadedProposals == true) {
+        if(this.state.loadedProposals === true) {
           clearInterval(id);
         }
         this.getProposals();
@@ -112,7 +112,7 @@ class Proposals extends Component {
   render() {
     let proposals = [];
 
-    {this.state.proposals[0] !== undefined && this.state.proposals.forEach(proposal => {
+    this.state.proposals[0] !== undefined && this.state.proposals.forEach(proposal => {
       if(proposal[0].length > 0) {
         proposals.push(
           <Proposal
@@ -125,7 +125,7 @@ class Proposals extends Component {
           />
         );
       } 
-    });}
+    });
 
     return (
       <section className="proposals">
