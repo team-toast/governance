@@ -196,15 +196,23 @@ class App extends Component {
       ];
       const tokenAddress = contract.contractAddresses['token']['address'];
       const tokenContract = new this.state.web3.eth.Contract(minABI, tokenAddress);
-      try {
-        const balance = await tokenContract.methods.balanceOf(this.state.account).call();
-      
-        if(balance > 0) {
-          this.setState({balance});
+      const retries = 5;
+      let tryCount = 0;
+      let balanceUpdated = false;
+      while(tryCount < retries && balanceUpdated === false) {
+        try {
+          const balance = await tokenContract.methods.balanceOf(this.state.account).call();
+        
+          if(balance > 0) {
+            this.setState({balance});
+          }
+          balanceUpdated = true;
+        } catch (error) {
+          console.error("Error setting token balance: ", error);
+          tryCount++;
         }
-      } catch (error) {
-        console.error("Error setting token balance: ", error);
       }
+      
     }
   }
 

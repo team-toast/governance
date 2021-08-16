@@ -5,16 +5,21 @@ import Proposal from './Proposal';
 import '../layout/components/proposals.sass';
 import contract from '../contracts/GovernorAlpha.json';
 
-
-
 class Proposals extends Component {
   constructor(props) {
     super(props);
     
     this.state = {
       proposals: [],
-      loadedProposals: false
+      loadedProposals: false,
+      timeout: 0
     }
+  }
+
+  sleep = (ms) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
   }
 
   getProposalsFromEvents = async (web3) => {
@@ -33,6 +38,11 @@ class Proposals extends Component {
       };
       console.log("Proposal array: ", tmpProposals);
       this.setState({proposals: tmpProposals});
+
+      if(tmpProposals.length > 0) {
+        this.setState({loadedProposals: true});
+      }
+      
     } catch (error) {
       console.error("Error in getProposalsFromEvents", error);
     }
@@ -73,16 +83,19 @@ class Proposals extends Component {
     return decoded
   }
 
-
-
   componentDidMount = () => {
-    setInterval(() => {
+    let id = setInterval(() => {
         this.getProposals();
-    }, 3000);
+        console.log(this.state.loadedProposals);
+        if(this.state.loadedProposals == true) {
+          clearInterval(id);
+        }
+    }, 1000);
   }
 
   getProposals = async () => {
     try {
+      console.log("Getting Proposals");
       if (this.props.network === 'Matic') {
         console.log("Populating Matic proposal data.");
         this.getProposalsFromEvents(this.props.web3);
@@ -95,8 +108,6 @@ class Proposals extends Component {
     }
   
   }
-
-  
 
   render() {
     let proposals = [];
