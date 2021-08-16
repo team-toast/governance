@@ -1,27 +1,30 @@
-import React, {Component} from 'react';
-import Web3 from 'web3';
-import Web3Connect from 'web3connect';
-import contract from './contracts/GovernorAlpha.json';
-import Nav from './components/Nav';
-import Header from './components/Header';
-import Proposals from './components/Proposals';
-import Footer from './components/Footer';
+import React, { Component, TextInput } from "react";
 
-import './layout/config/_base.sass';
+import Web3 from "web3";
+import Web3Connect from "web3connect";
+import contract from "./contracts/GovernorAlpha.json";
+import compTokenContract from "./contracts/Comp.json";
+import Nav from "./components/Nav";
+import Header from "./components/Header";
+import Proposals from "./components/Proposals";
+import Footer from "./components/Footer";
+
+import "./layout/config/_base.sass";
+import { text } from "body-parser";
 
 function initWeb3(provider) {
-  const web3 = new Web3(provider)
+  const web3 = new Web3(provider);
 
   web3.eth.extend({
     methods: [
       {
-        name: 'chainId',
-        call: 'eth_chainId',
-        outputFormatter: web3.utils.hexToNumber
-      }
-    ]
-  })
-  return web3
+        name: "chainId",
+        call: "eth_chainId",
+        outputFormatter: web3.utils.hexToNumber,
+      },
+    ],
+  });
+  return web3;
 }
 
 class App extends Component {
@@ -31,11 +34,11 @@ class App extends Component {
     super(props);
 
     this.state = {
-      web3: null, 
-      contract: null, 
+      web3: null,
+      contract: null,
       accounts: null,
       account: null,
-      latestBlock: '',
+      latestBlock: "",
       network: null,
       balance: 0,
       message: null,
@@ -43,21 +46,22 @@ class App extends Component {
       provider: null,
       connected: null,
       chainId: null,
-      networkId: null
-    }
+      networkId: null,
+      inputValue: "",
+    };
 
     this.web3Connect = new Web3Connect.Core({
       network: "mainnet",
-      cacheProvider: true//,
+      cacheProvider: true, //,
       //providerOptions
     });
   }
 
   componentDidMount = async () => {
     if (this.web3Connect.cachedProvider) {
-      this.onConnect()
+      this.onConnect();
     }
-  }
+  };
 
   onConnect = async () => {
     const provider = await this.web3Connect.connect();
@@ -73,7 +77,7 @@ class App extends Component {
     const deployedNetwork = contract.networks[137];
     const instance = new web3.eth.Contract(
       contract.abi,
-      deployedNetwork && deployedNetwork.address,
+      deployedNetwork && deployedNetwork.address
     );
 
     console.log("CONTRACT ADDRESS: ", deployedNetwork.address);
@@ -85,7 +89,7 @@ class App extends Component {
       account,
       chainId,
       networkId,
-      contract: instance
+      contract: instance,
     });
 
     this.interval = setInterval(async () => {
@@ -97,94 +101,92 @@ class App extends Component {
     this.getLatestBlock();
     await this.getNetworkName();
     this.getTokenBalance();
-  }
+  };
 
   subscribeProvider = async (provider) => {
-    provider.on('close', () => this.disconnect());
+    provider.on("close", () => this.disconnect());
 
-    provider.on('accountsChanged', async (accounts) => {
+    provider.on("accountsChanged", async (accounts) => {
       await this.setState({ address: accounts[0] });
     });
 
-    provider.on('chainChanged', async (chainId) => {
-      const { web3 } = this.state
-      const networkId = await web3.eth.net.getId()
+    provider.on("chainChanged", async (chainId) => {
+      const { web3 } = this.state;
+      const networkId = await web3.eth.net.getId();
       await this.setState({ chainId, networkId });
     });
 
-    provider.on('networkChanged', async (networkId) => {
+    provider.on("networkChanged", async (networkId) => {
       const { web3 } = this.state;
       const chainId = await web3.eth.chainId();
       await this.setState({ chainId, networkId });
     });
-  }
+  };
 
   disconnect = async () => {
-    const { web3 } = this.state
+    const { web3 } = this.state;
     if (web3 && web3.currentProvider && web3.currentProvider.close) {
-      await web3.currentProvider.close()
+      await web3.currentProvider.close();
     }
     await this.web3Connect.clearCachedProvider();
-    this.setState({connected: false, account: null});
-  }
+    this.setState({ connected: false, account: null });
+  };
 
   getAccount = async () => {
     const accounts = await this.state.web3.eth.getAccounts();
     if (accounts[0] !== this.state.account) {
       this.setState({
-        account: accounts[0]
+        account: accounts[0],
       });
       console.log(this.state.account);
     }
-  }
+  };
 
   getLatestBlock = async () => {
     try {
-      const block = await this.state.web3.eth.getBlock('latest');
-      this.setState({latestBlock: block.number});
+      const block = await this.state.web3.eth.getBlock("latest");
+      this.setState({ latestBlock: block.number });
     } catch (error) {
       console.error("Error executing getLatestBlock");
     }
-    
-  }
+  };
 
   getNetworkName = () => {
-    const {networkId} = this.state;
+    const { networkId } = this.state;
 
-    if(networkId === 1) {
-      this.setState({network: 'Mainnet'});
-    } else if(networkId === 3) {
-      this.setState({network: 'Ropsten'});
-    } else if(networkId === 4) {
-      this.setState({network: 'Rinkeby'});
-    } else if(networkId === 5) {
-      this.setState({network: 'Goerli'});
-    } else if(networkId === 42) {
-      this.setState({network: 'Kovan'});
-    } else if(networkId === 137) {
-      this.setState({network: 'Matic'});
-      console.log("MATIC")
-      
+    if (networkId === 1) {
+      this.setState({ network: "Mainnet" });
+    } else if (networkId === 3) {
+      this.setState({ network: "Ropsten" });
+    } else if (networkId === 4) {
+      this.setState({ network: "Rinkeby" });
+    } else if (networkId === 5) {
+      this.setState({ network: "Goerli" });
+    } else if (networkId === 42) {
+      this.setState({ network: "Kovan" });
+    } else if (networkId === 137) {
+      this.setState({ network: "Matic" });
+      console.log("MATIC");
     } else {
-      this.setState({network: 'Unknown Network'});
+      this.setState({ network: "Unknown Network" });
     }
-  }
+  };
 
   xhr = (api, callback) => {
     const xhr = new XMLHttpRequest();
 
-    xhr.open('GET', `${api}`, true);
+    xhr.open("GET", `${api}`, true);
     xhr.send();
 
     xhr.onreadystatechange = (e) => {
-      if(xhr.readyState === 4 && xhr.status === 200) {
+      if (xhr.readyState === 4 && xhr.status === 200) {
         callback(xhr.responseText);
       }
-    }
-  }
+    };
+  };
 
   getTokenBalance = async () => {
-    if(this.state.network === 'Matic') {
+    if (this.state.network === "Matic") {
       const minABI = [
         {
           constant: true,
@@ -194,17 +196,22 @@ class App extends Component {
           type: "function",
         },
       ];
-      const tokenAddress = contract.contractAddresses['token']['address'];
-      const tokenContract = new this.state.web3.eth.Contract(minABI, tokenAddress);
+      const tokenAddress = contract.contractAddresses["token"]["address"];
+      const tokenContract = new this.state.web3.eth.Contract(
+        minABI,
+        tokenAddress
+      );
       const retries = 5;
       let tryCount = 0;
       let balanceUpdated = false;
-      while(tryCount < retries && balanceUpdated === false) {
+      while (tryCount < retries && balanceUpdated === false) {
         try {
-          const balance = await tokenContract.methods.balanceOf(this.state.account).call();
-        
-          if(balance > 0) {
-            this.setState({balance});
+          const balance = await tokenContract.methods
+            .balanceOf(this.state.account)
+            .call();
+
+          if (balance > 0) {
+            this.setState({ balance });
           }
           balanceUpdated = true;
         } catch (error) {
@@ -212,39 +219,64 @@ class App extends Component {
           tryCount++;
         }
       }
-      
     }
-  }
+  };
 
   setMessage = (newMessage, txHash) => {
     this.setState({
       message: newMessage,
-      txHash
+      txHash,
     });
     console.log(this.state.message);
     console.log(this.state.txHash);
-  }
+  };
 
   clearMessage = () => {
     this.setState({
       message: null,
-      txHash: null
+      txHash: null,
     });
-  }
+  };
+
+  delegate = async (delegatee) => {
+    const tokenAddress = contract.contractAddresses["token"]["address"];
+    const tokenContract = new this.state.web3.eth.Contract(
+      compTokenContract,
+      tokenAddress
+    );
+    try {
+      const delgateR = await tokenContract.methods.delegate(delegatee).call();
+      console.log("Delegate Result: ", delgateR);
+    } catch (error) {
+      console.error("Error delegating: ", error);
+    }
+  };
+
+  updateDelegateeAddress = (text) => {
+    console.log(text);
+  };
+
+  updateInputValue = async (evt) => {
+    this.setState({
+      inputValue: evt.target.value,
+    });
+  };
 
   render() {
     return (
       <div className="app">
-        <Nav 
+        <Nav
           {...this.state}
           onConnect={this.onConnect}
           disconnect={this.disconnect}
         />
         <Header {...this.state} />
-        <Proposals 
-          {...this.state} 
+
+        <input value={this.state.inputValue} onChange={this.updateInputValue} />
+        <Proposals
+          {...this.state}
           xhr={this.xhr}
-          setMessage={this.setMessage} 
+          setMessage={this.setMessage}
           clearMessage={this.clearMessage}
         />
         <Footer {...this.state} />
