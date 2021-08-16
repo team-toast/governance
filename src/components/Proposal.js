@@ -1,74 +1,100 @@
-import React, {Component} from 'react';
+import React, { Component } from "react";
 
-import upvote from '../images/upvote.svg';
-import downvote from '../images/downvote.svg';
+import upvote from "../images/upvote.svg";
+import downvote from "../images/downvote.svg";
 
-import '../layout/components/proposals.sass';
+import "../layout/components/proposals.sass";
 
 class Proposal extends Component {
   handleVoteFor = () => {
-    this.props.contract.methods.castVote(this.props.id, true)
-      .send({from: this.props.account}, (err, transactionHash) => {
-        this.props.setMessage('Transaction Pending...', transactionHash);
-      }).on('confirmation', (number, receipt) => {
-        if(number === 0) {
-          this.props.setMessage('Transaction Confirmed!', receipt.transactionHash);
+    this.props.contract.methods
+      .castVote(this.props.id, true)
+      .send({ from: this.props.account }, (err, transactionHash) => {
+        this.props.setMessage("Transaction Pending...", transactionHash);
+      })
+      .on("confirmation", (number, receipt) => {
+        if (number === 0) {
+          this.props.setMessage(
+            "Transaction Confirmed!",
+            receipt.transactionHash
+          );
         }
         setTimeout(() => {
           this.props.clearMessage();
         }, 5000);
-      }).on('error', (err, receipt) => {
-        this.props.setMessage('Transaction Failed.', receipt ? receipt.transactionHash : null);
+      })
+      .on("error", (err, receipt) => {
+        this.props.setMessage(
+          "Transaction Failed.",
+          receipt ? receipt.transactionHash : null
+        );
       });
-  }
+  };
 
   handleVoteAgainst = () => {
-    this.props.contract.methods.castVote(this.props.id, false)
-      .send({from: this.props.account}, (err, transactionHash) => {
-        this.props.setMessage('Transaction Pending...', transactionHash);
-      }).on('confirmation', (number, receipt) => {
-        if(number === 0) {
-          this.props.setMessage('Transaction Confirmed!', receipt.transactionHash);
+    this.props.contract.methods
+      .castVote(this.props.id, false)
+      .send({ from: this.props.account }, (err, transactionHash) => {
+        this.props.setMessage("Transaction Pending...", transactionHash);
+      })
+      .on("confirmation", (number, receipt) => {
+        if (number === 0) {
+          this.props.setMessage(
+            "Transaction Confirmed!",
+            receipt.transactionHash
+          );
         }
         setTimeout(() => {
           this.props.clearMessage();
         }, 5000);
-      }).on('error', (err, receipt) => {
-        this.props.setMessage('Transaction Failed.', receipt ? receipt.transactionHash : null);
+      })
+      .on("error", (err, receipt) => {
+        this.props.setMessage(
+          "Transaction Failed.",
+          receipt ? receipt.transactionHash : null
+        );
       });
-  }
+  };
 
   render() {
     let arrows;
 
-    if(this.props.account && this.props.end > this.props.latestBlock) {
-      arrows = 
+    if (this.props.account && this.props.end > this.props.latestBlock) {
+      arrows = (
         <div className="proposal__arrows">
-          <img 
-            src={upvote} 
-            alt="Vote for" 
+          <img
+            src={upvote}
+            alt="Vote for"
             className="proposal__arrow"
             onClick={this.handleVoteFor}
           />
-          <img 
-            src={downvote} 
-            alt="Vote against" 
-            className="proposal__arrow" 
+          <img
+            src={downvote}
+            alt="Vote against"
+            className="proposal__arrow"
             onClick={this.handleVoteAgainst}
           />
-        </div>;
+        </div>
+      );
     }
-    
+
     return (
       <div className="proposal">
-        <h4 className="proposal__title">
-          {this.props.title}
-        </h4>
+        <h4 className="proposal__title">{this.props.title}</h4>
+        <div className="proposal__info">
+          <p className="proposal__votes">
+            {"In Favour: "} {this.props.infavor}
+            <br />
+            {"Against: "} {this.props.against}
+            <br />
+            {"Expiry Block: "} {this.props.endBlock}
+            <br />
+            {"Expiry Time: "} {this.props.endDate}
+          </p>
+        </div>
         <div className="proposal__bottom">
           {arrows}
-          <p className="proposal__description">
-            {this.props.description}
-          </p>
+          <p className="proposal__description">{this.props.description}</p>
         </div>
       </div>
     );

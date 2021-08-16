@@ -7,7 +7,7 @@ class Header extends Component {
     return(
       <section className="header">
         <h1 className="header__title">
-          Compound Governance Proposals
+          Foundry Governance Proposals
         </h1>
         <p className="header__balance">
           {`COMP Balance: ${this.props.balance}`}
