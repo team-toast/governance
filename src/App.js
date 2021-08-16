@@ -1,4 +1,4 @@
-import React, { Component, TextInput } from "react";
+import React, { Component } from "react";
 
 import Web3 from "web3";
 import Web3Connect from "web3connect";
@@ -10,7 +10,6 @@ import Proposals from "./components/Proposals";
 import Footer from "./components/Footer";
 
 import "./layout/config/_base.sass";
-import { text } from "body-parser";
 
 function initWeb3(provider) {
   const web3 = new Web3(provider);
