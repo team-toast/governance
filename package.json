@@ -1,5 +1,5 @@
 {
-  "name": "react-boilerplate",
+  "name": "foundry-governance-ui",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -24,10 +24,6 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "homepage": "https://kadenzipfel.github.io/compound-governance",
   "browserslist": {
     "production": [
       ">0.2%",
