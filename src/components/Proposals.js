@@ -85,12 +85,12 @@ class Proposals extends Component {
 
   componentDidMount = () => {
     let id = setInterval(() => {
-        this.getProposals();
-        console.log(this.state.loadedProposals);
         if(this.state.loadedProposals == true) {
           clearInterval(id);
         }
-    }, 1000);
+        this.getProposals();
+        console.log(this.state.loadedProposals);
+    }, 2000);
   }
 
   getProposals = async () => {
