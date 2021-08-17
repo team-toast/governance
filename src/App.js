@@ -307,6 +307,7 @@ class App extends Component {
           if (number === 0) {
             this.setMessage("Transaction Confirmed!", receipt.transactionHash);
             console.log("Transaction Confirmed!", receipt.transactionHash);
+            this.getVotingPower(); // Update voting power that might have changed
           }
           setTimeout(() => {
             this.clearMessage();
