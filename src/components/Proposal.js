@@ -15,6 +15,7 @@ class Proposal extends Component {
     "Queued",
     "Expired",
     "Executed",
+    "Unknown",
   ];
 
   handleVoteFor = () => {

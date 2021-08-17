@@ -49,7 +49,6 @@ class Proposals extends Component {
           this.getProposalEndTime(proposalObjs[i]["endBlock"]),
           await this.getStatus(i + 1, web3),
         ]);
-        //console.log("Proposal status: ", await this.getStatus(1, web3));
       }
       console.log("Proposal array: ", tmpProposals);
       this.setState({ proposals: tmpProposals });
@@ -136,6 +135,7 @@ class Proposals extends Component {
       } catch (error) {
         console.error("Error getting proposalState: ", error);
         tryCount++;
+        proposalState = 8;
       }
     }
     return proposalState;
