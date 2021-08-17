@@ -8,10 +8,13 @@ class Header extends Component {
       <section className="header">
         <h1 className="header__title">Foundry Governance Proposals</h1>
         <p className="header__balance">
-          {`Voting Power: ${(
-            (this.props.votingPower / this.props.totalSupply) *
-            100
-          ).toFixed(4)}` + "%"}
+          {`Voting Power: ${
+            this.props.votingPower !== 0
+              ? ((this.props.votingPower / this.props.totalSupply) * 100)
+                  .toFixed(4)
+                  .toString() + "%"
+              : "0%"
+          }`}
         </p>
         <input
           onChange={this.props.updateDelegateeAddress}
