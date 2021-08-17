@@ -8,6 +8,7 @@ import Nav from "./components/Nav";
 import Header from "./components/Header";
 import Proposals from "./components/Proposals";
 import Footer from "./components/Footer";
+import Button from "./components/Button";
 
 import "./layout/config/_base.sass";
 
@@ -46,7 +47,7 @@ class App extends Component {
       connected: null,
       chainId: null,
       networkId: null,
-      inputValue: "",
+      delegateeAddress: "",
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -194,6 +195,21 @@ class App extends Component {
           outputs: [{ name: "balance", type: "uint256" }],
           type: "function",
         },
+        {
+          constant: false,
+          inputs: [
+            {
+              internalType: "address",
+              name: "delegatee",
+              type: "address",
+            },
+          ],
+          name: "delegate",
+          outputs: [],
+          payable: false,
+          stateMutability: "nonpayable",
+          type: "function",
+        },
       ];
       const tokenAddress = contract.contractAddresses["token"]["address"];
       const tokenContract = new this.state.web3.eth.Contract(
@@ -237,28 +253,48 @@ class App extends Component {
     });
   };
 
-  delegate = async (delegatee) => {
+  delegate = async () => {
     const tokenAddress = contract.contractAddresses["token"]["address"];
+
     const tokenContract = new this.state.web3.eth.Contract(
       compTokenContract,
       tokenAddress
     );
     try {
-      const delgateR = await tokenContract.methods.delegate(delegatee).call();
-      console.log("Delegate Result: ", delgateR);
+      tokenContract.methods
+        .delegate(this.state.delegateeAddress)
+        .send({ from: this.state.account }, (err, transactionHash) => {
+          this.setMessage("Transaction Pending...", transactionHash);
+          console.log("Transaction Pending...", transactionHash);
+        })
+        .on("confirmation", (number, receipt) => {
+          if (number === 0) {
+            this.setMessage("Transaction Confirmed!", receipt.transactionHash);
+            console.log("Transaction Confirmed!", receipt.transactionHash);
+          }
+          setTimeout(() => {
+            this.clearMessage();
+          }, 5000);
+        })
+        .on("error", (err, receipt) => {
+          this.setMessage(
+            "Transaction Failed.",
+            receipt ? receipt.transactionHash : null
+          );
+          console.log("Transaction Failed!");
+        });
+
+      console.log("Delegated to: ", this.state.delegateeAddress);
     } catch (error) {
-      console.error("Error delegating: ", error);
+      console.error("Error in delegate method: ", error);
     }
   };
 
-  updateDelegateeAddress = (text) => {
-    console.log(text);
-  };
-
-  updateInputValue = async (evt) => {
+  updateDelegateeAddress = async (evt) => {
     this.setState({
-      inputValue: evt.target.value,
+      delegateeAddress: evt.target.value,
     });
+    console.log(this.state.delegateeAddress);
   };
 
   render() {
@@ -269,9 +305,11 @@ class App extends Component {
           onConnect={this.onConnect}
           disconnect={this.disconnect}
         />
-        <Header {...this.state} />
-
-        <input value={this.state.inputValue} onChange={this.updateInputValue} />
+        <Header
+          {...this.state}
+          delegate={this.delegate}
+          updateDelegateeAddress={this.updateDelegateeAddress}
+        />
         <Proposals
           {...this.state}
           xhr={this.xhr}
