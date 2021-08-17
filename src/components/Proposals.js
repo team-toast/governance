@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import Proposal from "./Proposal";
-
+import GovernorAlphaContract from "../contracts/GovernorAlpha.json";
 import "../layout/components/proposals.sass";
 import contract from "../contracts/GovernorAlpha.json";
 
@@ -47,7 +47,9 @@ class Proposals extends Component {
           proposalObjs[i]["againstVotes"],
           proposalObjs[i]["endBlock"],
           this.getProposalEndTime(proposalObjs[i]["endBlock"]),
+          await this.getStatus(i + 1, web3),
         ]);
+        //console.log("Proposal status: ", await this.getStatus(1, web3));
       }
       console.log("Proposal array: ", tmpProposals);
       this.setState({ proposals: tmpProposals });
@@ -116,6 +118,29 @@ class Proposals extends Component {
     return decoded;
   };
 
+  getStatus = async (proposalId, web3) => {
+    let proposalState = "";
+    const tokenAddress = "0xd9FDa03E4dD889484f8556dDb00Ca114e6A1f575"; //contract.contractAddresses["networks"]["137"];
+
+    const tokenContract = new web3.eth.Contract(
+      GovernorAlphaContract.abi,
+      tokenAddress
+    );
+    const retries = 5;
+    let tryCount = 0;
+    let stateUpdated = false;
+    while (tryCount < retries && stateUpdated === false) {
+      try {
+        proposalState = await tokenContract.methods.state(proposalId).call();
+        stateUpdated = true;
+      } catch (error) {
+        console.error("Error getting proposalState: ", error);
+        tryCount++;
+      }
+    }
+    return proposalState;
+  };
+
   componentDidMount = () => {
     let id = setInterval(() => {
       if (this.state.loadedProposals === true) {
@@ -176,6 +201,7 @@ class Proposals extends Component {
               against={proposal[6]}
               endBlock={proposal[7]}
               endDate={proposal[8]}
+              status={proposal[9]}
               {...this.props}
             />
           );
