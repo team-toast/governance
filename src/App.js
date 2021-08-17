@@ -8,7 +8,6 @@ import Nav from "./components/Nav";
 import Header from "./components/Header";
 import Proposals from "./components/Proposals";
 import Footer from "./components/Footer";
-import Button from "./components/Button";
 
 import "./layout/config/_base.sass";
 
