@@ -489,12 +489,12 @@
       "address": "0x0d573c4b5DBb1633FE3ca722510898Fd5a0D49A9"
     },
     "137": {
-      "address": "0x18BA522C8Fa843bA8726635Bb2cFD61aBCC41104"
+      "address": "0xd9FDa03E4dD889484f8556dDb00Ca114e6A1f575"
     }
   },
   "contractAddresses": {
     "token": {
-      "address": "0xE87d02cC91d16C20297B6D6ceA855202aE2F95c8"
+      "address": "0x37FB45ecc93928Ef29f545153971a0669BdDBFFF"
     }
   }
 }
