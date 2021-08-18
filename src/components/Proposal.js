@@ -6,6 +6,18 @@ import downvote from "../images/downvote.svg";
 import "../layout/components/proposals.sass";
 
 class Proposal extends Component {
+  proposalStateMap = [
+    "Pending",
+    "Active",
+    "Canceled",
+    "Defeated",
+    "Succeeded",
+    "Queued",
+    "Expired",
+    "Executed",
+    "Unknown",
+  ];
+
   handleVoteFor = () => {
     this.props.contract.methods
       .castVote(this.props.id, true)
@@ -94,6 +106,8 @@ class Proposal extends Component {
             {"Expiry Block: "} {this.props.endBlock}
             <br />
             {"Expiry Time: "} {this.props.endDate}
+            <br />
+            {"Status: "} {this.proposalStateMap[this.props.status]}
           </p>
         </div>
         <div className="proposal__bottom">
