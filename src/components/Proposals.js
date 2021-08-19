@@ -55,9 +55,11 @@ class Proposals extends Component {
 
       if (tmpProposals.length > 0) {
         this.setState({ loadedProposals: true });
+        return 0;
       }
     } catch (error) {
       console.error("Error in getProposalsFromEvents", error);
+      return 1;
     }
   };
 
@@ -142,13 +144,28 @@ class Proposals extends Component {
   };
 
   componentDidMount = () => {
-    let id = setInterval(() => {
-      if (this.state.loadedProposals === true) {
-        clearInterval(id);
-      }
-      this.getProposals();
-      console.log(this.state.loadedProposals);
-    }, 2000);
+    // let id = setInterval(() => {
+    //   if (this.state.loadedProposals === true) {
+    //     clearInterval(id);
+    //   }
+    //   this.getProposals();
+    //   console.log(this.state.loadedProposals);
+    // }, 2000);
+
+    setTimeout(
+      function () {
+        //Start the timer
+        this.retryGetProposals();
+      }.bind(this),
+      1000
+    );
+  };
+
+  retryGetProposals = async () => {
+    let r = 1;
+    while (r === 1) {
+      r = await this.getProposals();
+    }
   };
 
   getProposals = async () => {
@@ -156,12 +173,13 @@ class Proposals extends Component {
       console.log("Getting Proposals");
       if (this.props.network === "Matic") {
         console.log("Populating Matic proposal data.");
-        this.getProposalsFromEvents(this.props.web3);
+        return await this.getProposalsFromEvents(this.props.web3);
       } else {
         console.log("Please select the Matic network.");
       }
     } catch (error) {
       console.log("Error in getProposals", error);
+      return 1;
     }
   };
 

@@ -164,10 +164,15 @@ class Proposal extends Component {
           {arrows}
           <p className="proposal__description">{this.props.description}</p>
         </div>
-        {this.proposalStateMap[this.props.status] === "Queued" ||
-        this.proposalStateMap[this.props.status] === "Succeeded" ? (
+        {this.proposalStateMap[this.props.status] === "Succeeded" ? (
           <Button
-            label="Progress State"
+            label="Add Proposal to Queue"
+            handleClick={this.handleProgressState}
+          ></Button>
+        ) : null}
+        {this.proposalStateMap[this.props.status] === "Queued" ? (
+          <Button
+            label="Execute Proposal"
             handleClick={this.handleProgressState}
           ></Button>
         ) : null}
