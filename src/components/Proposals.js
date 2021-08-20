@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 
 import Proposal from "./Proposal";
-import GovernorAlphaContract from "../contracts/GovernorAlpha.json";
 import "../layout/components/proposals.sass";
 import contract from "../contracts/GovernorAlpha.json";
 
@@ -29,7 +28,7 @@ class Proposals extends Component {
 
       let eventDetail;
       let tmpProposals = [];
-      for (let i = 0; i < proposalObjs.length; i++) {
+      for (let i = proposalObjs.length - 5; i < proposalObjs.length; i++) {
         eventDetail = await this.getProposalEventParameters(
           web3,
           parseInt(proposalObjs[i]["startBlock"]) - 1,
@@ -47,7 +46,8 @@ class Proposals extends Component {
           proposalObjs[i]["againstVotes"],
           proposalObjs[i]["endBlock"],
           this.getProposalEndTime(proposalObjs[i]["endBlock"]),
-          await this.getStatus(i + 1, web3),
+          this.getStatus2(proposalObjs[i]),
+          this.isDaiProposal(eventDetail[5], eventDetail[2]).toString(),
         ]);
       }
       console.log("Proposal array: ", tmpProposals);
@@ -59,6 +59,30 @@ class Proposals extends Component {
     } catch (error) {
       console.error("Error in getProposalsFromEvents", error);
     }
+  };
+
+  isDaiProposal = (calldata, contractAddress) => {
+    if (
+      calldata.length === 1 &&
+      contractAddress
+        .toString()
+        .includes(contract["contractAddresses"]["forwarder"]["address"])
+    ) {
+      if (
+        calldata[0]
+          .toString()
+          .includes(contract["contractAddresses"]["forwarder"]["forwardSig"]) &&
+        calldata[0]
+          .toString()
+          .includes(contract["contractAddresses"]["dai"]["transferSig"]) &&
+        calldata[0]
+          .toString()
+          .includes(contract["contractAddresses"]["dai"]["address"].slice(2))
+      ) {
+        return true;
+      }
+    }
+    return false;
   };
 
   getAllProposalObjects = async (web3) => {
@@ -117,29 +141,74 @@ class Proposals extends Component {
     return decoded;
   };
 
-  getStatus = async (proposalId, web3) => {
-    let proposalState = "";
-    const tokenAddress = "0xd9FDa03E4dD889484f8556dDb00Ca114e6A1f575"; //contract.contractAddresses["networks"]["137"];
-
-    const tokenContract = new web3.eth.Contract(
-      GovernorAlphaContract.abi,
-      tokenAddress
-    );
-    const retries = 5;
-    let tryCount = 0;
-    let stateUpdated = false;
-    while (tryCount < retries && stateUpdated === false) {
-      try {
-        proposalState = await tokenContract.methods.state(proposalId).call();
-        stateUpdated = true;
-      } catch (error) {
-        console.error("Error getting proposalState: ", error);
-        tryCount++;
-        proposalState = 8;
-      }
+  // get state Solidity code (translated to JS in getState2 function)
+  // function state(uint proposalId) public view returns (ProposalState) {
+  //       require(proposalCount >= proposalId && proposalId > 0, "GovernorAlpha::state: invalid proposal id");
+  //       Proposal storage proposal = proposals[proposalId];
+  //       if (proposal.canceled) {
+  //           return ProposalState.Canceled;
+  //       } else if (block.number <= proposal.startBlock) {
+  //           return ProposalState.Pending;
+  //       } else if (block.number <= proposal.endBlock) {
+  //           return ProposalState.Active;
+  //       } else if (proposal.forVotes <= proposal.againstVotes || proposal.forVotes < quorumVotes()) {
+  //           return ProposalState.Defeated;
+  //       } else if (proposal.eta == 0) {
+  //           return ProposalState.Succeeded;
+  //       } else if (proposal.executed) {
+  //           return ProposalState.Executed;
+  //       } else if (block.timestamp >= add256(proposal.eta, timelock.GRACE_PERIOD())) {
+  //           return ProposalState.Expired;
+  //       } else {
+  //           return ProposalState.Queued;
+  //       }
+  //   }
+  getStatus2 = (proposal) => {
+    if (proposal["canceled"] === true) {
+      return "Canceled";
+    } else if (this.latestBlock <= proposal["startBlock"]) {
+      return "Pending";
+    } else if (this.latestBlock <= proposal["endBlock"]) {
+      return "Active";
+    } else if (
+      proposal["forVotes"] <= proposal["againstVotes"] ||
+      proposal["votesFor"] <= 400000
+    ) {
+      return "Defeated";
+    } else if (proposal["eta"] === "0") {
+      return "Succeeded";
+    } else if (proposal["executed"] === true) {
+      return "Executed";
+    } else if (this.latestBlock >= proposal["eta"] + 1209600) {
+      return "Expired";
+    } else {
+      return "Queued";
     }
-    return proposalState;
   };
+
+  // getStatus = async (proposalId, web3) => {
+  //   let proposalState = "";
+  //   const tokenAddress = "0xd9FDa03E4dD889484f8556dDb00Ca114e6A1f575"; //contract.contractAddresses["networks"]["137"];
+
+  //   const tokenContract = new web3.eth.Contract(
+  //     GovernorAlphaContract.abi,
+  //     tokenAddress
+  //   );
+  //   const retries = 5;
+  //   let tryCount = 0;
+  //   let stateUpdated = false;
+  //   while (tryCount < retries && stateUpdated === false) {
+  //     try {
+  //       proposalState = await tokenContract.methods.state(proposalId).call();
+  //       stateUpdated = true;
+  //     } catch (error) {
+  //       console.error("Error getting proposalState: ", error);
+  //       tryCount++;
+  //       proposalState = 8;
+  //     }
+  //   }
+  //   return proposalState;
+  // };
 
   componentDidMount = () => {
     let id = setInterval(() => {
@@ -173,7 +242,7 @@ class Proposals extends Component {
     let blockDifference =
       parseInt(expiryBlock) - parseInt(this.props.latestBlock);
     if (blockDifference < 0) {
-      return "Expired";
+      return "Closed";
     }
     console.log("Block Difference: ", blockDifference.toString());
     let secondsTillExpiry = 2.7 * blockDifference;
@@ -202,6 +271,7 @@ class Proposals extends Component {
               endBlock={proposal[7]}
               endDate={proposal[8]}
               status={proposal[9]}
+              isDai={proposal[10]}
               {...this.props}
             />
           );

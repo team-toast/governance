@@ -495,6 +495,14 @@
   "contractAddresses": {
     "token": {
       "address": "0x37FB45ecc93928Ef29f545153971a0669BdDBFFF"
+    },
+    "dai": {
+      "address": "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
+      "transferSig": "a9059cbb"
+    },
+    "forwarder": {
+      "address": "0x3467cf0CfF57099817Ce33670f42C19EDb4d514a",
+      "forwardSig": "dc5fe025"
     }
   }
 }

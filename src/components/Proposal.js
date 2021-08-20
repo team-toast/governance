@@ -105,9 +105,13 @@ class Proposal extends Component {
             <br />
             {"Expiry Block: "} {this.props.endBlock}
             <br />
-            {"Expiry Time: "} {this.props.endDate}
+            {"Vote Close Time: "} {this.props.endDate}
             <br />
-            {"Status: "} {this.proposalStateMap[this.props.status]}
+            {"Status: "} {this.props.status}
+            {/* {"Status: "} {this.proposalStateMap[this.props.status]} */}
+            <br />
+            {/* {"Is Dai Proposal: "} {this.props.isDai} */}
+            {this.props.isDai === "true" ? "This is a Dai Proposal" : null}
           </p>
         </div>
         <div className="proposal__bottom">
