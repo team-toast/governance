@@ -4,6 +4,7 @@ import upvote from "../images/upvote.svg";
 import downvote from "../images/downvote.svg";
 
 import "../layout/components/proposals.sass";
+import Button from "./Button";
 
 class Proposal extends Component {
   proposalStateMap = [
@@ -68,6 +69,59 @@ class Proposal extends Component {
       });
   };
 
+  handleProgressState = () => {
+    //succeeded can be queued state: 4, queued can be executed state: 5
+    if (this.proposalStateMap[this.props.status] === "Succeeded") {
+      this.props.contract.methods
+        .queue(this.props.id)
+        .send({ from: this.props.account }, (err, transactionHash) => {
+          this.props.setMessage("Transaction Pending...", transactionHash);
+        })
+        .on("confirmation", (number, receipt) => {
+          if (number === 0) {
+            this.props.setMessage(
+              "Transaction Confirmed!",
+              receipt.transactionHash
+            );
+          }
+          setTimeout(() => {
+            this.props.clearMessage();
+          }, 5000);
+        })
+        .on("error", (err, receipt) => {
+          this.props.setMessage(
+            "Transaction Failed.",
+            receipt ? receipt.transactionHash : null
+          );
+        });
+    } else if (this.proposalStateMap[this.props.status] === "Queued") {
+      this.props.contract.methods
+        .execute(this.props.id)
+        .send({ from: this.props.account }, (err, transactionHash) => {
+          this.props.setMessage("Transaction Pending...", transactionHash);
+        })
+        .on("confirmation", (number, receipt) => {
+          if (number === 0) {
+            this.props.setMessage(
+              "Transaction Confirmed!",
+              receipt.transactionHash
+            );
+          }
+          setTimeout(() => {
+            this.props.clearMessage();
+          }, 5000);
+        })
+        .on("error", (err, receipt) => {
+          this.props.setMessage(
+            "Transaction Failed.",
+            receipt ? receipt.transactionHash : null
+          );
+        });
+    } else {
+      console.log("This proposal is not in the succeeded or queued states");
+    }
+  };
+
   render() {
     let arrows;
 
@@ -114,6 +168,18 @@ class Proposal extends Component {
           {arrows}
           <p className="proposal__description">{this.props.description}</p>
         </div>
+        {this.proposalStateMap[this.props.status] === "Succeeded" ? (
+          <Button
+            label="Add Proposal to Queue"
+            handleClick={this.handleProgressState}
+          ></Button>
+        ) : null}
+        {this.proposalStateMap[this.props.status] === "Queued" ? (
+          <Button
+            label="Execute Proposal"
+            handleClick={this.handleProgressState}
+          ></Button>
+        ) : null}
       </div>
     );
   }

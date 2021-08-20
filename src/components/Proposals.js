@@ -16,12 +16,6 @@ class Proposals extends Component {
     };
   }
 
-  sleep = (ms) => {
-    return new Promise((resolve) => {
-      setTimeout(resolve, ms);
-    });
-  };
-
   getProposalsFromEvents = async (web3) => {
     try {
       let proposalObjs = await this.getAllProposalObjects(web3);
@@ -55,9 +49,11 @@ class Proposals extends Component {
 
       if (tmpProposals.length > 0) {
         this.setState({ loadedProposals: true });
+        return 0;
       }
     } catch (error) {
       console.error("Error in getProposalsFromEvents", error);
+      return 1;
     }
   };
 
@@ -142,23 +138,33 @@ class Proposals extends Component {
   };
 
   componentDidMount = () => {
-    let id = setInterval(() => {
-      if (this.state.loadedProposals === true) {
-        clearInterval(id);
-      }
-      this.getProposals();
-      console.log(this.state.loadedProposals);
-    }, 2000);
+    setTimeout(
+      function () {
+        //Start the timer
+        this.getProposals();
+      }.bind(this),
+      1000
+    );
+  };
+
+  sleep = (milliseconds) => {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
 
   getProposals = async () => {
     try {
-      console.log("Getting Proposals");
-      if (this.props.network === "Matic") {
-        console.log("Populating Matic proposal data.");
-        this.getProposalsFromEvents(this.props.web3);
-      } else {
-        console.log("Please select the Matic network.");
+      let matic = false;
+      while (matic === false) {
+        console.log("Getting Proposals");
+        if (this.props.network === "Matic") {
+          console.log("Populating Matic proposal data.");
+          matic = true;
+          await this.getProposalsFromEvents(this.props.web3);
+        } else {
+          console.log("Please select the Matic network.");
+          matic = false;
+          await this.sleep(5000);
+        }
       }
     } catch (error) {
       console.log("Error in getProposals", error);
