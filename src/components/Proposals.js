@@ -138,14 +138,6 @@ class Proposals extends Component {
   };
 
   componentDidMount = () => {
-    // let id = setInterval(() => {
-    //   if (this.state.loadedProposals === true) {
-    //     clearInterval(id);
-    //   }
-    //   this.getProposals();
-    //   console.log(this.state.loadedProposals);
-    // }, 2000);
-
     setTimeout(
       function () {
         //Start the timer
