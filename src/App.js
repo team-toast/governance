@@ -40,6 +40,8 @@ class App extends Component {
       latestBlock: "",
       network: null,
       balance: 0,
+      votingPower: 0,
+      totalSupply: 0,
       message: null,
       txHash: null,
       provider: null,
@@ -99,6 +101,8 @@ class App extends Component {
     await this.getAccount();
     this.getLatestBlock();
     await this.getNetworkName();
+    this.getVotingPower();
+    this.getTotalSupply();
     this.getTokenBalance();
   };
 
@@ -186,33 +190,10 @@ class App extends Component {
 
   getTokenBalance = async () => {
     if (this.state.network === "Matic") {
-      const minABI = [
-        {
-          constant: true,
-          inputs: [{ name: "_owner", type: "address" }],
-          name: "balanceOf",
-          outputs: [{ name: "balance", type: "uint256" }],
-          type: "function",
-        },
-        {
-          constant: false,
-          inputs: [
-            {
-              internalType: "address",
-              name: "delegatee",
-              type: "address",
-            },
-          ],
-          name: "delegate",
-          outputs: [],
-          payable: false,
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-      ];
       const tokenAddress = contract.contractAddresses["token"]["address"];
+
       const tokenContract = new this.state.web3.eth.Contract(
-        minABI,
+        compTokenContract,
         tokenAddress
       );
       const retries = 5;
@@ -230,6 +211,62 @@ class App extends Component {
           balanceUpdated = true;
         } catch (error) {
           console.error("Error setting token balance: ", error);
+          tryCount++;
+        }
+      }
+    }
+  };
+
+  getVotingPower = async () => {
+    if (this.state.network === "Matic") {
+      const tokenAddress = contract.contractAddresses["token"]["address"];
+
+      const tokenContract = new this.state.web3.eth.Contract(
+        compTokenContract,
+        tokenAddress
+      );
+      const retries = 5;
+      let tryCount = 0;
+      let votingPowerUpdated = false;
+      while (tryCount < retries && votingPowerUpdated === false) {
+        try {
+          const votingPower = await tokenContract.methods
+            .getCurrentVotes(this.state.account)
+            .call();
+
+          if (votingPower > 0) {
+            this.setState({ votingPower });
+          }
+          votingPowerUpdated = true;
+        } catch (error) {
+          console.error("Error setting token voting power: ", error);
+          tryCount++;
+        }
+      }
+    }
+  };
+
+  getTotalSupply = async () => {
+    if (this.state.network === "Matic") {
+      const tokenAddress = contract.contractAddresses["token"]["address"];
+
+      const tokenContract = new this.state.web3.eth.Contract(
+        compTokenContract,
+        tokenAddress
+      );
+      const retries = 5;
+      let tryCount = 0;
+      let totalSupplyUpdated = false;
+      while (tryCount < retries && totalSupplyUpdated === false) {
+        try {
+          const totalSupply = await tokenContract.methods.totalSupply().call();
+
+          if (totalSupply > 0) {
+            this.setState({ totalSupply });
+          }
+          totalSupplyUpdated = true;
+        } catch (error) {
+          console.error("Error setting token total supply: ", error);
           tryCount++;
         }
       }
@@ -270,6 +307,7 @@ class App extends Component {
           if (number === 0) {
             this.setMessage("Transaction Confirmed!", receipt.transactionHash);
             console.log("Transaction Confirmed!", receipt.transactionHash);
+            this.getVotingPower(); // Update voting power that might have changed after delegating
           }
           setTimeout(() => {
             this.clearMessage();
