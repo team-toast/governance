@@ -102,7 +102,9 @@ class Proposal extends Component {
                 this.props.isPayment[3] +
                 " payment Proposal (" +
                 this.props.isPayment[1].toString() +
-                " Dai to 0x" +
+                " " +
+                this.props.isPayment[3] +
+                " to 0x" +
                 this.props.isPayment[2].toString() +
                 ")"
               : null}
