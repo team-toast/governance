@@ -6,18 +6,6 @@ import downvote from "../images/downvote.svg";
 import "../layout/components/proposals.sass";
 
 class Proposal extends Component {
-  proposalStateMap = [
-    "Pending",
-    "Active",
-    "Canceled",
-    "Defeated",
-    "Succeeded",
-    "Queued",
-    "Expired",
-    "Executed",
-    "Unknown",
-  ];
-
   handleVoteFor = () => {
     this.props.contract.methods
       .castVote(this.props.id, true)
@@ -108,10 +96,16 @@ class Proposal extends Component {
             {"Vote Close Time: "} {this.props.endDate}
             <br />
             {"Status: "} {this.props.status}
-            {/* {"Status: "} {this.proposalStateMap[this.props.status]} */}
             <br />
-            {/* {"Is Dai Proposal: "} {this.props.isDai} */}
-            {this.props.isDai === "true" ? "This is a Dai Proposal" : null}
+            {this.props.isPayment[0] === true
+              ? "This is a simple " +
+                this.props.isPayment[3] +
+                " payment Proposal (" +
+                this.props.isPayment[1].toString() +
+                " Dai to 0x" +
+                this.props.isPayment[2].toString() +
+                ")"
+              : null}
           </p>
         </div>
         <div className="proposal__bottom">

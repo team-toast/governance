@@ -498,11 +498,14 @@
     },
     "dai": {
       "address": "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
-      "transferSig": "a9059cbb"
+      "transferSig": "0xa9059cbb"
     },
     "forwarder": {
-      "address": "0x3467cf0CfF57099817Ce33670f42C19EDb4d514a",
-      "forwardSig": "dc5fe025"
+      "address": "0x90Cd855a544dd2a626069A9C3D0be8f4Eeb8C4Fa",
+      "forwardSig": "0xdc5fe025"
+    },
+    "timelock": {
+      "address": "0x976d2729FcD435eEB2d2B847D55a3A29f153f320"
     }
   }
 }

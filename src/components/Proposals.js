@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Proposal from "./Proposal";
 import "../layout/components/proposals.sass";
 import contract from "../contracts/GovernorAlpha.json";
+import timelockContract from "../contracts/timelock.json";
 
 class Proposals extends Component {
   constructor(props) {
@@ -46,8 +47,8 @@ class Proposals extends Component {
           proposalObjs[i]["againstVotes"],
           proposalObjs[i]["endBlock"],
           this.getProposalEndTime(proposalObjs[i]["endBlock"]),
-          this.getStatus2(proposalObjs[i]),
-          this.isDaiProposal(eventDetail[5], eventDetail[2]).toString(),
+          await this.getStatus2(proposalObjs[i], web3),
+          this.isPaymentProposal(eventDetail[5], eventDetail[2]),
         ]);
       }
       console.log("Proposal array: ", tmpProposals);
@@ -61,28 +62,76 @@ class Proposals extends Component {
     }
   };
 
-  isDaiProposal = (calldata, contractAddress) => {
+  isPaymentProposal = (
+    calldata,
+    contractAddress,
+    paymentTokenAddress = contract["contractAddresses"]["dai"]["address"],
+    tokenName = "Dai"
+  ) => {
+    const expectedCalldataLength = 458;
+
+    const forwardMethodSigStartIndex = 2;
+    const forwardMethodSigEndIndex = 10;
+
+    const daiAddressStartIndex = 10;
+    const daiAddressEndIndex = 74;
+
+    const transferMethodSigStartIndex = 266;
+    const transferMethodSigEndIndex = 274;
+
+    const receiverAddressStartIndex = 298;
+    const receiverAddressEndIndex = 338;
+
+    const daiAmountStartIndex = 345;
+    const daiAmountEndIndex = 402;
+
     if (
       calldata.length === 1 &&
       contractAddress
         .toString()
-        .includes(contract["contractAddresses"]["forwarder"]["address"])
+        .includes(contract["contractAddresses"]["forwarder"]["address"]) &&
+      calldata[0].length === expectedCalldataLength
     ) {
+      let extractedForwardMethodSig = calldata[0].slice(
+        forwardMethodSigStartIndex,
+        forwardMethodSigEndIndex
+      );
+      let extractedTokenAddress = calldata[0].slice(
+        daiAddressStartIndex,
+        daiAddressEndIndex
+      );
+      let extratedTransferMethodSig = calldata[0].slice(
+        transferMethodSigStartIndex,
+        transferMethodSigEndIndex
+      );
+      let extratedReceiverAddress = calldata[0].slice(
+        receiverAddressStartIndex,
+        receiverAddressEndIndex
+      );
+      let extratedTokenAmount = calldata[0].slice(
+        daiAmountStartIndex,
+        daiAmountEndIndex
+      );
+
       if (
-        calldata[0]
-          .toString()
-          .includes(contract["contractAddresses"]["forwarder"]["forwardSig"]) &&
-        calldata[0]
-          .toString()
-          .includes(contract["contractAddresses"]["dai"]["transferSig"]) &&
-        calldata[0]
-          .toString()
-          .includes(contract["contractAddresses"]["dai"]["address"].slice(2))
+        extractedForwardMethodSig ===
+          contract["contractAddresses"]["forwarder"]["forwardSig"].slice(2) &&
+        extratedTransferMethodSig ===
+          contract["contractAddresses"]["dai"]["transferSig"].slice(2) &&
+        extractedTokenAddress.slice(24) === paymentTokenAddress.slice(2)
       ) {
-        return true;
+        //Decode Token amount and receiver
+        let amount = "";
+        let receiver = "";
+        amount = parseInt("0x" + extratedTokenAmount, 16) / 10 ** 18;
+        receiver = extratedReceiverAddress;
+        console.log("This is a PAYMENT");
+        return [true, amount, receiver, tokenName];
+      } else {
+        return [false, 0, "", ""];
       }
     }
-    return false;
+    return [false, 0, "", ""];
   };
 
   getAllProposalObjects = async (web3) => {
@@ -163,52 +212,67 @@ class Proposals extends Component {
   //           return ProposalState.Queued;
   //       }
   //   }
-  getStatus2 = (proposal) => {
+  getStatus2 = async (proposal, web3) => {
     if (proposal["canceled"] === true) {
       return "Canceled";
-    } else if (this.latestBlock <= proposal["startBlock"]) {
+    } else if (
+      parseInt(this.props.latestBlock) <= parseInt(proposal["startBlock"])
+    ) {
       return "Pending";
-    } else if (this.latestBlock <= proposal["endBlock"]) {
+    } else if (
+      parseInt(this.props.latestBlock) <= parseInt(proposal["endBlock"])
+    ) {
       return "Active";
     } else if (
       proposal["forVotes"] <= proposal["againstVotes"] ||
-      proposal["votesFor"] <= 400000
+      proposal["votesFor"] <= (await this.getQuorumVotes(web3))
     ) {
       return "Defeated";
     } else if (proposal["eta"] === "0") {
       return "Succeeded";
     } else if (proposal["executed"] === true) {
       return "Executed";
-    } else if (this.latestBlock >= proposal["eta"] + 1209600) {
+    } else if (
+      parseInt(this.props.latestBlock) >=
+      proposal["eta"] + (await this.getGracePeriod(web3))
+    ) {
       return "Expired";
     } else {
       return "Queued";
     }
   };
 
-  // getStatus = async (proposalId, web3) => {
-  //   let proposalState = "";
-  //   const tokenAddress = "0xd9FDa03E4dD889484f8556dDb00Ca114e6A1f575"; //contract.contractAddresses["networks"]["137"];
+  getQuorumVotes = async (web3) => {
+    const govAlpha = new web3.eth.Contract(
+      contract.abi,
+      contract["networks"]["137"]["address"]
+    );
+    let quorumVotes;
+    try {
+      quorumVotes = await govAlpha.methods.quorumVotes().call();
+    } catch (error) {
+      console.error("Error in getQuorumVotes: ", error);
+      return 40000 * 10 ** 18;
+    }
+    //console.log("QUORUM:", quorumVotes);
+    return quorumVotes;
+  };
 
-  //   const tokenContract = new web3.eth.Contract(
-  //     GovernorAlphaContract.abi,
-  //     tokenAddress
-  //   );
-  //   const retries = 5;
-  //   let tryCount = 0;
-  //   let stateUpdated = false;
-  //   while (tryCount < retries && stateUpdated === false) {
-  //     try {
-  //       proposalState = await tokenContract.methods.state(proposalId).call();
-  //       stateUpdated = true;
-  //     } catch (error) {
-  //       console.error("Error getting proposalState: ", error);
-  //       tryCount++;
-  //       proposalState = 8;
-  //     }
-  //   }
-  //   return proposalState;
-  // };
+  getGracePeriod = async (web3) => {
+    const timelock = new web3.eth.Contract(
+      timelockContract,
+      contract["contractAddresses"]["timelock"]["address"]
+    );
+    let gracePeriod;
+    try {
+      gracePeriod = await timelock.methods.GRACE_PERIOD().call();
+    } catch (error) {
+      console.error("Error in getGracePeriod: ", error);
+      return 1209600;
+    }
+    //console.log("gracePeriod:", gracePeriod);
+    return gracePeriod;
+  };
 
   componentDidMount = () => {
     let id = setInterval(() => {
@@ -271,7 +335,7 @@ class Proposals extends Component {
               endBlock={proposal[7]}
               endDate={proposal[8]}
               status={proposal[9]}
-              isDai={proposal[10]}
+              isPayment={proposal[10]}
               {...this.props}
             />
           );
