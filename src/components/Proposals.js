@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import Proposal from "./Proposal";
-import "../layout/components/proposals.sass";
+//import "../layout/components/proposals.sass";
 import contract from "../contracts/GovernorAlpha.json";
 import timelockContract from "../contracts/timelock.json";
 

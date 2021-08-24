@@ -4,7 +4,8 @@ import upvote from "../images/upvote.svg";
 import downvote from "../images/downvote.svg";
 
 import "../layout/components/proposals.sass";
-import Button from "./Button";
+//import Button from "./Button";
+import { Button } from "react-bootstrap";
 
 class Proposal extends Component {
   handleVoteFor = () => {
@@ -169,16 +170,14 @@ class Proposal extends Component {
           <p className="proposal__description">{this.props.description}</p>
         </div>
         {this.props.status === "Succeeded" ? (
-          <Button
-            label="Add Proposal to Queue"
-            handleClick={this.handleProgressState}
-          ></Button>
+          <Button variant="secondary" onClick={this.handleProgressState}>
+            Add Proposal to Queue
+          </Button>
         ) : null}
         {this.props.status === "Queued" ? (
-          <Button
-            label="Execute Proposal"
-            handleClick={this.handleProgressState}
-          ></Button>
+          <Button variant="secondary" onClick={this.handleProgressState}>
+            Execute Proposal
+          </Button>
         ) : null}
       </div>
     );

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 
 import "../layout/components/header.sass";
-import Button from "./Button";
+//import Button from "./Button";
+import { Button } from "react-bootstrap";
 class Header extends Component {
   render() {
     return (
@@ -20,7 +21,9 @@ class Header extends Component {
           onChange={this.props.updateDelegateeAddress}
           placeholder="Address to Delegate to"
         />
-        <Button label="Delegate" handleClick={this.props.delegate}></Button>
+        <Button variant="secondary" onClick={this.props.delegate}>
+          Delegate
+        </Button>
       </section>
     );
   }
