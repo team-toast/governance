@@ -56,7 +56,7 @@ class Proposals extends Component {
             this.isPaymentProposal(eventDetail[5], eventDetail[2]),
           ]);
         }
-        this.sleep(20);
+        await this.sleep(20);
         fectchedProposalObjects = true;
         console.log("Proposal array: ", tmpProposals);
         this.setState({ proposals: tmpProposals });
@@ -67,7 +67,7 @@ class Proposals extends Component {
         }
       } catch (error) {
         console.error("Error in getProposalsFromEvents", error);
-        this.sleep(20);
+        await this.sleep(20);
       }
     }
   };
