@@ -7,18 +7,6 @@ import "../layout/components/proposals.sass";
 import Button from "./Button";
 
 class Proposal extends Component {
-  proposalStateMap = [
-    "Pending",
-    "Active",
-    "Canceled",
-    "Defeated",
-    "Succeeded",
-    "Queued",
-    "Expired",
-    "Executed",
-    "Unknown",
-  ];
-
   handleVoteFor = () => {
     this.props.contract.methods
       .castVote(this.props.id, true)
@@ -159,9 +147,21 @@ class Proposal extends Component {
             <br />
             {"Expiry Block: "} {this.props.endBlock}
             <br />
-            {"Expiry Time: "} {this.props.endDate}
+            {"Vote Close Time: "} {this.props.endDate}
             <br />
-            {"Status: "} {this.proposalStateMap[this.props.status]}
+            {"Status: "} {this.props.status}
+            <br />
+            {this.props.isPayment[0] === true
+              ? "This is a simple " +
+                this.props.isPayment[3] +
+                " payment Proposal (" +
+                this.props.isPayment[1].toString() +
+                " " +
+                this.props.isPayment[3] +
+                " to 0x" +
+                this.props.isPayment[2].toString() +
+                ")"
+              : null}
           </p>
         </div>
         <div className="proposal__bottom">
