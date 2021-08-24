@@ -153,7 +153,8 @@ class Proposals extends Component {
 
     let proposals = [];
     let tmpProposal;
-    for (let i = 0; i < numOfProposals; i++) {
+    //for (let i = 0; i < numOfProposals; i++) {
+    for (let i = numOfProposals - 5; i < numOfProposals; i++) {
       tmpProposal = await govAlpha.methods.proposals(i + 1).call();
       proposals.push(tmpProposal);
     }
