@@ -59,7 +59,7 @@ class Proposal extends Component {
 
   handleProgressState = () => {
     //succeeded can be queued state: 4, queued can be executed state: 5
-    if (this.proposalStateMap[this.props.status] === "Succeeded") {
+    if (this.props.status === "Succeeded") {
       this.props.contract.methods
         .queue(this.props.id)
         .send({ from: this.props.account }, (err, transactionHash) => {
@@ -82,7 +82,7 @@ class Proposal extends Component {
             receipt ? receipt.transactionHash : null
           );
         });
-    } else if (this.proposalStateMap[this.props.status] === "Queued") {
+    } else if (this.props.status === "Queued") {
       this.props.contract.methods
         .execute(this.props.id)
         .send({ from: this.props.account }, (err, transactionHash) => {
@@ -168,13 +168,13 @@ class Proposal extends Component {
           {arrows}
           <p className="proposal__description">{this.props.description}</p>
         </div>
-        {this.proposalStateMap[this.props.status] === "Succeeded" ? (
+        {this.props.status === "Succeeded" ? (
           <Button
             label="Add Proposal to Queue"
             handleClick={this.handleProgressState}
           ></Button>
         ) : null}
-        {this.proposalStateMap[this.props.status] === "Queued" ? (
+        {this.props.status === "Queued" ? (
           <Button
             label="Execute Proposal"
             handleClick={this.handleProgressState}
