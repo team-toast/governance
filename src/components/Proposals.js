@@ -17,44 +17,58 @@ class Proposals extends Component {
   }
 
   getProposalsFromEvents = async (web3) => {
-    try {
-      let proposalObjs = await this.getAllProposalObjects(web3);
-      console.log("Events: ");
+    let fectchedProposalObjects = false;
+    while (fectchedProposalObjects === false) {
+      try {
+        let proposalObjs = await this.getAllProposalObjects(web3);
+        console.log("Events: ");
 
-      let eventDetail;
-      let tmpProposals = [];
-      for (let i = proposalObjs.length - 5; i < proposalObjs.length; i++) {
-        eventDetail = await this.getProposalEventParameters(
-          web3,
-          parseInt(proposalObjs[i]["startBlock"]) - 1,
-          proposalObjs[i]["id"]
-        );
-        console.log(eventDetail);
-        // Title, description, id (key), id, end_time
-        tmpProposals.push([
-          "Proposal " + parseInt(eventDetail[0]),
-          eventDetail[8],
-          eventDetail[0],
-          eventDetail[0],
-          eventDetail[7],
-          proposalObjs[i]["forVotes"],
-          proposalObjs[i]["againstVotes"],
-          proposalObjs[i]["endBlock"],
-          this.getProposalEndTime(proposalObjs[i]["endBlock"]),
-          await this.getStatus2(proposalObjs[i], web3),
-          this.isPaymentProposal(eventDetail[5], eventDetail[2]),
-        ]);
-      }
-      console.log("Proposal array: ", tmpProposals);
-      this.setState({ proposals: tmpProposals });
+        let quorumVotes = await this.getQuorumVotes(web3);
+        let gracePeriod = await this.getGracePeriod(web3);
 
-      if (tmpProposals.length > 0) {
-        this.setState({ loadedProposals: true });
-        return 0;
+        let eventDetail;
+        let tmpProposals = [];
+        for (let i = proposalObjs.length - 5; i < proposalObjs.length; i++) {
+          //for (let i = 0; i < proposalObjs.length; i++) {
+          eventDetail = await this.getProposalEventParameters(
+            web3,
+            parseInt(proposalObjs[i]["startBlock"]) - 1,
+            proposalObjs[i]["id"]
+          );
+          console.log(eventDetail);
+          // Title, description, id (key), id, end_time
+          tmpProposals.push([
+            "Proposal " + parseInt(eventDetail[0]),
+            eventDetail[8],
+            eventDetail[0],
+            eventDetail[0],
+            eventDetail[7],
+            proposalObjs[i]["forVotes"],
+            proposalObjs[i]["againstVotes"],
+            proposalObjs[i]["endBlock"],
+            this.getProposalEndTime(proposalObjs[i]["endBlock"]),
+            await this.getStatus2(
+              proposalObjs[i],
+              web3,
+              quorumVotes,
+              gracePeriod
+            ),
+            this.isPaymentProposal(eventDetail[5], eventDetail[2]),
+          ]);
+        }
+        this.sleep(20);
+        fectchedProposalObjects = true;
+        console.log("Proposal array: ", tmpProposals);
+        this.setState({ proposals: tmpProposals });
+
+        if (tmpProposals.length > 0) {
+          this.setState({ loadedProposals: true });
+          return 0;
+        }
+      } catch (error) {
+        console.error("Error in getProposalsFromEvents", error);
+        this.sleep(20);
       }
-    } catch (error) {
-      console.error("Error in getProposalsFromEvents", error);
-      return 1;
     }
   };
 
@@ -131,27 +145,23 @@ class Proposals extends Component {
   };
 
   getAllProposalObjects = async (web3) => {
-    try {
-      const govAlpha = new web3.eth.Contract(
-        contract.abi,
-        contract["networks"]["137"]["address"]
-      );
-      let numOfProposals = await govAlpha.methods.proposalCount().call();
+    const govAlpha = new web3.eth.Contract(
+      contract.abi,
+      contract["networks"]["137"]["address"]
+    );
+    let numOfProposals = await govAlpha.methods.proposalCount().call();
 
-      let proposals = [];
-      let tmpProposal;
-      for (let i = 0; i < numOfProposals; i++) {
-        tmpProposal = await govAlpha.methods.proposals(i + 1).call();
-        proposals.push(tmpProposal);
-      }
-      console.log("Proposal Objects: ");
-      proposals.forEach((element) => {
-        console.log(element);
-      });
-      return proposals;
-    } catch (error) {
-      console.error("Error in getAllProposalObjects: ", error);
+    let proposals = [];
+    let tmpProposal;
+    for (let i = 0; i < numOfProposals; i++) {
+      tmpProposal = await govAlpha.methods.proposals(i + 1).call();
+      proposals.push(tmpProposal);
     }
+    console.log("Proposal Objects: ");
+    proposals.forEach((element) => {
+      console.log(element);
+    });
+    return proposals;
   };
 
   getProposalEventParameters = async (web3, blockNumber, Id) => {
@@ -208,7 +218,7 @@ class Proposals extends Component {
   //           return ProposalState.Queued;
   //       }
   //   }
-  getStatus2 = async (proposal, web3) => {
+  getStatus2 = async (proposal, web3, quorumVotes, gracePeriod) => {
     if (proposal["canceled"] === true) {
       return "Canceled";
     } else if (
@@ -221,7 +231,7 @@ class Proposals extends Component {
       return "Active";
     } else if (
       proposal["forVotes"] <= proposal["againstVotes"] ||
-      proposal["votesFor"] <= (await this.getQuorumVotes(web3))
+      proposal["votesFor"] <= quorumVotes
     ) {
       return "Defeated";
     } else if (proposal["eta"] === "0") {
@@ -230,7 +240,7 @@ class Proposals extends Component {
       return "Executed";
     } else if (
       parseInt(this.props.latestBlock) >=
-      proposal["eta"] + (await this.getGracePeriod(web3))
+      proposal["eta"] + gracePeriod
     ) {
       return "Expired";
     } else {
@@ -276,7 +286,7 @@ class Proposals extends Component {
         //Start the timer
         this.getProposals();
       }.bind(this),
-      1000
+      2000
     );
   };
 
