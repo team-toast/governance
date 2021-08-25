@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-//import "../layout/components/message.sass";
+import "../layout/components/message.sass";
 
 class Message extends Component {
   render() {

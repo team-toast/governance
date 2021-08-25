@@ -21,7 +21,12 @@ class Header extends Component {
           onChange={this.props.updateDelegateeAddress}
           placeholder="Address to Delegate to"
         />
-        <Button variant="secondary" onClick={this.props.delegate}>
+
+        <Button
+          className="header__button"
+          variant="secondary"
+          onClick={this.props.delegate}
+        >
           Delegate
         </Button>
       </section>

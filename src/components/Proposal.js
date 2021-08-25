@@ -170,12 +170,20 @@ class Proposal extends Component {
           <p className="proposal__description">{this.props.description}</p>
         </div>
         {this.props.status === "Succeeded" ? (
-          <Button variant="secondary" onClick={this.handleProgressState}>
+          <Button
+            className="proposal__button"
+            variant="secondary"
+            onClick={this.handleProgressState}
+          >
             Add Proposal to Queue
           </Button>
         ) : null}
         {this.props.status === "Queued" ? (
-          <Button variant="secondary" onClick={this.handleProgressState}>
+          <Button
+            className="proposal__button"
+            variant="secondary"
+            onClick={this.handleProgressState}
+          >
             Execute Proposal
           </Button>
         ) : null}

@@ -349,12 +349,12 @@ class App extends Component {
           delegate={this.delegate}
           updateDelegateeAddress={this.updateDelegateeAddress}
         />
-        <Container>
+        <Container className="tabcontainer">
           <Tabs
             fill
             defaultActiveKey="proposals"
             id="uncontrolled-tab"
-            className="mb-3"
+            className="tabs"
           >
             <Tab eventKey="proposals" title="View Proposals" color="white">
               <div>
@@ -367,7 +367,11 @@ class App extends Component {
               </div>
             </Tab>
             <Tab eventKey="create_proposal" title="Create Proposal">
-              <CreateProposalForm {...this.state}></CreateProposalForm>
+              <CreateProposalForm
+                setMessage={this.setMessage}
+                clearMessage={this.clearMessage}
+                {...this.state}
+              ></CreateProposalForm>
             </Tab>
           </Tabs>
         </Container>
