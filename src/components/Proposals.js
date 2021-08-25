@@ -289,6 +289,10 @@ class Proposals extends Component {
       }.bind(this),
       2000
     );
+
+    setInterval(() => {
+      this.getProposals();
+    }, 30000);
   };
 
   sleep = (milliseconds) => {

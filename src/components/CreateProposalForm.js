@@ -21,36 +21,30 @@ class CreateProposalForm extends Component {
     console.log("of amount: ", amount);
     console.log("Decription: ", description);
 
-    //0x
-    const forwardSigConst = "dc5fe025"; // forwardSig
-    const daiAddressConst =
-      "0000000000000000000000008f3cf7ad23cd3cadbd9735aff958023239c6a063"; // Dai Address
-    const unknown1 =
-      "0000000000000000000000000000000000000000000000000000000000000060"; // ? const (Remains constant in tests)
-    const optionalPayableAmount =
-      "0000000000000000000000000000000000000000000000000000000000000000"; // ? const (payable amount paramter. keep zero)
-    const parametersSize =
-      "0000000000000000000000000000000000000000000000000000000000000044"; // ? const (Seems to have to do with the amount of paramter bytes. Should be 0x44 for dai transfers)
-    const transferSigConst = "a9059cbb"; // transferSigConst
-    let dstAddress =
-      "000000000000000000000000860eae023c3aa28b197af1bda800be9220a468bc"; // dstAddress
-    let daiAmount =
-      "000000000000000000000000000000000000000000000000002386f26fc10000"; // daiAmountWei
-    const unknown4 = "00000000000000000000000000000000000000000000000000000000"; // ? const
-
-    console.log(
-      "AMOUUNT: ",
-      parseInt(this.props.web3.utils.toWei(amount))
-        .toString(16)
-        .padStart(64, "0")
-    );
-
     if (this.props.network === "Matic") {
       const governAddress = contract.networks[137]["address"];
       const governContract = new this.props.web3.eth.Contract(
         contract.abi,
         governAddress
       );
+
+      //0x
+      const forwardSigConst =
+        contract["contractAddresses"]["forwarder"]["forwardSig"].slice(2); // forwardSig
+      const daiAddressConst =
+        "000000000000000000000000" +
+        contract["contractAddresses"]["dai"]["address"].slice(2); // Dai Address
+      const unknown1 =
+        "0000000000000000000000000000000000000000000000000000000000000060"; // ? const (Remains constant in tests)
+      const optionalPayableAmount =
+        "0000000000000000000000000000000000000000000000000000000000000000"; // ? const (payable amount paramter. keep zero)
+      const parametersSize =
+        "0000000000000000000000000000000000000000000000000000000000000044"; // ? const (Seems to have to do with the amount of paramter bytes. Should be 0x44 for dai transfers)
+      const transferSigConst =
+        contract["contractAddresses"]["dai"]["transferSig"].slice(2); // transferSigConst
+      const unknown4 =
+        "00000000000000000000000000000000000000000000000000000000"; // ? const
+
       let callDatasDynamic = [
         "0x" +
           forwardSigConst +
@@ -76,23 +70,10 @@ class CreateProposalForm extends Component {
       let targets = [contract.contractAddresses["forwarder"]["address"]];
       let values = [0];
       let signatures = [""];
-      let callDatas = [
-        "0x" +
-          forwardSigConst +
-          daiAddressConst +
-          unknown1 +
-          optionalPayableAmount +
-          parametersSize +
-          transferSigConst +
-          dstAddress +
-          daiAmount +
-          unknown4,
-      ];
 
       console.log("targets: ", targets);
       console.log("values: ", values);
       console.log("signatures: ", signatures);
-      console.log("callDatasT: ", callDatas);
       console.log("callDatasD: ", callDatasDynamic);
       console.log("description: ", description);
 
