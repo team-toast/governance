@@ -96,7 +96,7 @@ class App extends Component {
     this.interval = setInterval(async () => {
       this.getLatestBlock();
       this.getNetworkName();
-    }, 2000);
+    }, 5000);
 
     await this.getAccount();
     this.getLatestBlock();
@@ -110,7 +110,9 @@ class App extends Component {
     provider.on("close", () => this.disconnect());
 
     provider.on("accountsChanged", async (accounts) => {
-      await this.setState({ address: accounts[0] });
+      const accounts2 = await this.state.web3.eth.getAccounts();
+      await this.getVotingPower(accounts2[0]);
+      this.setState({ account: accounts2[0] });
     });
 
     provider.on("chainChanged", async (chainId) => {
@@ -217,7 +219,11 @@ class App extends Component {
     }
   };
 
-  getVotingPower = async () => {
+  sleep = (milliseconds) => {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+  };
+
+  getVotingPower = async (account = "none") => {
     if (this.state.network === "Matic") {
       const tokenAddress = contract.contractAddresses["token"]["address"];
 
@@ -225,20 +231,28 @@ class App extends Component {
         compTokenContract,
         tokenAddress
       );
-      const retries = 5;
+
+      let overrideAccount = "";
+      if (account !== "none") {
+        overrideAccount = account;
+      } else {
+        overrideAccount = this.state.account;
+      }
+
+      const retries = 500;
       let tryCount = 0;
       let votingPowerUpdated = false;
       while (tryCount < retries && votingPowerUpdated === false) {
         try {
           const votingPower = await tokenContract.methods
-            .getCurrentVotes(this.state.account)
+            .getCurrentVotes(overrideAccount)
             .call();
 
-          if (votingPower > 0) {
-            this.setState({ votingPower });
-          }
+          this.setState({ votingPower });
+
           votingPowerUpdated = true;
         } catch (error) {
+          await this.sleep(100);
           console.error("Error setting token voting power: ", error);
           tryCount++;
         }
