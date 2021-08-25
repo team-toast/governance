@@ -133,7 +133,7 @@ class CreateProposalForm extends Component {
   render() {
     return (
       <section className="form">
-        <h4>Create a Payment Proposal</h4>
+        <h4 className="title">Create a Payment Proposal</h4>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -174,7 +174,7 @@ class CreateProposalForm extends Component {
               required
               as="textarea"
               placeholder="Describe the payment proposal"
-              style={{ height: "100px" }}
+              style={{ height: "200px" }}
               onChange={this.handleDescriptionChange}
             />
           </FloatingLabel>
