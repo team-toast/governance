@@ -380,7 +380,7 @@ class App extends Component {
                 />
               </div>
             </Tab>
-            <Tab eventKey="create_proposal" title="Create Proposal">
+            <Tab eventKey="create_proposal" title="Create Dai Payment Proposal">
               <CreateProposalForm
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
