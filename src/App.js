@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Tabs, Tab, Container } from "react-bootstrap";
 
 import Web3 from "web3";
 import Web3Connect from "web3connect";
@@ -8,6 +9,7 @@ import Nav from "./components/Nav";
 import Header from "./components/Header";
 import Proposals from "./components/Proposals";
 import Footer from "./components/Footer";
+import CreateProposalForm from "./components/CreateProposalForm";
 
 import "./layout/config/_base.sass";
 
@@ -361,12 +363,32 @@ class App extends Component {
           delegate={this.delegate}
           updateDelegateeAddress={this.updateDelegateeAddress}
         />
-        <Proposals
-          {...this.state}
-          xhr={this.xhr}
-          setMessage={this.setMessage}
-          clearMessage={this.clearMessage}
-        />
+        <Container className="tabcontainer">
+          <Tabs
+            fill
+            defaultActiveKey="proposals"
+            id="uncontrolled-tab"
+            className="tabs"
+          >
+            <Tab eventKey="proposals" title="View Proposals" color="white">
+              <div>
+                <Proposals
+                  {...this.state}
+                  xhr={this.xhr}
+                  setMessage={this.setMessage}
+                  clearMessage={this.clearMessage}
+                />
+              </div>
+            </Tab>
+            <Tab eventKey="create_proposal" title="Create Proposal">
+              <CreateProposalForm
+                setMessage={this.setMessage}
+                clearMessage={this.clearMessage}
+                {...this.state}
+              ></CreateProposalForm>
+            </Tab>
+          </Tabs>
+        </Container>
         <Footer {...this.state} />
       </div>
     );

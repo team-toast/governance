@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import Proposal from "./Proposal";
-import "../layout/components/proposals.sass";
+//import "../layout/components/proposals.sass";
 import contract from "../contracts/GovernorAlpha.json";
 import timelockContract from "../contracts/timelock.json";
 
@@ -289,6 +289,10 @@ class Proposals extends Component {
       }.bind(this),
       2000
     );
+
+    setInterval(() => {
+      this.getProposals();
+    }, 30000);
   };
 
   sleep = (milliseconds) => {
@@ -337,7 +341,7 @@ class Proposals extends Component {
   render() {
     let proposals = [];
 
-    this.state.proposals[0] !== undefined &&
+    if (this.state.proposals[0] !== undefined) {
       this.state.proposals.forEach((proposal) => {
         if (proposal[0].length > 0) {
           proposals.push(
@@ -358,8 +362,24 @@ class Proposals extends Component {
           );
         }
       });
-
-    return <section className="proposals">{proposals.reverse()}</section>;
+      return <section className="proposals">{proposals.reverse()}</section>;
+    } else {
+      if (this.props.account)
+        return (
+          <div className="proposals">
+            <br />
+            <h5>Loading...</h5>
+          </div>
+        );
+      else {
+        return (
+          <div className="proposals">
+            <br />
+            <h5>Please connect wallet</h5>
+          </div>
+        );
+      }
+    }
   }
 }
 
