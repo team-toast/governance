@@ -1,0 +1,87 @@
+*
+  box-sizing: border-box
+
+body
+  padding-top: 0
+  font-family: Helvetica Neue, Helvetica
+  background: #f7f7f7
+  
+
+h4
+  margin-top: 20px
+  margin-bottom: 5px
+  text-align: center
+  width: 100%
+
+form
+  padding: 0 40px
+  margin-top: 20px
+  
+
+  input
+    display: block
+    
+    font-size: 12px
+    padding: 5px 10px
+    margin: 10px 0
+    border-radius: 5px
+    border: 1px solid #ddd
+
+    &.calldata
+        width: 600%
+    
+    &.target
+        width: 250%
+    
+    &.error
+      border-color: red
+
+  button
+    display: block
+    width: 100%
+    appearance: none
+    border-radius: 5px
+    background-color: #777
+    color: #fff
+    border: none
+    font-size: 16px
+    height: 30px
+    margin-top: 30px
+
+    &:hover
+      background-color: #999
+
+    &:disabled
+      background-color: #999
+      color: #333
+
+    &.small
+      display: inline-block
+      width: auto
+      padding: 0 20px
+      background-color: #777
+      font-size: 14px
+
+      &:hover
+        background-color: #999
+
+    &.medium
+      width: 40%
+      height: 40px
+      min-width: 200px
+      padding: 0 20px
+      margin-left: 30%
+      background-color: #777
+      font-size: 20px
+
+      &:hover
+        background-color: #999
+
+.shareholder
+  display: flex
+  direction: row
+  align-items: center
+
+  button
+    margin: 0
+    margin-left: 10px

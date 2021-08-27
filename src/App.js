@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import Proposals from "./components/Proposals";
 import Footer from "./components/Footer";
 import CreateProposalForm from "./components/CreateProposalForm";
+import IncorporationForm from "./components/InputList";
 
 import "./layout/config/_base.sass";
 
@@ -380,12 +381,26 @@ class App extends Component {
                 />
               </div>
             </Tab>
-            <Tab eventKey="create_proposal" title="Create Dai Payment Proposal">
+            <Tab
+              eventKey="create_payment_proposal"
+              title="Create Dai Payment Proposal"
+            >
               <CreateProposalForm
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
                 {...this.state}
               ></CreateProposalForm>
+            </Tab>
+            <Tab
+              eventKey="create_custom_proposal"
+              title="Create Custom Proposal"
+            >
+              <IncorporationForm></IncorporationForm>
+              {/* <CreateProposalForm
+                setMessage={this.setMessage}
+                clearMessage={this.clearMessage}
+                {...this.state}
+              ></CreateProposalForm> */}
             </Tab>
           </Tabs>
         </Container>
