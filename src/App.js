@@ -10,7 +10,7 @@ import Header from "./components/Header";
 import Proposals from "./components/Proposals";
 import Footer from "./components/Footer";
 import CreateProposalForm from "./components/CreateProposalForm";
-import IncorporationForm from "./components/InputList";
+import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
 
 import "./layout/config/_base.sass";
 
@@ -395,12 +395,11 @@ class App extends Component {
               eventKey="create_custom_proposal"
               title="Create Custom Proposal"
             >
-              <IncorporationForm></IncorporationForm>
-              {/* <CreateProposalForm
+              <CreateCustomProposalForm
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
                 {...this.state}
-              ></CreateProposalForm> */}
+              ></CreateCustomProposalForm>
             </Tab>
           </Tabs>
         </Container>
