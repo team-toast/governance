@@ -137,7 +137,7 @@ class CreateCustomProposalForm extends React.Component {
               <input
                 required
                 type="text"
-                placeholder={`Target Contract #${idx + 1}`}
+                placeholder={`Target Contract Address #${idx + 1}`}
                 value={entry.target}
                 onChange={this.handleEntryNameChange(idx)}
                 className="target"
@@ -145,7 +145,7 @@ class CreateCustomProposalForm extends React.Component {
               <input
                 required
                 type="text"
-                placeholder={`CallData #${idx + 1}`}
+                placeholder={`Call Data #${idx + 1}`}
                 value={entry.callData}
                 onChange={this.handleCallChange(idx)}
                 className="calldata"
@@ -160,7 +160,7 @@ class CreateCustomProposalForm extends React.Component {
             </div>
           ))}
           <button type="button" onClick={this.handleAddEntry} className="small">
-            Add Contract Method Call
+            Add Contract Call
           </button>
           <br />
           <br />
