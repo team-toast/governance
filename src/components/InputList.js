@@ -1,5 +1,6 @@
 import React from "react";
 import "../layout/components/createcustomproposal.sass";
+import { Form, FloatingLabel } from "react-bootstrap";
 
 class IncorporationForm extends React.Component {
   constructor() {
@@ -8,6 +9,7 @@ class IncorporationForm extends React.Component {
       name: "",
       callData: "",
       shareholders: [{ name: "", callData: "" }],
+      description: "",
     };
   }
 
@@ -50,6 +52,13 @@ class IncorporationForm extends React.Component {
     this.setState({
       shareholders: this.state.shareholders.filter((s, sidx) => idx !== sidx),
     });
+  };
+
+  handleDescriptionChange = async (evt) => {
+    this.setState({
+      description: evt.target.value,
+    });
+    console.log(this.state.description);
   };
 
   render() {
@@ -97,6 +106,17 @@ class IncorporationForm extends React.Component {
           >
             Add Method Call
           </button>
+          <br />
+          <br />
+          <FloatingLabel controlId="floatingTextarea2" label="Description">
+            <Form.Control
+              required
+              as="textarea"
+              placeholder="Describe the payment proposal"
+              style={{ height: "150px" }}
+              onChange={this.handleDescriptionChange}
+            />
+          </FloatingLabel>
           <br />
           <button className="medium">Create Proposal</button>
         </form>
