@@ -46,6 +46,8 @@ class CreateProposalForm extends Component {
       let values = [0];
       let signatures = [""];
 
+      console.log("CALLDATAAA", callDatasDynamic[0]);
+
       try {
         governContract.methods
           .propose(targets, values, signatures, callDatasDynamic, description)

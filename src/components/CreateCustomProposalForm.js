@@ -17,9 +17,13 @@ class CreateCustomProposalForm extends React.Component {
   createCustomProposalUsingABI = async () => {
     let callDataArray = [];
     let methodCallsArray = [];
+    let values = [];
+    let signatures = [];
     for (let i = 0; i < this.state.methodCalls.length; i++) {
       methodCallsArray.push(this.state.methodCalls[i]["target"]);
       callDataArray.push(this.state.methodCalls[i]["callData"]);
+      values.push(0);
+      signatures.push("");
     }
 
     console.log("Method call arrays: ");
@@ -34,9 +38,6 @@ class CreateCustomProposalForm extends React.Component {
         governorABI.abi,
         governAddress
       );
-
-      let values = [0];
-      let signatures = [""];
 
       try {
         governContract.methods
