@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import Proposals from "./components/Proposals";
 import Footer from "./components/Footer";
 import CreateProposalForm from "./components/CreateProposalForm";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 import "./layout/config/_base.sass";
 
@@ -27,6 +28,15 @@ function initWeb3(provider) {
   });
   return web3;
 }
+
+const providerOptions = {
+  walletconnect: {
+    package: WalletConnectProvider,
+    options: {
+      infuraId: "80c9b77d70f64a5d94ea177acb67a008",
+    },
+  },
+};
 
 class App extends Component {
   web3Connect;
@@ -56,7 +66,7 @@ class App extends Component {
     this.web3Connect = new Web3Connect.Core({
       network: "mainnet",
       cacheProvider: true, //,
-      //providerOptions
+      //providerOptions,
     });
   }
 
@@ -68,6 +78,7 @@ class App extends Component {
 
   onConnect = async () => {
     const provider = await this.web3Connect.connect();
+
     await this.subscribeProvider(provider);
     const web3 = initWeb3(provider);
 
@@ -75,6 +86,8 @@ class App extends Component {
     const account = accounts[0];
     const networkId = await web3.eth.net.getId();
     const chainId = await web3.eth.chainId();
+
+    console.log("PROVIDER: ", web3.eth.currentProvider);
 
     // Get the contract instance.
     const deployedNetwork = contract.networks[137];
@@ -95,10 +108,10 @@ class App extends Component {
       contract: instance,
     });
 
-    this.interval = setInterval(async () => {
-      this.getLatestBlock();
-      this.getNetworkName();
-    }, 5000);
+    // this.interval = setInterval(async () => {
+    //   this.getLatestBlock();
+    //   this.getNetworkName();
+    // }, 5000);
 
     await this.getAccount();
     this.getLatestBlock();
@@ -254,7 +267,7 @@ class App extends Component {
 
           votingPowerUpdated = true;
         } catch (error) {
-          await this.sleep(100);
+          await this.sleep(1000);
           console.error("Error setting token voting power: ", error);
           tryCount++;
         }
@@ -282,6 +295,7 @@ class App extends Component {
           }
           totalSupplyUpdated = true;
         } catch (error) {
+          await this.sleep(1000);
           console.error("Error setting token total supply: ", error);
           tryCount++;
         }
@@ -377,6 +391,8 @@ class App extends Component {
                   xhr={this.xhr}
                   setMessage={this.setMessage}
                   clearMessage={this.clearMessage}
+                  getLatestBlock={this.getLatestBlock}
+                  getNetworkName={this.getNetworkName}
                 />
               </div>
             </Tab>
