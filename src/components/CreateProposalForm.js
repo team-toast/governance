@@ -2,7 +2,9 @@ import React, { Component } from "react";
 
 import "../layout/components/createproposalform.sass";
 import { Form, FloatingLabel } from "react-bootstrap";
-import contract from "../contracts/GovernorAlpha.json";
+import governorABI from "../contracts/GovernorAlpha.json";
+import Forwarder from "../contracts/Forwarder.json";
+import Dai from "../contracts/Dai.json";
 
 class CreateProposalForm extends Component {
   constructor(props) {
@@ -15,67 +17,36 @@ class CreateProposalForm extends Component {
     };
   }
 
-  createProposal = async (receiverAddress, amount, description) => {
+  createProposalUsingABI = async (receiverAddress, amount, description) => {
     console.log("Creator Address: ", this.props.account);
     console.log("Creating payment for: ", receiverAddress);
     console.log("of amount: ", amount);
     console.log("Decription: ", description);
 
     if (this.props.network === "Matic") {
-      const governAddress = contract.networks[137]["address"];
+      const governAddress = governorABI.networks[137]["address"];
       const governContract = new this.props.web3.eth.Contract(
-        contract.abi,
+        governorABI.abi,
         governAddress
       );
 
-      //0x
-      const forwardSigConst =
-        contract["contractAddresses"]["forwarder"]["forwardSig"].slice(2); // forwardSig
-      const daiAddressConst =
-        "000000000000000000000000" +
-        contract["contractAddresses"]["dai"]["address"].slice(2); // Dai Address
-      const unknown1 =
-        "0000000000000000000000000000000000000000000000000000000000000060"; // ? const (Remains constant in tests)
-      const optionalPayableAmount =
-        "0000000000000000000000000000000000000000000000000000000000000000"; // ? const (payable amount paramter. keep zero)
-      const parametersSize =
-        "0000000000000000000000000000000000000000000000000000000000000044"; // ? const (Seems to have to do with the amount of paramter bytes. Should be 0x44 for dai transfers)
-      const transferSigConst =
-        contract["contractAddresses"]["dai"]["transferSig"].slice(2); // transferSigConst
-      const unknown4 =
-        "00000000000000000000000000000000000000000000000000000000"; // ? const
+      const daiFuncCall = this.props.web3.eth.abi.encodeFunctionCall(
+        Dai.find((el) => el.name === "transfer"),
+        [receiverAddress, this.props.web3.utils.toWei(amount).toString(16)]
+      );
 
-      let callDatasDynamic = [
-        "0x" +
-          forwardSigConst +
-          daiAddressConst +
-          unknown1 +
-          optionalPayableAmount +
-          parametersSize +
-          transferSigConst +
-          "000000000000000000000000" +
-          receiverAddress.slice(2).toLowerCase() +
-          parseInt(this.props.web3.utils.toWei(amount))
-            .toString(16)
-            .padStart(64, "0") +
-          unknown4,
-      ];
-      // Propose Parameters:
-      // targets: ["forwarderAddress"]
-      // values: [0]
-      // signatures: [""]
-      // calldatas: ["forwarder calldata"]
-      // description: "Description"
+      const forwardFuncCall = this.props.web3.eth.abi.encodeFunctionCall(
+        Forwarder.find((el) => el.name === "forward"),
+        [governorABI.contractAddresses["dai"]["address"], daiFuncCall, "0"]
+      );
 
-      let targets = [contract.contractAddresses["forwarder"]["address"]];
+      let callDatasDynamic = [forwardFuncCall];
+
+      let targets = [governorABI.contractAddresses["forwarder"]["address"]];
       let values = [0];
       let signatures = [""];
 
-      console.log("targets: ", targets);
-      console.log("values: ", values);
-      console.log("signatures: ", signatures);
-      console.log("callDatasD: ", callDatasDynamic);
-      console.log("description: ", description);
+      console.log("CALLDATAAA", callDatasDynamic[0]);
 
       try {
         governContract.methods
@@ -133,11 +104,11 @@ class CreateProposalForm extends Component {
   render() {
     return (
       <section className="form">
-        <h4 className="title">Create a Payment Proposal</h4>
+        <h4 className="title">Create a Dai Payment Proposal</h4>
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            this.createProposal(
+            this.createProposalUsingABI(
               this.state.toAddress,
               this.state.daiAmount,
               this.state.description
