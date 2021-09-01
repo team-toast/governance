@@ -32,8 +32,8 @@ function initWeb3(provider) {
 const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider,
-    options: {
-      infuraId: "80c9b77d70f64a5d94ea177acb67a008",
+    rpc: {
+      137: "https://rpc-mainnet.matic.quiknode.pro",
     },
   },
 };
@@ -66,7 +66,7 @@ class App extends Component {
     this.web3Connect = new Web3Connect.Core({
       network: "mainnet",
       cacheProvider: true, //,
-      //providerOptions,
+      providerOptions,
     });
   }
 
