@@ -52,7 +52,7 @@ class App extends Component {
       chainId: null,
       networkId: null,
       delegateeAddress: "",
-      delegatedAddress: "",
+      delegatedAddress: "Unknown",
     };
 
     this.web3Connect = new Web3Connect.Core({
