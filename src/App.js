@@ -337,7 +337,7 @@ class App extends Component {
           ) {
             this.setState({ delegatedAddress: "Not yet delegated" });
           } else {
-            this.setState({ delegatedAddress: "Self" });
+            this.setState({ delegatedAddress });
           }
 
           delegatedAddressUpdated = true;
@@ -385,6 +385,7 @@ class App extends Component {
             this.setMessage("Transaction Confirmed!", receipt.transactionHash);
             console.log("Transaction Confirmed!", receipt.transactionHash);
             this.getVotingPower(); // Update voting power that might have changed after delegating
+            this.getDelegateToAddress();
           }
           setTimeout(() => {
             this.clearMessage();
