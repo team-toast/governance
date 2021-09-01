@@ -330,8 +330,8 @@ class App extends Component {
             .delegates(overrideAccount)
             .call();
 
-          if (delegatedAddress === this.account) {
-            this.setState({ delegatedAddress });
+          if (delegatedAddress === this.state.account) {
+            this.setState({ delegatedAddress: "Self" });
           } else if (
             delegatedAddress === "0x0000000000000000000000000000000000000000"
           ) {
