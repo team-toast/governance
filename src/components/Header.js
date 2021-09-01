@@ -20,7 +20,7 @@ class Header extends Component {
         <input
           onChange={this.props.updateDelegateeAddress}
           placeholder="Address to Delegate to"
-          style={{ width: "380px" }}
+          style={{ width: "400px" }}
         />
 
         <Button

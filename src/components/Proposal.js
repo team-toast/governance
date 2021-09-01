@@ -50,7 +50,7 @@ class Proposal extends Component {
         setTimeout(() => {
           this.props.clearMessage();
           this.props.updateProposalStates();
-        }, 20000);
+        }, 5000);
       })
       .on("error", (err, receipt) => {
         this.props.setMessage(
@@ -78,7 +78,7 @@ class Proposal extends Component {
           setTimeout(() => {
             this.props.clearMessage();
             this.props.updateProposalStates();
-          }, 20000);
+          }, 5000);
         })
         .on("error", (err, receipt) => {
           this.props.setMessage(
@@ -102,7 +102,7 @@ class Proposal extends Component {
           setTimeout(() => {
             this.props.clearMessage();
             this.props.updateProposalStates();
-          }, 20000);
+          }, 5000);
         })
         .on("error", (err, receipt) => {
           this.props.setMessage(
