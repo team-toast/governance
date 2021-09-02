@@ -11,7 +11,6 @@ import Proposals from "./components/Proposals";
 import Footer from "./components/Footer";
 import CreateProposalForm from "./components/CreateProposalForm";
 import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
-
 import "./layout/config/_base.sass";
 
 function initWeb3(provider) {
@@ -219,10 +218,11 @@ class App extends Component {
       let balanceUpdated = false;
       while (tryCount < retries && balanceUpdated === false) {
         try {
-          const balance = await tokenContract.methods
+          let balance = await tokenContract.methods
             .balanceOf(overrideAccount)
             .call();
 
+          balance = this.state.web3.utils.fromWei(balance);
           if (balance > 0) {
             this.setState({ balance });
           }
