@@ -4,6 +4,8 @@ import Proposal from "./Proposal";
 //import "../layout/components/proposals.sass";
 import contract from "../contracts/GovernorAlpha.json";
 import timelockContract from "../contracts/timelock.json";
+import Dai from "../contracts/Dai.json";
+import Forwarder from "../contracts/Forwarder.json";
 
 class Proposals extends Component {
   constructor(props) {
@@ -95,6 +97,25 @@ class Proposals extends Component {
     const daiAmountStartIndex = 345;
     const daiAmountEndIndex = 402;
 
+    const generatedDaiTransferCallData =
+      this.props.web3.eth.abi.encodeFunctionCall(
+        Dai.find((el) => el.name === "transfer"),
+        [
+          // fake address because receiver addresses are not checked
+          "0x0000000000000000000000000000000000000000",
+          // can be an arbitrary amount because the amount is also not checked
+          this.props.web3.utils.toWei("1").toString(16),
+        ]
+      );
+
+    const generatedForwardCallData = this.props.web3.eth.abi.encodeFunctionCall(
+      Forwarder.find((el) => el.name === "forward"),
+      [paymentTokenAddress, generatedDaiTransferCallData, "0"]
+    );
+
+    //console.log("Original call data: ", calldata);
+    //console.log("Generated call data: ", generatedForwardCallData);
+
     if (
       calldata.length === 1 &&
       contractAddress
@@ -114,6 +135,19 @@ class Proposals extends Component {
         transferMethodSigStartIndex,
         transferMethodSigEndIndex
       );
+      let generatedForwardMethodSig = generatedForwardCallData.slice(
+        forwardMethodSigStartIndex,
+        forwardMethodSigEndIndex
+      );
+      let generatedTokenAddress = generatedForwardCallData.slice(
+        daiAddressStartIndex,
+        daiAddressEndIndex
+      );
+      let generatedTransferMethodSig = generatedForwardCallData.slice(
+        transferMethodSigStartIndex,
+        transferMethodSigEndIndex
+      );
+
       let extratedReceiverAddress = calldata[0].slice(
         receiverAddressStartIndex,
         receiverAddressEndIndex
@@ -124,11 +158,9 @@ class Proposals extends Component {
       );
 
       if (
-        extractedForwardMethodSig ===
-          contract["contractAddresses"]["forwarder"]["forwardSig"].slice(2) &&
-        extratedTransferMethodSig ===
-          contract["contractAddresses"]["dai"]["transferSig"].slice(2) &&
-        extractedTokenAddress.slice(24) === paymentTokenAddress.slice(2)
+        extractedForwardMethodSig === generatedForwardMethodSig &&
+        extratedTransferMethodSig === generatedTransferMethodSig &&
+        extractedTokenAddress === generatedTokenAddress
       ) {
         //Decode Token amount and receiver
         let amount = "";

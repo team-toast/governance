@@ -18,7 +18,7 @@ class Message extends Component {
           rel="noopener noreferrer"
           href={
             this.props.txHash
-              ? `http://${network}etherscan.io/tx/${this.props.txHash}`
+              ? `https://polygonscan.com/tx/${this.props.txHash}`
               : null
           }
         >
