@@ -28,7 +28,7 @@ class Proposals extends Component {
 
         let eventDetail;
         let tmpProposals = [];
-        for (let i = proposalObjs.length - 5; i < proposalObjs.length; i++) {
+        for (let i = proposalObjs.length - 4; i < proposalObjs.length; i++) {
           //for (let i = 0; i < proposalObjs.length; i++) {
           eventDetail = await this.getProposalEventParameters(
             web3,
@@ -55,8 +55,8 @@ class Proposals extends Component {
             ),
             this.isPaymentProposal(eventDetail[5], eventDetail[2]),
           ]);
+          await this.sleep(200);
         }
-        await this.sleep(20);
         fectchedProposalObjects = true;
         console.log("Proposal array: ", tmpProposals);
         this.setState({ proposals: tmpProposals });
@@ -67,7 +67,7 @@ class Proposals extends Component {
         }
       } catch (error) {
         console.error("Error in getProposalsFromEvents", error);
-        await this.sleep(20);
+        await this.sleep(2000);
       }
     }
   };
@@ -154,9 +154,10 @@ class Proposals extends Component {
     let proposals = [];
     let tmpProposal;
     //for (let i = 0; i < numOfProposals; i++) {
-    for (let i = numOfProposals - 5; i < numOfProposals; i++) {
+    for (let i = numOfProposals - 4; i < numOfProposals; i++) {
       tmpProposal = await govAlpha.methods.proposals(i + 1).call();
       proposals.push(tmpProposal);
+      //await this.sleep(500);
     }
     console.log("Proposal Objects: ");
     proposals.forEach((element) => {
@@ -291,6 +292,8 @@ class Proposals extends Component {
     );
 
     setInterval(() => {
+      this.props.getLatestBlock();
+      this.props.getNetworkName();
       this.getProposals();
     }, 30000);
   };
@@ -315,6 +318,7 @@ class Proposals extends Component {
         }
       }
     } catch (error) {
+      await this.sleep(2000);
       console.log("Error in getProposals", error);
     }
   };
@@ -357,6 +361,7 @@ class Proposals extends Component {
               endDate={proposal[8]}
               status={proposal[9]}
               isPayment={proposal[10]}
+              updateProposalStates={this.getProposals}
               {...this.props}
             />
           );

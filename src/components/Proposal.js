@@ -23,7 +23,8 @@ class Proposal extends Component {
         }
         setTimeout(() => {
           this.props.clearMessage();
-        }, 5000);
+          this.props.updateProposalStates();
+        }, 10000);
       })
       .on("error", (err, receipt) => {
         this.props.setMessage(
@@ -48,7 +49,8 @@ class Proposal extends Component {
         }
         setTimeout(() => {
           this.props.clearMessage();
-        }, 5000);
+          this.props.updateProposalStates();
+        }, 10000);
       })
       .on("error", (err, receipt) => {
         this.props.setMessage(
@@ -75,7 +77,8 @@ class Proposal extends Component {
           }
           setTimeout(() => {
             this.props.clearMessage();
-          }, 5000);
+            this.props.updateProposalStates();
+          }, 10000);
         })
         .on("error", (err, receipt) => {
           this.props.setMessage(
@@ -98,7 +101,8 @@ class Proposal extends Component {
           }
           setTimeout(() => {
             this.props.clearMessage();
-          }, 5000);
+            this.props.updateProposalStates();
+          }, 10000);
         })
         .on("error", (err, receipt) => {
           this.props.setMessage(
@@ -174,6 +178,10 @@ class Proposal extends Component {
             className="proposal__button"
             variant="secondary"
             onClick={this.handleProgressState}
+            disabled={
+              this.props.message === "Transaction Pending..." ||
+              this.props.message === "Transaction Confirmed!"
+            }
           >
             Add Proposal to Queue
           </Button>
@@ -183,6 +191,10 @@ class Proposal extends Component {
             className="proposal__button"
             variant="secondary"
             onClick={this.handleProgressState}
+            disabled={
+              this.props.message === "Transaction Pending..." ||
+              this.props.message === "Transaction Confirmed!"
+            }
           >
             Execute Proposal
           </Button>
