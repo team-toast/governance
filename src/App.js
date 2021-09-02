@@ -11,6 +11,7 @@ import Proposals from "./components/Proposals";
 import Footer from "./components/Footer";
 import CreateProposalForm from "./components/CreateProposalForm";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
 
 import "./layout/config/_base.sass";
 
@@ -396,12 +397,25 @@ class App extends Component {
                 />
               </div>
             </Tab>
-            <Tab eventKey="create_proposal" title="Create Proposal">
+            <Tab
+              eventKey="create_payment_proposal"
+              title="Create Dai Payment Proposal"
+            >
               <CreateProposalForm
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
                 {...this.state}
               ></CreateProposalForm>
+            </Tab>
+            <Tab
+              eventKey="create_custom_proposal"
+              title="Create Custom Proposal"
+            >
+              <CreateCustomProposalForm
+                setMessage={this.setMessage}
+                clearMessage={this.clearMessage}
+                {...this.state}
+              ></CreateCustomProposalForm>
             </Tab>
           </Tabs>
         </Container>
