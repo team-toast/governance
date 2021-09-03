@@ -122,7 +122,7 @@ class CreateProposalForm extends Component {
               type="text"
               value={this.state.value}
               onChange={this.handleAddressChange}
-              style={{ width: "380px" }}
+              style={{ width: "400px" }}
             />
           </label>
           <br />
@@ -135,7 +135,7 @@ class CreateProposalForm extends Component {
               step="0.01"
               value={this.state.value}
               onChange={this.handleAmountChange}
-              style={{ width: "380px" }}
+              style={{ width: "400px" }}
             />
           </label>
           <br />
@@ -154,7 +154,7 @@ class CreateProposalForm extends Component {
             disabled={!this.props.connected}
             type="submit"
             value="Create Proposal"
-            style={{ width: "380px" }}
+            style={{ width: "400px" }}
           />
         </form>
       </section>
