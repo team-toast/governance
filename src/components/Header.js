@@ -16,6 +16,10 @@ class Header extends Component {
                   .toString() + "%"
               : "0%"
           }`}
+          <br />
+          {`Token Balance: ${this.props.balance}`}
+          <br />
+          {`Delegating To: ${this.props.delegatedAddress}`}
         </p>
         <input
           onChange={this.props.updateDelegateeAddress}

@@ -12,7 +12,6 @@ import Footer from "./components/Footer";
 import CreateProposalForm from "./components/CreateProposalForm";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
-
 import "./layout/config/_base.sass";
 
 function initWeb3(provider) {
@@ -62,6 +61,7 @@ class App extends Component {
       chainId: null,
       networkId: null,
       delegateeAddress: "",
+      delegatedAddress: "Unknown",
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -116,10 +116,11 @@ class App extends Component {
 
     await this.getAccount();
     this.getLatestBlock();
-    await this.getNetworkName();
+    this.getNetworkName();
     this.getVotingPower();
     this.getTotalSupply();
     this.getTokenBalance();
+    this.getDelegateToAddress();
   };
 
   subscribeProvider = async (provider) => {
@@ -128,13 +129,16 @@ class App extends Component {
     provider.on("accountsChanged", async (accounts) => {
       const accounts2 = await this.state.web3.eth.getAccounts();
       await this.getVotingPower(accounts2[0]);
+      await this.getTotalSupply(accounts2[0]);
+      await this.getTokenBalance(accounts2[0]);
+      await this.getDelegateToAddress(accounts2[0]);
       this.setState({ account: accounts2[0] });
     });
 
     provider.on("chainChanged", async (chainId) => {
       const { web3 } = this.state;
       const networkId = await web3.eth.net.getId();
-      await this.setState({ chainId, networkId });
+      this.setState({ chainId, networkId });
     });
 
     provider.on("networkChanged", async (networkId) => {
@@ -206,7 +210,7 @@ class App extends Component {
     };
   };
 
-  getTokenBalance = async () => {
+  getTokenBalance = async (account = "none") => {
     if (this.state.network === "Matic") {
       const tokenAddress = contract.contractAddresses["token"]["address"];
 
@@ -214,15 +218,24 @@ class App extends Component {
         compTokenContract,
         tokenAddress
       );
-      const retries = 5;
+
+      let overrideAccount = "";
+      if (account !== "none") {
+        overrideAccount = account;
+      } else {
+        overrideAccount = this.state.account;
+      }
+
+      const retries = 500;
       let tryCount = 0;
       let balanceUpdated = false;
       while (tryCount < retries && balanceUpdated === false) {
         try {
-          const balance = await tokenContract.methods
-            .balanceOf(this.state.account)
+          let balance = await tokenContract.methods
+            .balanceOf(overrideAccount)
             .call();
 
+          balance = this.state.web3.utils.fromWei(balance);
           if (balance > 0) {
             this.setState({ balance });
           }
@@ -276,7 +289,7 @@ class App extends Component {
     }
   };
 
-  getTotalSupply = async () => {
+  getTotalSupply = async (account = "none") => {
     if (this.state.network === "Matic") {
       const tokenAddress = contract.contractAddresses["token"]["address"];
 
@@ -284,6 +297,7 @@ class App extends Component {
         compTokenContract,
         tokenAddress
       );
+
       const retries = 5;
       let tryCount = 0;
       let totalSupplyUpdated = false;
@@ -296,8 +310,53 @@ class App extends Component {
           }
           totalSupplyUpdated = true;
         } catch (error) {
-          await this.sleep(1000);
+          await this.sleep(100);
           console.error("Error setting token total supply: ", error);
+          tryCount++;
+        }
+      }
+    }
+  };
+
+  getDelegateToAddress = async (account = "none") => {
+    if (this.state.network === "Matic") {
+      const tokenAddress = contract.contractAddresses["token"]["address"];
+
+      const tokenContract = new this.state.web3.eth.Contract(
+        compTokenContract,
+        tokenAddress
+      );
+
+      let overrideAccount = "";
+      if (account !== "none") {
+        overrideAccount = account;
+      } else {
+        overrideAccount = this.state.account;
+      }
+
+      const retries = 500;
+      let tryCount = 0;
+      let delegatedAddressUpdated = false;
+      while (tryCount < retries && delegatedAddressUpdated === false) {
+        try {
+          const delegatedAddress = await tokenContract.methods
+            .delegates(overrideAccount)
+            .call();
+
+          if (delegatedAddress === this.state.account) {
+            this.setState({ delegatedAddress: "Self" });
+          } else if (
+            delegatedAddress === "0x0000000000000000000000000000000000000000"
+          ) {
+            this.setState({ delegatedAddress: "Not yet delegated" });
+          } else {
+            this.setState({ delegatedAddress });
+          }
+
+          delegatedAddressUpdated = true;
+        } catch (error) {
+          await this.sleep(100);
+          console.error("Error setting token voting power: ", error);
           tryCount++;
         }
       }
@@ -339,6 +398,7 @@ class App extends Component {
             this.setMessage("Transaction Confirmed!", receipt.transactionHash);
             console.log("Transaction Confirmed!", receipt.transactionHash);
             this.getVotingPower(); // Update voting power that might have changed after delegating
+            this.getDelegateToAddress();
           }
           setTimeout(() => {
             this.clearMessage();
