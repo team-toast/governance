@@ -139,12 +139,22 @@ class App extends Component {
       const { web3 } = this.state;
       const networkId = await web3.eth.net.getId();
       this.setState({ chainId, networkId });
+      this.getNetworkName();
+      this.getVotingPower();
+      this.getTotalSupply();
+      this.getTokenBalance();
+      this.getDelegateToAddress();
     });
 
     provider.on("networkChanged", async (networkId) => {
       const { web3 } = this.state;
       const chainId = await web3.eth.chainId();
       await this.setState({ chainId, networkId });
+      this.getNetworkName();
+      this.getVotingPower();
+      this.getTotalSupply();
+      this.getTokenBalance();
+      this.getDelegateToAddress();
     });
   };
 
@@ -226,23 +236,24 @@ class App extends Component {
         overrideAccount = this.state.account;
       }
 
-      const retries = 500;
-      let tryCount = 0;
+      // const retries = 500;
+      // let tryCount = 0;
       let balanceUpdated = false;
-      while (tryCount < retries && balanceUpdated === false) {
+      while (balanceUpdated === false) {
         try {
           let balance = await tokenContract.methods
             .balanceOf(overrideAccount)
             .call();
 
           balance = this.state.web3.utils.fromWei(balance);
+          console.log("BALANCE: ", balance);
           if (balance > 0) {
             this.setState({ balance });
           }
           balanceUpdated = true;
         } catch (error) {
           console.error("Error setting token balance: ", error);
-          tryCount++;
+          this.sleep(1000);
         }
       }
     }
@@ -268,10 +279,10 @@ class App extends Component {
         overrideAccount = this.state.account;
       }
 
-      const retries = 500;
-      let tryCount = 0;
+      // const retries = 500;
+      // let tryCount = 0;
       let votingPowerUpdated = false;
-      while (tryCount < retries && votingPowerUpdated === false) {
+      while (votingPowerUpdated === false) {
         try {
           const votingPower = await tokenContract.methods
             .getCurrentVotes(overrideAccount)
@@ -281,9 +292,9 @@ class App extends Component {
 
           votingPowerUpdated = true;
         } catch (error) {
-          await this.sleep(1000);
           console.error("Error setting token voting power: ", error);
-          tryCount++;
+          await this.sleep(1000);
+          //tryCount++;
         }
       }
     }
@@ -298,10 +309,10 @@ class App extends Component {
         tokenAddress
       );
 
-      const retries = 5;
-      let tryCount = 0;
+      // const retries = 5;
+      // let tryCount = 0;
       let totalSupplyUpdated = false;
-      while (tryCount < retries && totalSupplyUpdated === false) {
+      while (totalSupplyUpdated === false) {
         try {
           const totalSupply = await tokenContract.methods.totalSupply().call();
 
@@ -310,9 +321,9 @@ class App extends Component {
           }
           totalSupplyUpdated = true;
         } catch (error) {
-          await this.sleep(100);
           console.error("Error setting token total supply: ", error);
-          tryCount++;
+          await this.sleep(1000);
+          //tryCount++;
         }
       }
     }
@@ -334,10 +345,10 @@ class App extends Component {
         overrideAccount = this.state.account;
       }
 
-      const retries = 500;
-      let tryCount = 0;
+      // const retries = 500;
+      // let tryCount = 0;
       let delegatedAddressUpdated = false;
-      while (tryCount < retries && delegatedAddressUpdated === false) {
+      while (delegatedAddressUpdated === false) {
         try {
           const delegatedAddress = await tokenContract.methods
             .delegates(overrideAccount)
@@ -355,9 +366,9 @@ class App extends Component {
 
           delegatedAddressUpdated = true;
         } catch (error) {
-          await this.sleep(100);
+          await this.sleep(1000);
           console.error("Error setting token voting power: ", error);
-          tryCount++;
+          //tryCount++;
         }
       }
     }
