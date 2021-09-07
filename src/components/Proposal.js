@@ -4,8 +4,6 @@ import upvote from "../images/upvote.svg";
 import downvote from "../images/downvote.svg";
 
 import "../layout/components/proposals.sass";
-//import Button from "./Button";
-import { Button } from "react-bootstrap";
 
 class Proposal extends Component {
   handleVoteFor = () => {
@@ -118,6 +116,29 @@ class Proposal extends Component {
   render() {
     let arrows;
 
+    // if (
+    //   this.props.account &&
+    //   this.props.end > this.props.latestBlock &&
+    //   this.props.votingPower > 0
+    // ) {
+    //   arrows = (
+    //     <div className="proposal__arrows">
+    //       <img
+    //         src={upvote}
+    //         alt="Vote for"
+    //         className="proposal__arrow"
+    //         onClick={this.handleVoteFor}
+    //       />
+    //       <img
+    //         src={downvote}
+    //         alt="Vote against"
+    //         className="proposal__arrow"
+    //         onClick={this.handleVoteAgainst}
+    //       />
+    //     </div>
+    //   );
+    // }
+
     if (
       this.props.account &&
       this.props.end > this.props.latestBlock &&
@@ -125,18 +146,13 @@ class Proposal extends Component {
     ) {
       arrows = (
         <div className="proposal__arrows">
-          <img
-            src={upvote}
-            alt="Vote for"
-            className="proposal__arrow"
-            onClick={this.handleVoteFor}
-          />
-          <img
-            src={downvote}
-            alt="Vote against"
-            className="proposal__arrow"
-            onClick={this.handleVoteAgainst}
-          />
+          <button className="vote__button" onClick={this.handleVoteFor}>
+            Vote In Favour
+          </button>
+
+          <button className="vote__button" onClick={this.handleVoteAgainst}>
+            Vote Against
+          </button>
         </div>
       );
     }
@@ -147,9 +163,9 @@ class Proposal extends Component {
         <div className="proposal__info">
           <p className="proposal__votes">
             <h6>Proposal Info</h6>
-            {"In Favour: "} {this.props.infavor}
+            {"Votes in Favour: "} {this.props.infavor}
             <br />
-            {"Against: "} {this.props.against}
+            {"Votes Against: "} {this.props.against}
             <br />
             {"Expiry Block: "} {this.props.endBlock}
             <br />
@@ -171,12 +187,12 @@ class Proposal extends Component {
           </p>
         </div>
         <div className="proposal__bottom">
-          {arrows}
           <p className="proposal__description">
             <h6>Description</h6>
             {this.props.description}
           </p>
         </div>
+        {arrows}
         {this.props.status === "Succeeded" ? (
           <button
             className="proposal__button"
