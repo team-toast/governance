@@ -171,7 +171,10 @@ class Proposal extends Component {
         </div>
         <div className="proposal__bottom">
           {arrows}
-          <p className="proposal__description">{this.props.description}</p>
+          <p className="proposal__description">
+            <h6>Description</h6>
+            {this.props.description}
+          </p>
         </div>
         {this.props.status === "Succeeded" ? (
           <button

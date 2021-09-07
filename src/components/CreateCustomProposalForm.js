@@ -176,7 +176,9 @@ class CreateCustomProposalForm extends React.Component {
             />
           </FloatingLabel>
           <br />
-          <button className="medium">Create Proposal</button>
+          <div className="center_div">
+            <button className="medium">Create Proposal</button>
+          </div>
           <br />
           <br />
           <br />
