@@ -337,7 +337,7 @@ class Proposals extends Component {
         this.props.getLatestBlock();
         this.getProposals();
       }
-    }, 30000);
+    }, 15000);
   };
 
   sleep = (milliseconds) => {

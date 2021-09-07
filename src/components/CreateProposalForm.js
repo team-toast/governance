@@ -105,6 +105,10 @@ class CreateProposalForm extends Component {
     return (
       <section className="form">
         <h4 className="title">Create a Dai Payment Proposal</h4>
+        <h6 className="title">
+          {"( Treasury Balance: " + this.props.treasuryBalance + " Dai)"}
+        </h6>
+        <br />
         <form
           onSubmit={(e) => {
             e.preventDefault();

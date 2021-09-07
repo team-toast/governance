@@ -5,6 +5,7 @@ import Web3 from "web3";
 import Web3Connect from "web3connect";
 import contract from "./contracts/GovernorAlpha.json";
 import compTokenContract from "./contracts/Comp.json";
+import Dai from "./contracts/Dai.json";
 import Nav from "./components/Nav";
 import Header from "./components/Header";
 import Proposals from "./components/Proposals";
@@ -62,6 +63,7 @@ class App extends Component {
       networkId: null,
       delegateeAddress: "",
       delegatedAddress: "Unknown",
+      treasuryBalance: 0,
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -124,6 +126,7 @@ class App extends Component {
       this.getTotalSupply();
       this.getTokenBalance();
       this.getDelegateToAddress();
+      this.getTreasuryBalance();
     }
   };
 
@@ -264,6 +267,34 @@ class App extends Component {
           balanceUpdated = true;
         } catch (error) {
           console.error("Error setting token balance: ", error);
+          this.sleep(1000);
+        }
+      }
+    }
+  };
+
+  getTreasuryBalance = async () => {
+    if (this.state.network === "Matic") {
+      const daiAddress = contract.contractAddresses["dai"]["address"];
+
+      const daiContract = new this.state.web3.eth.Contract(Dai, daiAddress);
+
+      let overrideAccount = contract.contractAddresses["forwarder"]["address"];
+
+      let balanceUpdated = false;
+      while (balanceUpdated === false) {
+        try {
+          let balance = await daiContract.methods
+            .balanceOf(overrideAccount)
+            .call();
+
+          balance = this.state.web3.utils.fromWei(balance);
+          console.log("Treasury BALANCE: ", balance);
+          balance = this.numberWithCommas(parseFloat(balance).toFixed(2));
+          balanceUpdated = true;
+          this.setState({ treasuryBalance: balance });
+        } catch (error) {
+          console.error("Error getting treasury balance: ", error);
           this.sleep(1000);
         }
       }
@@ -491,6 +522,7 @@ class App extends Component {
               <CreateProposalForm
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
+                getTreasuryBalance={this.getTreasuryBalance}
                 {...this.state}
               ></CreateProposalForm>
             </Tab>
