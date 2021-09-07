@@ -115,12 +115,16 @@ class App extends Component {
     // }, 5000);
 
     await this.getAccount();
-    this.getLatestBlock();
-    this.getNetworkName();
-    this.getVotingPower();
-    this.getTotalSupply();
-    this.getTokenBalance();
-    this.getDelegateToAddress();
+    const netId = await web3.eth.net.getId();
+    const netName = this.getNetworkName(netId);
+
+    if (netName === "Matic") {
+      this.getLatestBlock();
+      this.getVotingPower();
+      this.getTotalSupply();
+      this.getTokenBalance();
+      this.getDelegateToAddress();
+    }
   };
 
   subscribeProvider = async (provider) => {
@@ -135,27 +139,31 @@ class App extends Component {
       await this.getDelegateToAddress(accounts2[0]);
     });
 
-    // provider.on("chainChanged", async (chainId) => {
+    provider.on("chainChanged", async (chainId) => {
+      const { web3 } = this.state;
+      const networkId = await web3.eth.net.getId();
+      if (networkId === 137) {
+        this.setState({ chainId, networkId });
+        this.getNetworkName(networkId);
+        this.getVotingPower();
+        this.getTotalSupply();
+        this.getTokenBalance();
+        this.getDelegateToAddress();
+      } else {
+        this.getNetworkName(networkId);
+      }
+    });
+
+    // provider.on("networkChanged", async (networkId) => {
     //   const { web3 } = this.state;
-    //   const networkId = await web3.eth.net.getId();
-    //   this.setState({ chainId, networkId });
+    //   const chainId = await web3.eth.chainId();
+    //   await this.setState({ chainId, networkId });
     //   this.getNetworkName();
     //   this.getVotingPower();
     //   this.getTotalSupply();
     //   this.getTokenBalance();
     //   this.getDelegateToAddress();
     // });
-
-    provider.on("networkChanged", async (networkId) => {
-      const { web3 } = this.state;
-      const chainId = await web3.eth.chainId();
-      await this.setState({ chainId, networkId });
-      this.getNetworkName();
-      this.getVotingPower();
-      this.getTotalSupply();
-      this.getTokenBalance();
-      this.getDelegateToAddress();
-    });
   };
 
   disconnect = async () => {
@@ -186,8 +194,12 @@ class App extends Component {
     }
   };
 
-  getNetworkName = () => {
-    const { networkId } = this.state;
+  getNetworkName = (netID = null) => {
+    let { networkId } = this.state;
+
+    if (netID !== null) {
+      networkId = netID;
+    }
 
     if (networkId === 1) {
       this.setState({ network: "Mainnet" });
@@ -201,7 +213,7 @@ class App extends Component {
       this.setState({ network: "Kovan" });
     } else if (networkId === 137) {
       this.setState({ network: "Matic" });
-      console.log("MATIC");
+      return "Matic";
     } else {
       this.setState({ network: "Unknown Network" });
     }

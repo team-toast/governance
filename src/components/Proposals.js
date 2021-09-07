@@ -65,7 +65,7 @@ class Proposals extends Component {
             ),
             this.isPaymentProposal(eventDetail[5], eventDetail[2]),
           ]);
-          await this.sleep(200);
+          await this.sleep(20);
         }
         fectchedProposalObjects = true;
         console.log("Proposal array: ", tmpProposals);
@@ -77,7 +77,7 @@ class Proposals extends Component {
         }
       } catch (error) {
         console.error("Error in getProposalsFromEvents", error);
-        await this.sleep(2000);
+        await this.sleep(1000);
       }
     }
   };
@@ -326,15 +326,17 @@ class Proposals extends Component {
     setTimeout(
       function () {
         //Start the timer
+
         this.getProposals();
       }.bind(this),
-      2000
+      1000
     );
 
     setInterval(() => {
-      this.props.getLatestBlock();
-      this.props.getNetworkName();
-      this.getProposals();
+      if (this.props.network === "Matic") {
+        this.props.getLatestBlock();
+        this.getProposals();
+      }
     }, 30000);
   };
 
@@ -343,6 +345,7 @@ class Proposals extends Component {
   };
 
   getProposals = async () => {
+    //if (this.props.networkId === 137) {
     try {
       let matic = false;
       while (matic === false) {
@@ -354,13 +357,14 @@ class Proposals extends Component {
         } else {
           console.log("Please select the Matic network.");
           matic = false;
-          await this.sleep(5000);
+          await this.sleep(2000);
         }
       }
     } catch (error) {
-      await this.sleep(2000);
+      await this.sleep(1000);
       console.log("Error in getProposals", error);
     }
+    //}
   };
 
   getProposalEndTime = (expiryBlock) => {
