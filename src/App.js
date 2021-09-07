@@ -128,23 +128,23 @@ class App extends Component {
 
     provider.on("accountsChanged", async (accounts) => {
       const accounts2 = await this.state.web3.eth.getAccounts();
+      this.setState({ account: accounts2[0] });
       await this.getVotingPower(accounts2[0]);
       await this.getTotalSupply(accounts2[0]);
       await this.getTokenBalance(accounts2[0]);
       await this.getDelegateToAddress(accounts2[0]);
-      this.setState({ account: accounts2[0] });
     });
 
-    provider.on("chainChanged", async (chainId) => {
-      const { web3 } = this.state;
-      const networkId = await web3.eth.net.getId();
-      this.setState({ chainId, networkId });
-      this.getNetworkName();
-      this.getVotingPower();
-      this.getTotalSupply();
-      this.getTokenBalance();
-      this.getDelegateToAddress();
-    });
+    // provider.on("chainChanged", async (chainId) => {
+    //   const { web3 } = this.state;
+    //   const networkId = await web3.eth.net.getId();
+    //   this.setState({ chainId, networkId });
+    //   this.getNetworkName();
+    //   this.getVotingPower();
+    //   this.getTotalSupply();
+    //   this.getTokenBalance();
+    //   this.getDelegateToAddress();
+    // });
 
     provider.on("networkChanged", async (networkId) => {
       const { web3 } = this.state;
@@ -236,8 +236,6 @@ class App extends Component {
         overrideAccount = this.state.account;
       }
 
-      // const retries = 500;
-      // let tryCount = 0;
       let balanceUpdated = false;
       while (balanceUpdated === false) {
         try {
@@ -247,9 +245,10 @@ class App extends Component {
 
           balance = this.state.web3.utils.fromWei(balance);
           console.log("BALANCE: ", balance);
-          if (balance > 0) {
-            this.setState({ balance });
-          }
+          balance = this.numberWithCommas(parseFloat(balance).toFixed(2));
+          //if (balance > 0) {
+          this.setState({ balance });
+          //}
           balanceUpdated = true;
         } catch (error) {
           console.error("Error setting token balance: ", error);
@@ -374,6 +373,10 @@ class App extends Component {
     }
   };
 
+  numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   setMessage = (newMessage, txHash) => {
     this.setState({
       message: newMessage,
@@ -465,6 +468,7 @@ class App extends Component {
                   clearMessage={this.clearMessage}
                   getLatestBlock={this.getLatestBlock}
                   getNetworkName={this.getNetworkName}
+                  numberWithCommas={this.numberWithCommas}
                 />
               </div>
             </Tab>

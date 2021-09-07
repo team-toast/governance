@@ -12,7 +12,7 @@ class Header extends Component {
           {`Voting Power: ${
             this.props.votingPower !== 0
               ? ((this.props.votingPower / this.props.totalSupply) * 100)
-                  .toFixed(4)
+                  .toFixed(2)
                   .toString() + "%"
               : "0%"
           }`}

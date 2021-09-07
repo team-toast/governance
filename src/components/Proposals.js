@@ -45,8 +45,16 @@ class Proposals extends Component {
             eventDetail[0],
             eventDetail[0],
             eventDetail[7],
-            proposalObjs[i]["forVotes"],
-            proposalObjs[i]["againstVotes"],
+            this.props.numberWithCommas(
+              parseFloat(
+                this.props.web3.utils.fromWei(proposalObjs[i]["forVotes"])
+              ).toFixed(2)
+            ),
+            this.props.numberWithCommas(
+              parseFloat(
+                this.props.web3.utils.fromWei(proposalObjs[i]["againstVotes"])
+              ).toFixed(2)
+            ),
             proposalObjs[i]["endBlock"],
             this.getProposalEndTime(proposalObjs[i]["endBlock"]),
             await this.getStatus2(
