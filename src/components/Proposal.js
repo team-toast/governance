@@ -146,6 +146,7 @@ class Proposal extends Component {
         <h4 className="proposal__title">{this.props.title}</h4>
         <div className="proposal__info">
           <p className="proposal__votes">
+            <h6>Proposal Info</h6>
             {"In Favour: "} {this.props.infavor}
             <br />
             {"Against: "} {this.props.against}
