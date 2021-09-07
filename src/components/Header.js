@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-
+import { Button } from "react-bootstrap";
 import "../layout/components/header.sass";
 //import Button from "./Button";
-import { Button } from "react-bootstrap";
+
 class Header extends Component {
   render() {
     return (
@@ -27,13 +27,9 @@ class Header extends Component {
           style={{ width: "400px" }}
         />
 
-        <Button
-          className="header__button"
-          variant="secondary"
-          onClick={this.props.delegate}
-        >
+        <button className="header__button" onClick={this.props.delegate}>
           Delegate
-        </Button>
+        </button>
       </section>
     );
   }

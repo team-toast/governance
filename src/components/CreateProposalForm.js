@@ -150,12 +150,14 @@ class CreateProposalForm extends Component {
             />
           </FloatingLabel>
           <br />
-          <input
-            disabled={!this.props.connected}
-            type="submit"
-            value="Create Proposal"
-            style={{ width: "400px" }}
-          />
+          <div className="center_div">
+            <input
+              disabled={!this.props.connected}
+              class="dai_proposal_button"
+              type="submit"
+              value="Create Proposal"
+            />
+          </div>
         </form>
       </section>
     );

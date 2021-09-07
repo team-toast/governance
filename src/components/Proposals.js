@@ -345,7 +345,6 @@ class Proposals extends Component {
   };
 
   getProposals = async () => {
-    //if (this.props.networkId === 137) {
     try {
       let matic = false;
       while (matic === false) {
@@ -364,7 +363,6 @@ class Proposals extends Component {
       await this.sleep(1000);
       console.log("Error in getProposals", error);
     }
-    //}
   };
 
   getProposalEndTime = (expiryBlock) => {
