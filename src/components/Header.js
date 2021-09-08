@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "react-bootstrap";
 import "../layout/components/header.sass";
-//import Button from "./Button";
 
 class Header extends Component {
   render() {

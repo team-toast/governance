@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 
 import Proposal from "./Proposal";
 //import "../layout/components/proposals.sass";
@@ -6,6 +6,7 @@ import contract from "../contracts/GovernorAlpha.json";
 import timelockContract from "../contracts/timelock.json";
 import Dai from "../contracts/Dai.json";
 import Forwarder from "../contracts/Forwarder.json";
+import Pager from "../components/Pager";
 
 class Proposals extends Component {
   constructor(props) {
@@ -15,8 +16,33 @@ class Proposals extends Component {
       proposals: [],
       loadedProposals: false,
       timeout: 0,
+      pageBookmark: 3,
+      numberOfProposals: 0,
+      proposalsPerPage: 3,
+      newerButtonDisable: true,
+      olderButtonDisable: false,
     };
   }
+
+  refresh = () => {
+    this.setState({ proposals: [] });
+    this.props.getLatestBlock();
+    this.getProposals();
+  };
+
+  next = () => {
+    this.setState({ proposals: [] });
+    let tmpBookmark = this.state.pageBookmark + this.state.proposalsPerPage;
+    this.setState({ pageBookmark: tmpBookmark });
+    this.refresh();
+  };
+
+  back = () => {
+    let tmpBookmark = this.state.pageBookmark - this.state.proposalsPerPage;
+    this.setState({ proposals: [] });
+    this.setState({ pageBookmark: tmpBookmark });
+    this.refresh();
+  };
 
   getProposalsFromEvents = async (web3) => {
     let fectchedProposalObjects = false;
@@ -30,7 +56,26 @@ class Proposals extends Component {
 
         let eventDetail;
         let tmpProposals = [];
-        for (let i = proposalObjs.length - 4; i < proposalObjs.length; i++) {
+
+        console.log(
+          "Events Bookmark Start: ",
+          proposalObjs.length - this.state.pageBookmark
+        );
+        console.log(
+          "Events Bookmark End: ",
+          proposalObjs.length -
+            this.state.pageBookmark +
+            this.state.proposalsPerPage
+        );
+
+        let start = 0;
+        if (proposalObjs.length - this.state.pageBookmark < 0) {
+          start = 0;
+        } else {
+          start = proposalObjs.length - this.state.pageBookmark;
+        }
+
+        for (let i = start; i < proposalObjs.length; i++) {
           //for (let i = 0; i < proposalObjs.length; i++) {
           eventDetail = await this.getProposalEventParameters(
             web3,
@@ -65,7 +110,7 @@ class Proposals extends Component {
             ),
             this.isPaymentProposal(eventDetail[5], eventDetail[2]),
           ]);
-          await this.sleep(20);
+          //await this.sleep(20);
         }
         fectchedProposalObjects = true;
         console.log("Proposal array: ", tmpProposals);
@@ -190,14 +235,34 @@ class Proposals extends Component {
       contract["networks"]["137"]["address"]
     );
     let numOfProposals = await govAlpha.methods.proposalCount().call();
-
+    this.setState({ numberOfProposals: numOfProposals });
     let proposals = [];
     let tmpProposal;
     //for (let i = 0; i < numOfProposals; i++) {
-    for (let i = numOfProposals - 4; i < numOfProposals; i++) {
+
+    let start = 0;
+    if (numOfProposals - this.state.pageBookmark < 0) {
+      start = 0;
+    } else {
+      start = numOfProposals - this.state.pageBookmark;
+    }
+
+    console.log(
+      "Objects Bookmark Start: ",
+      numOfProposals - this.state.pageBookmark
+    );
+    console.log(
+      "Objects Bookmark End: ",
+      numOfProposals - this.state.pageBookmark + this.state.proposalsPerPage
+    );
+    for (
+      let i = start;
+      i <
+      numOfProposals - this.state.pageBookmark + this.state.proposalsPerPage;
+      i++
+    ) {
       tmpProposal = await govAlpha.methods.proposals(i + 1).call();
       proposals.push(tmpProposal);
-      //await this.sleep(500);
     }
     console.log("Proposal Objects: ");
     proposals.forEach((element) => {
@@ -332,12 +397,12 @@ class Proposals extends Component {
       1000
     );
 
-    setInterval(() => {
-      if (this.props.network === "Matic") {
-        this.props.getLatestBlock();
-        this.getProposals();
-      }
-    }, 15000);
+    // setInterval(() => {
+    //   if (this.props.network === "Matic") {
+    //     this.props.getLatestBlock();
+    //     this.getProposals();
+    //   }
+    // }, 20000);
   };
 
   sleep = (milliseconds) => {
@@ -409,7 +474,22 @@ class Proposals extends Component {
           );
         }
       });
-      return <section className="proposals">{proposals.reverse()}</section>;
+      return (
+        <section className="proposals">
+          {" "}
+          <Pager
+            refresh={this.refresh}
+            next={this.next}
+            back={this.back}
+            numberOfProposals={this.state.numberOfProposals}
+            bookmark={this.state.pageBookmark}
+            proposalsPerPage={this.state.proposalsPerPage}
+            newerButtonDisable={this.state.newerButtonDisable}
+            olderButtonDisable={this.state.olderButtonDisable}
+          ></Pager>
+          {proposals.reverse()}
+        </section>
+      );
     } else {
       if (this.props.account)
         return (

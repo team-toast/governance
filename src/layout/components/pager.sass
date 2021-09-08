@@ -1,0 +1,114 @@
+@import ../config/_colors
+@import ../config/_variables
+@import ../config/_breakpoints
+  
+.pager
+  height: 50px
+  display: flex
+  flex-direction: row
+  align-items: center
+  text-align: center
+  padding-bottom: 0px
+  margin-bottom: 0px
+  background: $color-light-grey
+  justify-content: center
+  margin-bottom: 10px
+
+.pager__title
+  font-size: 32px
+  color: $color-white
+  font-weight: 500
+  margin-bottom: 48px
+  max-width: 95vw
+  text-align: center
+  align-items: center
+
+  +media($breakpoint-sm)
+    font-size: 28px
+    margin-bottom: 32px
+
+.pager__text
+  font-size: 15px
+  color: $color-black
+  font-weight: 500
+  margin-bottom: 15px
+  width: 100%
+  flex-direction: row
+  align-items: center
+  text-align: center
+  background-color: 888
+
+.pager__utils
+  display: flex
+  align-items: center
+  justify-content: space-between
+  width: 650px
+
+.pager__label
+  font-size: 16px
+  position: relative
+  cursor: pointer
+
+.pager__label--open
+  color: $color-green
+
+.pager__label--closed
+  color: $color-purple
+
+.pager__label-title--open
+  margin-left: 24px
+
+.pager__label-title--closed
+  margin-right: 24px
+
+.pager__checkbox
+  position: absolute
+  opacity: 0
+  cursor: pointer
+  height: 0
+  width: 0
+
+.pager__checkmark
+  position: absolute
+  top: 0
+  height: 16px
+  width: 16px
+  cursor: pointer
+  transition: 0.2s background
+
+.pager__checkmark--open
+  border: 2px solid $color-green
+  left: 0
+
+.pager__checkmark--closed
+  border: 2px solid $color-purple
+  right: 0
+
+.pager__checkbox--open:checked ~ .pager__checkmark--open
+  background: $color-green
+
+.pager__checkbox--closed:checked ~ .pager__checkmark--closed
+  background: $color-purple
+
+.pager__balance
+  color: $color-grey
+  font-size: 16px
+
+.pager__button
+    display: block
+    padding: 6px 30px
+    border-radius: 5px
+    background-color: $color-light-grey
+    color: #000
+    border: none
+    font-size: 16px
+    margin-top: 15px
+    margin-left: 5px
+    margin-right: 5px
+
+    &:hover
+      background-color: #999
+
+    &:disabled
+      background-color: $color-light-grey
+      color:#999
