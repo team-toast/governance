@@ -17,11 +17,15 @@ class Header extends Component {
             }
           >
             {` ${
-              this.props.votingPower !== "0" && this.props.votingPower !== 0
+              this.props.votingPower !== "0" &&
+              this.props.votingPower !== 0 &&
+              this.props.votingPower !== "Unknown"
                 ? ((this.props.votingPower / this.props.totalSupply) * 100)
                     .toFixed(2)
                     .toString() + "%"
-                : "0% (Delegation Required)"
+                : this.props.votingPower !== "Unknown"
+                ? "0% (Delegation Required)"
+                : "Unknown"
             }`}
           </text>
           <br />
