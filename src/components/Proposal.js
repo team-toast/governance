@@ -170,7 +170,7 @@ class Proposal extends Component {
           <button
             className="vote__button"
             onClick={this.handleVoteFor}
-            disabled={this.props.buttonsDisabled}
+            disabled={!this.props.connected || this.props.buttonsDisabled}
           >
             Vote In Favour
           </button>
@@ -178,7 +178,7 @@ class Proposal extends Component {
           <button
             className="vote__button"
             onClick={this.handleVoteAgainst}
-            disabled={this.props.buttonsDisabled}
+            disabled={!this.props.connected || this.props.buttonsDisabled}
           >
             Vote Against
           </button>
@@ -231,7 +231,7 @@ class Proposal extends Component {
             //   this.props.message === "Transaction Pending..." ||
             //   this.props.message === "Transaction Confirmed!"
             // }
-            disabled={this.props.buttonsDisabled}
+            disabled={!this.props.connected || this.props.buttonsDisabled}
           >
             Add Proposal to Queue
           </button>
@@ -245,7 +245,7 @@ class Proposal extends Component {
             //   this.props.message === "Transaction Pending..." ||
             //   this.props.message === "Transaction Confirmed!"
             // }
-            disabled={this.props.buttonsDisabled}
+            disabled={!this.props.connected || this.props.buttonsDisabled}
           >
             Execute Proposal
           </button>

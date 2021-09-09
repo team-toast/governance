@@ -159,12 +159,18 @@ class CreateCustomProposalForm extends React.Component {
                 type="button"
                 onClick={this.handleRemoveEntry(idx)}
                 className="remove"
+                //disabled={!this.props.connected || this.props.disableButtons}
               >
                 Remove
               </button>
             </div>
           ))}
-          <button type="button" onClick={this.handleAddEntry} className="small">
+          <button
+            type="button"
+            onClick={this.handleAddEntry}
+            className="small"
+            //disabled={!this.props.connected || this.props.disableButtons}
+          >
             Add Contract Call
           </button>
           <br />
@@ -181,7 +187,12 @@ class CreateCustomProposalForm extends React.Component {
           </FloatingLabel>
           <br />
           <div className="center_div">
-            <button className="medium">Create Proposal</button>
+            <button
+              className="medium"
+              disabled={!this.props.connected || this.props.disableButtons}
+            >
+              Create Proposal
+            </button>
           </div>
           <br />
           <br />

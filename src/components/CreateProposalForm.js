@@ -160,7 +160,7 @@ class CreateProposalForm extends Component {
           <br />
           <div className="center_div">
             <input
-              disabled={!this.props.connected}
+              disabled={!this.props.connected || this.props.disableButtons}
               class="dai_proposal_button"
               type="submit"
               value="Create Proposal"

@@ -47,7 +47,11 @@ class Header extends Component {
           style={{ width: "400px" }}
         />
 
-        <button className="header__button" onClick={this.props.delegate}>
+        <button
+          className="header__button"
+          onClick={this.props.delegate}
+          disabled={!this.props.connected || this.props.disableButtons}
+        >
           Delegate
         </button>
       </section>

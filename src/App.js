@@ -516,6 +516,7 @@ class App extends Component {
           {...this.state}
           delegate={this.delegate}
           updateDelegateeAddress={this.updateDelegateeAddress}
+          disableButtons={this.state.disableButtons}
         />
         <Container className="tabcontainer">
           <Tabs
@@ -548,6 +549,7 @@ class App extends Component {
                 clearMessage={this.clearMessage}
                 getTreasuryBalance={this.getTreasuryBalance}
                 getGasPrice={this.getGasPrice}
+                disableButtons={this.disableButtons}
                 {...this.state}
               ></CreateProposalForm>
             </Tab>
@@ -559,6 +561,7 @@ class App extends Component {
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
                 getGasPrice={this.getGasPrice}
+                disableButtons={this.disableButtons}
                 {...this.state}
               ></CreateCustomProposalForm>
             </Tab>
