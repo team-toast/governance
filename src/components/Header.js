@@ -31,7 +31,15 @@ class Header extends Component {
           <br />
           {`Token Balance: ${this.props.balance}`}
           <br />
-          {`Delegating To: ${this.props.delegatedAddress}`}
+          {this.props.delegatedAddress.length > 10
+            ? `Delegating To: ${this.props.delegatedAddress.slice(
+                0,
+                4
+              )}...${this.props.delegatedAddress.slice(
+                this.props.delegatedAddress.length - 4,
+                this.props.delegatedAddress.length
+              )}`
+            : `Delegating To: ${this.props.delegatedAddress}`}
         </p>
         <input
           onChange={this.props.updateDelegateeAddress}
