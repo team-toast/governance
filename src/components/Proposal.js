@@ -6,12 +6,16 @@ import React, { Component } from "react";
 import "../layout/components/proposals.sass";
 
 class Proposal extends Component {
-  handleVoteFor = () => {
+  handleVoteFor = async () => {
+    const gasPrice = await this.props.getGasPrice();
     this.props.contract.methods
       .castVote(this.props.id, true)
-      .send({ from: this.props.account }, (err, transactionHash) => {
-        this.props.setMessage("Transaction Pending...", transactionHash);
-      })
+      .send(
+        { from: this.props.account, gasPrice: gasPrice },
+        (err, transactionHash) => {
+          this.props.setMessage("Transaction Pending...", transactionHash);
+        }
+      )
       .on("confirmation", (number, receipt) => {
         if (number === 0) {
           this.props.setMessage(
@@ -32,12 +36,16 @@ class Proposal extends Component {
       });
   };
 
-  handleVoteAgainst = () => {
+  handleVoteAgainst = async () => {
+    const gasPrice = await this.props.getGasPrice();
     this.props.contract.methods
       .castVote(this.props.id, false)
-      .send({ from: this.props.account }, (err, transactionHash) => {
-        this.props.setMessage("Transaction Pending...", transactionHash);
-      })
+      .send(
+        { from: this.props.account, gasPrice: gasPrice },
+        (err, transactionHash) => {
+          this.props.setMessage("Transaction Pending...", transactionHash);
+        }
+      )
       .on("confirmation", (number, receipt) => {
         if (number === 0) {
           this.props.setMessage(
@@ -58,14 +66,21 @@ class Proposal extends Component {
       });
   };
 
-  handleProgressState = () => {
+  handleProgressState = async () => {
     //succeeded can be queued state: 4, queued can be executed state: 5
+    let gasPrice = await this.props.getGasPrice();
     if (this.props.status === "Succeeded") {
       this.props.contract.methods
         .queue(this.props.id)
-        .send({ from: this.props.account }, (err, transactionHash) => {
-          this.props.setMessage("Transaction Pending...", transactionHash);
-        })
+        .send(
+          {
+            from: this.props.account,
+            gasPrice: gasPrice,
+          },
+          (err, transactionHash) => {
+            this.props.setMessage("Transaction Pending...", transactionHash);
+          }
+        )
         .on("confirmation", (number, receipt) => {
           if (number === 0) {
             this.props.setMessage(
@@ -87,9 +102,15 @@ class Proposal extends Component {
     } else if (this.props.status === "Queued") {
       this.props.contract.methods
         .execute(this.props.id)
-        .send({ from: this.props.account }, (err, transactionHash) => {
-          this.props.setMessage("Transaction Pending...", transactionHash);
-        })
+        .send(
+          {
+            from: this.props.account,
+            gasPrice: gasPrice,
+          },
+          (err, transactionHash) => {
+            this.props.setMessage("Transaction Pending...", transactionHash);
+          }
+        )
         .on("confirmation", (number, receipt) => {
           if (number === 0) {
             this.props.setMessage(

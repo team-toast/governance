@@ -49,12 +49,16 @@ class CreateProposalForm extends Component {
       console.log("CALLDATAAA", callDatasDynamic[0]);
 
       try {
+        const gasPrice = await this.props.getGasPrice();
         governContract.methods
           .propose(targets, values, signatures, callDatasDynamic, description)
-          .send({ from: this.props.account }, (err, transactionHash) => {
-            this.props.setMessage("Transaction Pending...", transactionHash);
-            console.log("Transaction Pending...", transactionHash);
-          })
+          .send(
+            { from: this.props.account, gasPrice: gasPrice },
+            (err, transactionHash) => {
+              this.props.setMessage("Transaction Pending...", transactionHash);
+              console.log("Transaction Pending...", transactionHash);
+            }
+          )
           .on("confirmation", (number, receipt) => {
             if (number === 0) {
               this.props.setMessage(
@@ -106,7 +110,7 @@ class CreateProposalForm extends Component {
       <section className="form">
         <h4 className="title">Create a Dai Payment Proposal</h4>
         <h6 className="title">
-          {"( Treasury Balance: " + this.props.treasuryBalance + " Dai)"}
+          {"(Treasury Balance: " + this.props.treasuryBalance + " Dai)"}
         </h6>
         <br />
         <form

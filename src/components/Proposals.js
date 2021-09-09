@@ -470,6 +470,7 @@ class Proposals extends Component {
               isPayment={proposal[10]}
               updateProposalStates={this.getProposals}
               buttonsDisabled={this.props.buttonsDisabled}
+              getGasPrice={this.props.getGasPrice}
               {...this.props}
             />
           );

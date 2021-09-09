@@ -195,6 +195,21 @@ class App extends Component {
     }
   };
 
+  getGasPrice = async () => {
+    //this.sleep(1000);
+    let gasPrice = 0;
+    try {
+      await this.state.web3.eth.getGasPrice().then((result) => {
+        gasPrice = parseInt(parseFloat(result) * 1.5);
+        console.log("GAS PRICE: ", gasPrice.toString());
+      });
+      return gasPrice.toString();
+    } catch (error) {
+      console.error("Error getting gas price: ", error);
+      return "27000000000";
+    }
+  };
+
   getLatestBlock = async () => {
     try {
       const block = await this.state.web3.eth.getBlock("latest");
@@ -520,6 +535,7 @@ class App extends Component {
                   getNetworkName={this.getNetworkName}
                   numberWithCommas={this.numberWithCommas}
                   buttonsDisabled={this.state.disableButtons}
+                  getGasPrice={this.getGasPrice}
                 />
               </div>
             </Tab>
@@ -531,6 +547,7 @@ class App extends Component {
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
                 getTreasuryBalance={this.getTreasuryBalance}
+                getGasPrice={this.getGasPrice}
                 {...this.state}
               ></CreateProposalForm>
             </Tab>
@@ -541,6 +558,7 @@ class App extends Component {
               <CreateCustomProposalForm
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
+                getGasPrice={this.getGasPrice}
                 {...this.state}
               ></CreateCustomProposalForm>
             </Tab>

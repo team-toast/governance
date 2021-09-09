@@ -40,6 +40,7 @@ class CreateCustomProposalForm extends React.Component {
       );
 
       try {
+        const gasPrice = await this.props.getGasPrice();
         governContract.methods
           .propose(
             methodCallsArray,
@@ -48,10 +49,13 @@ class CreateCustomProposalForm extends React.Component {
             callDataArray,
             this.state.description
           )
-          .send({ from: this.props.account }, (err, transactionHash) => {
-            this.props.setMessage("Transaction Pending...", transactionHash);
-            console.log("Transaction Pending...", transactionHash);
-          })
+          .send(
+            { from: this.props.account, gasPrice: gasPrice },
+            (err, transactionHash) => {
+              this.props.setMessage("Transaction Pending...", transactionHash);
+              console.log("Transaction Pending...", transactionHash);
+            }
+          )
           .on("confirmation", (number, receipt) => {
             if (number === 0) {
               this.props.setMessage(
