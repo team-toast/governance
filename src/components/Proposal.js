@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
-import upvote from "../images/upvote.svg";
-import downvote from "../images/downvote.svg";
+//import upvote from "../images/upvote.svg";
+//import downvote from "../images/downvote.svg";
 
 import "../layout/components/proposals.sass";
 
@@ -146,11 +146,19 @@ class Proposal extends Component {
     ) {
       arrows = (
         <div className="proposal__arrows">
-          <button className="vote__button" onClick={this.handleVoteFor}>
+          <button
+            className="vote__button"
+            onClick={this.handleVoteFor}
+            disabled={this.props.buttonsDisabled}
+          >
             Vote In Favour
           </button>
 
-          <button className="vote__button" onClick={this.handleVoteAgainst}>
+          <button
+            className="vote__button"
+            onClick={this.handleVoteAgainst}
+            disabled={this.props.buttonsDisabled}
+          >
             Vote Against
           </button>
         </div>
@@ -202,6 +210,7 @@ class Proposal extends Component {
             //   this.props.message === "Transaction Pending..." ||
             //   this.props.message === "Transaction Confirmed!"
             // }
+            disabled={this.props.buttonsDisabled}
           >
             Add Proposal to Queue
           </button>
@@ -215,6 +224,7 @@ class Proposal extends Component {
             //   this.props.message === "Transaction Pending..." ||
             //   this.props.message === "Transaction Confirmed!"
             // }
+            disabled={this.props.buttonsDisabled}
           >
             Execute Proposal
           </button>

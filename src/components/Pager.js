@@ -15,7 +15,7 @@ class Pager extends Component {
     if (
       parseInt(this.props.numberOfProposals) -
         parseInt(this.props.bookmark) +
-        parseInt(this.props.proposalsPerPage) ==
+        parseInt(this.props.proposalsPerPage) ===
       parseInt(this.props.numberOfProposals)
     ) {
       this.setState({ newerDisabled: true });

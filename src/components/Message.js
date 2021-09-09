@@ -4,12 +4,6 @@ import "../layout/components/message.sass";
 
 class Message extends Component {
   render() {
-    let network;
-
-    if (this.props.network === "Ropsten") {
-      network = "ropsten.";
-    }
-
     if (this.props.message) {
       return (
         <a

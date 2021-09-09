@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 
 import Proposal from "./Proposal";
 //import "../layout/components/proposals.sass";
@@ -469,6 +469,7 @@ class Proposals extends Component {
               status={proposal[9]}
               isPayment={proposal[10]}
               updateProposalStates={this.getProposals}
+              buttonsDisabled={this.props.buttonsDisabled}
               {...this.props}
             />
           );

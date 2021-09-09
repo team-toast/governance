@@ -64,6 +64,7 @@ class App extends Component {
       delegateeAddress: "",
       delegatedAddress: "Unknown",
       treasuryBalance: 0,
+      disableButtons: true,
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -127,6 +128,9 @@ class App extends Component {
       this.getTokenBalance();
       this.getDelegateToAddress();
       this.getTreasuryBalance();
+      this.setState({ disableButtons: false });
+    } else {
+      this.setState({ disableButtons: true });
     }
   };
 
@@ -152,8 +156,11 @@ class App extends Component {
         this.getTotalSupply();
         this.getTokenBalance();
         this.getDelegateToAddress();
+        this.getLatestBlock();
+        this.setState({ disableButtons: false });
       } else {
         this.getNetworkName(networkId);
+        this.setState({ disableButtons: true });
       }
     });
 
@@ -512,6 +519,7 @@ class App extends Component {
                   getLatestBlock={this.getLatestBlock}
                   getNetworkName={this.getNetworkName}
                   numberWithCommas={this.numberWithCommas}
+                  buttonsDisabled={this.state.disableButtons}
                 />
               </div>
             </Tab>
