@@ -21,7 +21,7 @@ class Proposal extends Component {
         }
         setTimeout(() => {
           this.props.clearMessage();
-          this.props.updateProposalStates();
+          //this.props.updateProposalStates();
         }, 10000);
       })
       .on("error", (err, receipt) => {
@@ -47,7 +47,7 @@ class Proposal extends Component {
         }
         setTimeout(() => {
           this.props.clearMessage();
-          this.props.updateProposalStates();
+          //this.props.updateProposalStates();
         }, 10000);
       })
       .on("error", (err, receipt) => {
@@ -75,7 +75,7 @@ class Proposal extends Component {
           }
           setTimeout(() => {
             this.props.clearMessage();
-            this.props.updateProposalStates();
+            //this.props.updateProposalStates();
           }, 10000);
         })
         .on("error", (err, receipt) => {
@@ -99,7 +99,7 @@ class Proposal extends Component {
           }
           setTimeout(() => {
             this.props.clearMessage();
-            this.props.updateProposalStates();
+            //this.props.updateProposalStates();
           }, 10000);
         })
         .on("error", (err, receipt) => {
@@ -198,10 +198,10 @@ class Proposal extends Component {
             className="proposal__button"
             variant="secondary"
             onClick={this.handleProgressState}
-            disabled={
-              this.props.message === "Transaction Pending..." ||
-              this.props.message === "Transaction Confirmed!"
-            }
+            // disabled={
+            //   this.props.message === "Transaction Pending..." ||
+            //   this.props.message === "Transaction Confirmed!"
+            // }
           >
             Add Proposal to Queue
           </button>
@@ -211,10 +211,10 @@ class Proposal extends Component {
             className="proposal__button"
             variant="secondary"
             onClick={this.handleProgressState}
-            disabled={
-              this.props.message === "Transaction Pending..." ||
-              this.props.message === "Transaction Confirmed!"
-            }
+            // disabled={
+            //   this.props.message === "Transaction Pending..." ||
+            //   this.props.message === "Transaction Confirmed!"
+            // }
           >
             Execute Proposal
           </button>
