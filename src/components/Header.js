@@ -31,7 +31,7 @@ class Header extends Component {
           <br />
           {`Token Balance: ${this.props.balance}`}
           <br />
-          {this.props.delegatedAddress.length > 10
+          {this.props.delegatedAddress.length === 42
             ? `Delegating To: ${this.props.delegatedAddress.slice(
                 0,
                 4
