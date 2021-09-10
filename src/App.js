@@ -89,6 +89,7 @@ class App extends Component {
     ) {
       console.log("WEB3 not available");
       this.setState({ metaMaskMissing: true });
+      return;
     } else {
       const provider = window.ethereum;
       console.log(provider.isMetaMask);
@@ -96,6 +97,7 @@ class App extends Component {
         this.setState({ metaMaskMissing: false });
       } else {
         this.setState({ metaMaskMissing: true });
+        return;
       }
     }
 
