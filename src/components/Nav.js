@@ -4,7 +4,7 @@ import Message from "./Message";
 
 import "../layout/components/nav.sass";
 
-import logo from "../images/FoundyLogoCropped.PNG";
+import logo from "../images/foundryWhiteLogo.png";
 
 class Nav extends Component {
   render() {
