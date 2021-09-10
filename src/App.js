@@ -65,6 +65,7 @@ class App extends Component {
       delegatedAddress: "Unknown",
       treasuryBalance: 0,
       disableButtons: true,
+      metaMaskMissing: false,
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -81,6 +82,23 @@ class App extends Component {
   };
 
   onConnect = async () => {
+    console.log("OnConnect click");
+    if (
+      typeof window.ethereum === "undefined" //||
+      //typeof window.web3 !== "undefined"
+    ) {
+      console.log("WEB3 not available");
+      this.setState({ metaMaskMissing: true });
+    } else {
+      const provider = window.ethereum;
+      console.log(provider.isMetaMask);
+      if (provider.isMetaMask) {
+        this.setState({ metaMaskMissing: false });
+      } else {
+        this.setState({ metaMaskMissing: true });
+      }
+    }
+
     const provider = await this.web3Connect.connect();
 
     await this.subscribeProvider(provider);

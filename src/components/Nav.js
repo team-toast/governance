@@ -30,12 +30,30 @@ class Nav extends Component {
       );
     }
 
-    if (this.props.network && this.props.network !== "Matic") {
+    if (
+      (this.props.network && this.props.network !== "Matic") ||
+      this.props.metaMaskMissing
+    ) {
       return (
         <div className="nav__wrapper">
-          <p className="nav__network">
-            {`Note: Please connect to the Matic network`}
-          </p>
+          {this.props.network && this.props.network !== "Matic" && (
+            <p className="nav__network">
+              {`Note: Please connect to the Matic network`}
+            </p>
+          )}
+          {this.props.metaMaskMissing && (
+            <p className="nav__network">
+              {`Note: You need `}
+              <a
+                className="nav__network"
+                target="_blank"
+                href="https://metamask.io/"
+              >
+                MetaMask
+              </a>
+              {` to use Foundry Governance`}
+            </p>
+          )}
           <nav className="nav">
             <a className="nav__brand" href="/">
               <img src={logo} alt="Compound" className="nav__brand-logo" />
@@ -53,6 +71,7 @@ class Nav extends Component {
           <img src={logo} alt="Compound" className="nav__brand-logo" />
           <h1 className="nav__brand-name">Foundry Governance</h1>
         </a>
+
         {button}
       </nav>
     );
