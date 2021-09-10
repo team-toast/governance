@@ -50,7 +50,11 @@ class Header extends Component {
         <button
           className="header__button"
           onClick={this.props.delegate}
-          disabled={!this.props.connected || this.props.disableButtons}
+          disabled={
+            !this.props.connected ||
+            (this.props.disableButtons && this.props.balance === "0.00") ||
+            this.props.network !== "Matic"
+          }
         >
           Delegate
         </button>

@@ -83,10 +83,7 @@ class App extends Component {
 
   onConnect = async () => {
     console.log("OnConnect click");
-    if (
-      typeof window.ethereum === "undefined" //||
-      //typeof window.web3 !== "undefined"
-    ) {
+    if (typeof window.ethereum === "undefined") {
       console.log("WEB3 not available");
       this.setState({ metaMaskMissing: true });
       return;
@@ -143,12 +140,15 @@ class App extends Component {
 
     if (netName === "Matic") {
       this.getLatestBlock();
-      this.getVotingPower();
       this.getTotalSupply();
       this.getTokenBalance();
       this.getDelegateToAddress();
       this.getTreasuryBalance();
-      this.setState({ disableButtons: false });
+      if ((await this.getVotingPower()) === "0") {
+        this.setState({ disableButtons: true });
+      } else {
+        this.setState({ disableButtons: false });
+      }
     } else {
       this.setState({ disableButtons: true });
     }
@@ -375,6 +375,7 @@ class App extends Component {
           this.setState({ votingPower });
 
           votingPowerUpdated = true;
+          return votingPower;
         } catch (error) {
           console.error("Error setting token voting power: ", error);
           await this.sleep(1000);
