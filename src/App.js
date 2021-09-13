@@ -188,14 +188,10 @@ class App extends Component {
       if (networkId === 137) {
         this.setState({ chainId, networkId });
         this.getNetworkName(networkId);
-        this.getVotingPower();
-        this.getTotalSupply();
-        this.getTokenBalance();
-        this.getDelegateToAddress();
-        this.getLatestBlock();
-        this.getTreasuryBalance();
+        this.determineButtonsDisabled(this.state.web3);
+      } else {
+        this.determineButtonsDisabled(this.state.web3);
       }
-      this.determineButtonsDisabled(this.state.web3);
     });
 
     // provider.on("networkChanged", async (networkId) => {
