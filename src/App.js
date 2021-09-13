@@ -63,14 +63,15 @@ class App extends Component {
       networkId: null,
       delegateeAddress: "",
       delegatedAddress: "Unknown",
-      treasuryBalance: 0,
+      treasuryBalance: "Unknown",
       disableButtons: true,
       metaMaskMissing: false,
+      disableMessage: "Your wallet is not connected",
     };
 
     this.web3Connect = new Web3Connect.Core({
       network: "mainnet",
-      cacheProvider: true, //,
+      cacheProvider: true,
       providerOptions,
     });
   }
@@ -129,14 +130,22 @@ class App extends Component {
       contract: instance,
     });
 
-    // this.interval = setInterval(async () => {
-    //   this.getLatestBlock();
-    //   this.getNetworkName();
-    // }, 5000);
+    this.determineButtonsDisabled(web3);
+  };
 
-    await this.getAccount();
+  determineButtonsDisabled = async (web3) => {
+    const tmpAccount = await this.getAccount();
     const netId = await web3.eth.net.getId();
     const netName = this.getNetworkName(netId);
+
+    console.log("tmpAccount", tmpAccount);
+    if (tmpAccount === "undefined") {
+      this.setState({ disableButtons: true });
+      this.setState({ disableMessage: "Your wallet is not connected" });
+      return;
+    } else {
+      this.setState({ disableMessage: "" });
+    }
 
     if (netName === "Matic") {
       this.getLatestBlock();
@@ -146,16 +155,23 @@ class App extends Component {
       this.getTreasuryBalance();
       if ((await this.getVotingPower()) === "0") {
         this.setState({ disableButtons: true });
+        this.setState({ disableMessage: "You don't have voting power" });
       } else {
         this.setState({ disableButtons: false });
+        this.setState({ disableMessage: "" });
       }
     } else {
       this.setState({ disableButtons: true });
+      this.setState({ disableMessage: "You are not on the Matic network" });
     }
   };
 
   subscribeProvider = async (provider) => {
-    provider.on("close", () => this.disconnect());
+    provider.on("disconnect", () => {
+      this.setState({ disableMessage: "Your wallet is not connected." });
+      console.log("DISCONNECTIONNGNGNGN");
+      this.disconnect();
+    });
 
     provider.on("accountsChanged", async (accounts) => {
       const accounts2 = await this.state.web3.eth.getAccounts();
@@ -177,11 +193,9 @@ class App extends Component {
         this.getTokenBalance();
         this.getDelegateToAddress();
         this.getLatestBlock();
-        this.setState({ disableButtons: false });
-      } else {
-        this.getNetworkName(networkId);
-        this.setState({ disableButtons: true });
+        this.getTreasuryBalance();
       }
+      this.determineButtonsDisabled(this.state.web3);
     });
 
     // provider.on("networkChanged", async (networkId) => {
@@ -203,6 +217,8 @@ class App extends Component {
     }
     await this.web3Connect.clearCachedProvider();
     this.setState({ connected: false, account: null });
+    this.setState({ disableMessage: "Your wallet is not connected." });
+    this.setState({ disableButtons: true });
   };
 
   getAccount = async () => {
@@ -212,6 +228,7 @@ class App extends Component {
         account: accounts[0],
       });
       console.log(this.state.account);
+      return accounts[0];
     }
   };
 
@@ -363,8 +380,6 @@ class App extends Component {
         overrideAccount = this.state.account;
       }
 
-      // const retries = 500;
-      // let tryCount = 0;
       let votingPowerUpdated = false;
       while (votingPowerUpdated === false) {
         try {
@@ -379,7 +394,6 @@ class App extends Component {
         } catch (error) {
           console.error("Error setting token voting power: ", error);
           await this.sleep(1000);
-          //tryCount++;
         }
       }
     }
@@ -394,8 +408,6 @@ class App extends Component {
         tokenAddress
       );
 
-      // const retries = 5;
-      // let tryCount = 0;
       let totalSupplyUpdated = false;
       while (totalSupplyUpdated === false) {
         try {
@@ -408,7 +420,6 @@ class App extends Component {
         } catch (error) {
           console.error("Error setting token total supply: ", error);
           await this.sleep(1000);
-          //tryCount++;
         }
       }
     }
@@ -430,8 +441,6 @@ class App extends Component {
         overrideAccount = this.state.account;
       }
 
-      // const retries = 500;
-      // let tryCount = 0;
       let delegatedAddressUpdated = false;
       while (delegatedAddressUpdated === false) {
         try {
@@ -453,7 +462,6 @@ class App extends Component {
         } catch (error) {
           await this.sleep(1000);
           console.error("Error setting token voting power: ", error);
-          //tryCount++;
         }
       }
     }
@@ -487,12 +495,16 @@ class App extends Component {
       tokenAddress
     );
     try {
+      const gasPrice = await this.getGasPrice();
       tokenContract.methods
         .delegate(this.state.delegateeAddress)
-        .send({ from: this.state.account }, (err, transactionHash) => {
-          this.setMessage("Transaction Pending...", transactionHash);
-          console.log("Transaction Pending...", transactionHash);
-        })
+        .send(
+          { from: this.state.account, gasPrice: gasPrice },
+          (err, transactionHash) => {
+            this.setMessage("Transaction Pending...", transactionHash);
+            console.log("Transaction Pending...", transactionHash);
+          }
+        )
         .on("confirmation", (number, receipt) => {
           if (number === 0) {
             this.setMessage("Transaction Confirmed!", receipt.transactionHash);
@@ -538,6 +550,7 @@ class App extends Component {
           delegate={this.delegate}
           updateDelegateeAddress={this.updateDelegateeAddress}
           disableButtons={this.state.disableButtons}
+          disableMessage={this.state.disableMessage}
         />
         <Container className="tabcontainer">
           <Tabs
