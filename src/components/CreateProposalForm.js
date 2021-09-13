@@ -6,6 +6,8 @@ import governorABI from "../contracts/GovernorAlpha.json";
 import Forwarder from "../contracts/Forwarder.json";
 import Dai from "../contracts/Dai.json";
 
+import PopupHint from "./PopupHint";
+
 class CreateProposalForm extends Component {
   constructor(props) {
     super(props);
@@ -159,12 +161,14 @@ class CreateProposalForm extends Component {
           </FloatingLabel>
           <br />
           <div className="center_div">
-            <input
-              disabled={!this.props.connected || this.props.disableButtons}
-              class="dai_proposal_button"
-              type="submit"
-              value="Create Proposal"
-            />
+            <PopupHint message={this.props.disableMessage}>
+              <input
+                disabled={!this.props.connected || this.props.disableButtons}
+                class="dai_proposal_button"
+                type="submit"
+                value="Create Proposal"
+              />
+            </PopupHint>
           </div>
         </form>
       </section>

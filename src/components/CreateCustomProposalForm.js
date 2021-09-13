@@ -2,6 +2,7 @@ import React from "react";
 import "../layout/components/createcustomproposal.sass";
 import { Form, FloatingLabel } from "react-bootstrap";
 import governorABI from "../contracts/GovernorAlpha.json";
+import PopupHint from "./PopupHint";
 
 class CreateCustomProposalForm extends React.Component {
   constructor() {
@@ -187,12 +188,14 @@ class CreateCustomProposalForm extends React.Component {
           </FloatingLabel>
           <br />
           <div className="center_div">
-            <button
-              className="medium"
-              disabled={!this.props.connected || this.props.disableButtons}
-            >
-              Create Proposal
-            </button>
+            <PopupHint message={this.props.disableMessage}>
+              <button
+                className="medium"
+                disabled={!this.props.connected || this.props.disableButtons}
+              >
+                Create Proposal
+              </button>
+            </PopupHint>
           </div>
           <br />
           <br />

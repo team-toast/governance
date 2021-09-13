@@ -23,10 +23,6 @@ class Pager extends Component {
       this.setState({ newerDisabled: false });
     }
 
-    console.log(
-      "VALUEEE: ",
-      parseInt(this.props.numberOfProposals) - parseInt(this.props.bookmark) - 1
-    );
     if (
       parseInt(this.props.numberOfProposals) -
         parseInt(this.props.bookmark) -

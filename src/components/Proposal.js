@@ -4,6 +4,7 @@ import React, { Component } from "react";
 //import downvote from "../images/downvote.svg";
 
 import "../layout/components/proposals.sass";
+import PopupHint from "./PopupHint";
 
 class Proposal extends Component {
   handleVoteFor = async () => {
@@ -25,7 +26,6 @@ class Proposal extends Component {
         }
         setTimeout(() => {
           this.props.clearMessage();
-          //this.props.updateProposalStates();
         }, 10000);
       })
       .on("error", (err, receipt) => {
@@ -137,29 +137,6 @@ class Proposal extends Component {
   render() {
     let arrows;
 
-    // if (
-    //   this.props.account &&
-    //   this.props.end > this.props.latestBlock &&
-    //   this.props.votingPower > 0
-    // ) {
-    //   arrows = (
-    //     <div className="proposal__arrows">
-    //       <img
-    //         src={upvote}
-    //         alt="Vote for"
-    //         className="proposal__arrow"
-    //         onClick={this.handleVoteFor}
-    //       />
-    //       <img
-    //         src={downvote}
-    //         alt="Vote against"
-    //         className="proposal__arrow"
-    //         onClick={this.handleVoteAgainst}
-    //       />
-    //     </div>
-    //   );
-    // }
-
     if (
       this.props.account &&
       this.props.end > this.props.latestBlock &&
@@ -167,21 +144,24 @@ class Proposal extends Component {
     ) {
       arrows = (
         <div className="proposal__arrows">
-          <button
-            className="vote__button"
-            onClick={this.handleVoteFor}
-            disabled={!this.props.connected || this.props.buttonsDisabled}
-          >
-            Vote In Favour
-          </button>
-
-          <button
-            className="vote__button"
-            onClick={this.handleVoteAgainst}
-            disabled={!this.props.connected || this.props.buttonsDisabled}
-          >
-            Vote Against
-          </button>
+          <PopupHint message={this.props.disableMessage} position="left">
+            <button
+              className="vote__button"
+              onClick={this.handleVoteFor}
+              disabled={!this.props.connected || this.props.buttonsDisabled}
+            >
+              Vote In Favour
+            </button>
+          </PopupHint>
+          <PopupHint message={this.props.disableMessage} position="left">
+            <button
+              className="vote__button"
+              onClick={this.handleVoteAgainst}
+              disabled={!this.props.connected || this.props.buttonsDisabled}
+            >
+              Vote Against
+            </button>
+          </PopupHint>
         </div>
       );
     }
@@ -223,32 +203,28 @@ class Proposal extends Component {
         </div>
         {arrows}
         {this.props.status === "Succeeded" ? (
-          <button
-            className="proposal__button"
-            variant="secondary"
-            onClick={this.handleProgressState}
-            // disabled={
-            //   this.props.message === "Transaction Pending..." ||
-            //   this.props.message === "Transaction Confirmed!"
-            // }
-            disabled={!this.props.connected || this.props.buttonsDisabled}
-          >
-            Add Proposal to Queue
-          </button>
+          <PopupHint message={this.props.disableMessage} position="left">
+            <button
+              className="proposal__button"
+              variant="secondary"
+              onClick={this.handleProgressState}
+              disabled={!this.props.connected || this.props.buttonsDisabled}
+            >
+              Add Proposal to Queue
+            </button>
+          </PopupHint>
         ) : null}
         {this.props.status === "Queued" ? (
-          <button
-            className="proposal__button"
-            variant="secondary"
-            onClick={this.handleProgressState}
-            // disabled={
-            //   this.props.message === "Transaction Pending..." ||
-            //   this.props.message === "Transaction Confirmed!"
-            // }
-            disabled={!this.props.connected || this.props.buttonsDisabled}
-          >
-            Execute Proposal
-          </button>
+          <PopupHint message={this.props.disableMessage} position="left">
+            <button
+              className="proposal__button"
+              variant="secondary"
+              onClick={this.handleProgressState}
+              disabled={!this.props.connected || this.props.buttonsDisabled}
+            >
+              Execute Proposal
+            </button>
+          </PopupHint>
         ) : null}
       </div>
     );

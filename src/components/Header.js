@@ -1,5 +1,8 @@
 import React, { Component } from "react";
+import Tooltip from "react-bootstrap/Tooltip";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import "../layout/components/header.sass";
+import PopupHint from "./PopupHint";
 //0x7E1d0353063F01CfFa92f4a9C8A100cFE37d8264
 //0x0000000000000000000000000000000000000000
 class Header extends Component {
@@ -46,18 +49,25 @@ class Header extends Component {
           placeholder="Address to Delegate to"
           style={{ width: "400px" }}
         />
-
-        <button
-          className="header__button"
-          onClick={this.props.delegate}
-          disabled={
-            !this.props.connected ||
-            (this.props.disableButtons && this.props.balance === "0.00") ||
-            this.props.network !== "Matic"
+        <PopupHint
+          message={
+            this.props.disableMessage === "You don't have voting power"
+              ? ""
+              : this.props.disableMessage
           }
         >
-          Delegate
-        </button>
+          <button
+            className="header__button"
+            onClick={this.props.delegate}
+            disabled={
+              !this.props.connected ||
+              (this.props.disableButtons && this.props.balance === "0.00") ||
+              this.props.network !== "Matic"
+            }
+          >
+            Delegate
+          </button>
+        </PopupHint>
       </section>
     );
   }
