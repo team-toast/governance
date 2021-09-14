@@ -46,8 +46,7 @@ class Header extends Component {
         </p>
         <input
           onChange={this.props.updateDelegateeAddress}
-          placeholder="Address to Delegate to"
-          style={{ width: "400px" }}
+          placeholder="0x... Address to Delegate to"
         />
         <PopupHint
           message={
