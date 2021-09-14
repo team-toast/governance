@@ -164,7 +164,7 @@ class CreateProposalForm extends Component {
             <PopupHint message={this.props.disableMessage}>
               <input
                 disabled={!this.props.connected || this.props.disableButtons}
-                class="dai_proposal_button"
+                className="dai_proposal_button"
                 type="submit"
                 value="Create Proposal"
               />

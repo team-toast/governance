@@ -139,7 +139,7 @@ class CreateCustomProposalForm extends React.Component {
           {/* ... */}
 
           {this.state.methodCalls.map((entry, idx) => (
-            <div className="entry">
+            <div key={idx} className="entry">
               <input
                 required
                 type="text"

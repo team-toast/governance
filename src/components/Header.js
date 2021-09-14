@@ -12,7 +12,7 @@ class Header extends Component {
         <h1 className="header__title">Foundry Governance Proposals</h1>
         <p className="header__balance__white">
           {"Voting Power:"}
-          <text
+          <span
             className={
               this.props.votingPower === "0"
                 ? "header__balance__orange"
@@ -30,7 +30,7 @@ class Header extends Component {
                 ? "0% (Delegation Required)"
                 : "Unknown"
             }`}
-          </text>
+          </span>
           <br />
           {`Token Balance: ${this.props.balance}`}
           <br />

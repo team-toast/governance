@@ -170,8 +170,8 @@ class Proposal extends Component {
       <div className="proposal">
         <h4 className="proposal__title">{this.props.title}</h4>
         <div className="proposal__info">
+          <h6>Proposal Info</h6>
           <p className="proposal__votes">
-            <h6>Proposal Info</h6>
             {"Votes in Favour: "} {this.props.infavor}
             <br />
             {"Votes Against: "} {this.props.against}
@@ -196,10 +196,8 @@ class Proposal extends Component {
           </p>
         </div>
         <div className="proposal__bottom">
-          <p className="proposal__description">
-            <h6>Description</h6>
-            {this.props.description}
-          </p>
+          <h6>Description</h6>
+          <p className="proposal__description">{this.props.description}</p>
         </div>
         {arrows}
         {this.props.status === "Succeeded" ? (
