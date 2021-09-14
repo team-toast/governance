@@ -185,12 +185,14 @@ class App extends Component {
     provider.on("chainChanged", async (chainId) => {
       const { web3 } = this.state;
       const networkId = await web3.eth.net.getId();
-      if (networkId === 137) {
-        this.setState({ chainId, networkId });
-        this.getNetworkName(networkId);
-        this.determineButtonsDisabled(this.state.web3);
-      } else {
-        this.determineButtonsDisabled(this.state.web3);
+      if (this.state.connected) {
+        if (networkId === 137) {
+          this.setState({ chainId, networkId });
+          this.getNetworkName(networkId);
+          this.determineButtonsDisabled(this.state.web3);
+        } else {
+          this.determineButtonsDisabled(this.state.web3);
+        }
       }
     });
 
