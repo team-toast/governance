@@ -54,7 +54,7 @@ class Nav extends Component {
               {` to use Foundry Governance`}
             </p>
           )}
-          <nav className="nav">
+          <nav className="nav top-nav">
             <a className="nav__brand" href="/">
               <img src={logo} alt="Compound" className="nav__brand-logo" />
               <h1 className="nav__brand-name">Foundry Governance</h1>
@@ -66,7 +66,7 @@ class Nav extends Component {
     }
 
     return (
-      <nav className="nav">
+      <nav className="nav top-nav">
         <a className="nav__brand" href="/">
           <img src={logo} alt="Compound" className="nav__brand-logo" />
           <h1 className="nav__brand-name">Foundry Governance</h1>
