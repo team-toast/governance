@@ -130,9 +130,9 @@ class CreateProposalForm extends Component {
             <input
               required
               type="text"
+              placeholder="0x..."
               value={this.state.value}
               onChange={this.handleAddressChange}
-              style={{ width: "400px" }}
             />
           </label>
           <br />
@@ -143,22 +143,26 @@ class CreateProposalForm extends Component {
               required
               type="number"
               step="0.01"
+              placeholder="1"
               value={this.state.value}
               onChange={this.handleAmountChange}
-              style={{ width: "400px" }}
             />
           </label>
           <br />
           <br />
-          <FloatingLabel controlId="floatingTextarea2" label="Description">
-            <Form.Control
-              required
-              as="textarea"
-              placeholder="Describe the payment proposal"
-              style={{ height: "200px" }}
-              onChange={this.handleDescriptionChange}
-            />
-          </FloatingLabel>
+          <label>
+            Description: <br />
+            <FloatingLabel controlId="floatingTextarea2">
+              <Form.Control
+                required
+                as="textarea"
+                placeholder="Describe the payment proposal"
+                style={{ height: "200px" }}
+                onChange={this.handleDescriptionChange}
+              />
+            </FloatingLabel>
+          </label>
+          <br />
           <br />
           <div className="center_div">
             <PopupHint message={this.props.disableMessage}>

@@ -15,7 +15,14 @@ class Nav extends Component {
     } else {
       button = (
         <p
-          className="nav__account"
+          tooltip={
+            this.props.connected ? "Disconnect wallet" : "Connect wallet"
+          }
+          className={
+            this.props.connected
+              ? "nav__account connected-wallet"
+              : "nav__account"
+          }
           onClick={
             this.props.connected ? this.props.disconnect : this.props.onConnect
           }

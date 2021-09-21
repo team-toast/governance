@@ -1,6 +1,8 @@
 @import ../config/_colors
 @import ../config/_variables
 @import ../config/_breakpoints
+
+.pager-section
   
 .pager
   height: 50px
@@ -13,6 +15,8 @@
   background: $color-light-grey
   justify-content: center
   margin-bottom: 10px
+  position: sticky
+  top: 60px
 
 .pager__title
   font-size: 32px
@@ -96,10 +100,11 @@
 
 .pager__button
     display: block
-    padding: 6px 30px
+    flex: 1 1 auto
+    padding: 6px 1rem
     border-radius: 5px
-    background-color: $color-light-grey
-    color: #000
+    background-color: transparent
+    color: $color-dark-grey
     border: none
     font-size: 16px
     margin-top: 15px
@@ -107,7 +112,8 @@
     margin-right: 5px
 
     &:hover
-      background-color: #999
+      background-color: $color-dark-grey
+      color: #fff
 
     &:disabled
       background-color: $color-light-grey

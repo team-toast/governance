@@ -201,7 +201,7 @@ class Proposal extends Component {
         </div>
         {arrows}
         {this.props.status === "Succeeded" ? (
-          <PopupHint message={this.props.disableMessage} position="left">
+          <PopupHint message={this.props.disableMessage} position="bottom">
             <button
               className="proposal__button"
               variant="secondary"
@@ -213,7 +213,7 @@ class Proposal extends Component {
           </PopupHint>
         ) : null}
         {this.props.status === "Queued" ? (
-          <PopupHint message={this.props.disableMessage} position="left">
+          <PopupHint message={this.props.disableMessage} position="bottom">
             <button
               className="proposal__button"
               variant="secondary"

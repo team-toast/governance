@@ -37,7 +37,7 @@ class Pager extends Component {
 
   render() {
     return (
-      <section>
+      <section className="pager-section">
         <section className="pager">
           <button
             className="pager__button"

@@ -42,12 +42,20 @@
 
 .nav__account
   color: $color-white
-  background: $color-dark-grey
+  background: #f60
   border-radius: 3px
   font-size: 14px
   padding: 8px 16px
   cursor: pointer
   margin: 0
+  border: solid 2px #f60
+  &:hover
+    box-shadow: 0 0 20px #f60
+  &.connected-wallet
+    background: none
+    border: solid 2px #fff
+    &:hover
+      box-shadow: 0 0 20px #fff
 
 .nav__wrapper
   background: $color-black

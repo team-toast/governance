@@ -68,3 +68,40 @@ body
       left: 50%
       margin-left: -6px
       transition: top 0.25s
+
+button:disabled
+  opacity: 0.5
+
+@media screen and (max-width: 40rem)
+  .tabcontainer .nav-tabs
+    padding: 0
+    background: rgb(249,250,251)
+    background: linear-gradient(180deg, #f9fafb 47%, rgba(249, 250, 251, 0) 100%)
+    position: relative
+    top: 1rem
+    .nav-link
+      color: #000
+      background: #ccc
+      border-radius: 5px
+      border: none
+      margin: 0
+      color: #000
+      position: relative
+      border-top: solid 4px transparent
+      margin-bottom: 1rem
+      &:hover
+        color: #777
+        border: none
+        border-radius: 0
+        background: #F9FAFB
+        border-top: solid 4px #ccc
+    .nav-link.active
+      background: #f60
+      pointer-events: none
+      border: none
+      border-radius: 0
+      transition: all 0.15s ease
+      border-radius: 5px
+      color: #fff
+      &:after
+        display: none
