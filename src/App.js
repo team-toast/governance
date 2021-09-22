@@ -617,6 +617,7 @@ class App extends Component {
                   numberWithCommas={this.numberWithCommas}
                   buttonsDisabled={this.state.disableButtons}
                   getGasPrice={this.getGasPrice}
+                  setStatusOf={this.setStatusOf}
                 />
               </div>
             </Tab>

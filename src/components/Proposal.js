@@ -70,6 +70,7 @@ class Proposal extends Component {
     //succeeded can be queued state: 4, queued can be executed state: 5
     let gasPrice = await this.props.getGasPrice();
     if (this.props.status === "Succeeded") {
+      this.props.setStatusOf("Adding proposal to Queue ...", true);
       this.props.contract.methods
         .queue(this.props.id)
         .send(
@@ -79,6 +80,7 @@ class Proposal extends Component {
           },
           (err, transactionHash) => {
             this.props.setMessage("Transaction Pending...", transactionHash);
+            this.props.setStatusOf("Transaction Pending ...", true);
           }
         )
         .on("confirmation", (number, receipt) => {
@@ -87,10 +89,12 @@ class Proposal extends Component {
               "Transaction Confirmed!",
               receipt.transactionHash
             );
+            this.props.setStatusOf("Transaction Confirmed!", true);
           }
           setTimeout(() => {
             this.props.clearMessage();
             //this.props.updateProposalStates();
+            this.props.setStatusOf("", false);
           }, 10000);
         })
         .on("error", (err, receipt) => {
@@ -98,8 +102,10 @@ class Proposal extends Component {
             "Transaction Failed.",
             receipt ? receipt.transactionHash : null
           );
+          this.props.setStatusOf("Transaction failed! Please try again.", true);
         });
     } else if (this.props.status === "Queued") {
+      this.props.setStatusOf("Executing proposal ...", true);
       this.props.contract.methods
         .execute(this.props.id)
         .send(
@@ -109,6 +115,7 @@ class Proposal extends Component {
           },
           (err, transactionHash) => {
             this.props.setMessage("Transaction Pending...", transactionHash);
+            this.props.setStatusOf("Transaction Pending ...", true);
           }
         )
         .on("confirmation", (number, receipt) => {
@@ -117,10 +124,12 @@ class Proposal extends Component {
               "Transaction Confirmed!",
               receipt.transactionHash
             );
+            this.props.setStatusOf("Transaction Confirmed!", true);
           }
           setTimeout(() => {
             this.props.clearMessage();
             //this.props.updateProposalStates();
+            this.props.setStatusOf("", false);
           }, 10000);
         })
         .on("error", (err, receipt) => {
@@ -128,6 +137,7 @@ class Proposal extends Component {
             "Transaction Failed.",
             receipt ? receipt.transactionHash : null
           );
+          this.props.setStatusOf("Transaction Failed! Please try again.", true);
         });
     } else {
       console.log("This proposal is not in the succeeded or queued states");
