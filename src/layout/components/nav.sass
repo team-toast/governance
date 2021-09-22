@@ -49,13 +49,32 @@
   cursor: pointer
   margin: 0
   border: solid 2px #f60
-  transition: all 0.15s ease
+  transition: all .2s
+  position: relative
   &:hover
     box-shadow: 0 0 10px #f60
-    transition: all 0.25s ease
+    transition: all .2s
+  &::after
+    content: ""
+    display: inline-block
+    height: 100%
+    width: 100%
+    border-radius: 100px
+    position: absolute
+    top: 0
+    left: 0
+    z-index: -1
+    transition: all .4s
+    background-color: #f60
+
+  &:hover::after
+    transform: scaleX(1.4) scaleY(1.6)
+    opacity: 0
   &.connected-wallet
-    background: none
+    background: #000
     border: solid 2px #fff
+    &::after
+      background-color: #fff
     &:hover
       box-shadow: 0 0 10px #fff
 

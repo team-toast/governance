@@ -127,7 +127,7 @@ class CreateCustomProposalForm extends React.Component {
 
   render() {
     return (
-      <section>
+      <section className="createCustomProposalForm">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -162,14 +162,14 @@ class CreateCustomProposalForm extends React.Component {
                 className="remove"
                 //disabled={!this.props.connected || this.props.disableButtons}
               >
-                Remove
+                X
               </button>
             </div>
           ))}
           <button
             type="button"
             onClick={this.handleAddEntry}
-            className="small"
+            className="add-new-call"
             //disabled={!this.props.connected || this.props.disableButtons}
           >
             Add Contract Call

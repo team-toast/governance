@@ -17,7 +17,7 @@
     background: #222
     border: solid 1px #f7f7f7
     border-radius: 5px
-    padding: 1rem 1.5rem
+    padding: 0.9rem 1.5rem
     outline: none
     color: #ffffff
     margin: 2rem 0 0
@@ -99,29 +99,44 @@
   font-size: 16px
 
 .header__button
-    display: block
-    padding: 5px 20px
-    border-radius: 5px
-    background-color: #fff
-    color: #000
-    border: none
-    font-size: 16px
-    margin-top: 25px
-    background: #f60
+  display: block
+  padding: 1rem 2rem
+  border-radius: 27px
+  color: #000
+  border: none
+  font-size: 16px
+  margin-top: 25px
+  background: #f60
+  width: 200px
+  max-width: 290px
+  margin: auto
+  margin-top: 2rem
+  color: #fff
+  position: relative
+  &:hover
+    background-color: #999
+  &:disabled
+    background-color: #999
+    color: #555
+    pointer-events: none
+  &::after
+    content: ""
+    display: inline-block
+    height: 100%
     width: 100%
-    max-width: 290px
-    margin: auto
-    margin-top: 2rem
-    color: #fff
-    padding: 1rem 2rem
+    border-radius: 100px
+    position: absolute
+    top: 0
+    left: 0
+    z-index: -1
+    transition: all .4s
 
-    &:hover
-      background-color: #999
+  &::after
+    background-color: #f60
 
-    &:disabled
-      background-color: #999
-      color: #555
-      pointer-events: none
+  &:hover::after
+    transform: scaleX(1.4) scaleY(1.6)
+    opacity: 0
 
 // .tooltip
 //   background-color: #000

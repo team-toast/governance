@@ -490,6 +490,16 @@ class Proposals extends Component {
             olderButtonDisable={this.state.olderButtonDisable}
           ></Pager>
           {proposals.reverse()}
+          <Pager
+            refresh={this.refresh}
+            next={this.next}
+            back={this.back}
+            numberOfProposals={this.state.numberOfProposals}
+            bookmark={this.state.pageBookmark}
+            proposalsPerPage={this.state.proposalsPerPage}
+            newerButtonDisable={this.state.newerButtonDisable}
+            olderButtonDisable={this.state.olderButtonDisable}
+          ></Pager>
         </section>
       );
     } else {
