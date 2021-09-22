@@ -1,0 +1,86 @@
+.fire-content
+    position: fixed
+    left: 50%
+    bottom: 0
+    margin: 0 0 -30px -100px
+    width: 200px
+    height: 200px
+    overflow: hidden
+    border-radius: 100%
+
+    width: 100%
+    text-align: center
+    left: 0
+    bottom: 0
+    border-radius: 0
+    margin: 0
+
+    background: none
+    background: linear-gradient(0deg, rgba(255,255,255,0.8) 0%, rgba(249,250,251,0) 100%)
+
+    &::after
+        content: ""
+        height: 5px
+        width: 0%
+        background: #f60
+        position: absolute
+        left: 0
+        bottom: 0
+        animation: loaderLeftToRight 5s infinite
+
+    .fire
+        filter: url(#goo)
+        position: absolute
+        left: 0
+        height: 100%
+        animation: loaderFromLeftToRight 5s infinite
+
+    figure.floating
+        position: absolute
+        margin: 0 0 -15px
+        left: calc(50% - 70px)
+        bottom: 0
+        width: 70px
+        height: 70px
+        background: #f60
+        border-radius: 100%
+        @for $i from 1 through 16
+            &:nth-child(#{$i})
+                animation: firecircle 1.2s #{$i*0.14}s cubic-bezier(0.5, 0.07, 0.64, 1) infinite
+                margin-left: random(70)+px
+                margin-bottom: -#{15+random(25)}px
+
+@keyframes loaderLeftToRight
+    0%
+        width: 0%
+    100%
+        width: 100%
+
+@keyframes loaderFromLeftToRight
+    0%
+        left: 0
+    100%
+        left: 100%
+
+@keyframes firecircle
+    0%
+        transform: translateY(0) scale(1)
+        background: #f60
+
+    100%
+        transform: translateY(-175px) scale(0)
+        background: #ffc107
+
+@keyframes firereverseleft
+    0%
+        transform: translateY(0) translateX(0) scale(0.3)
+
+    100%
+        transform: translateY(-175px) translateX(50px) scale(1)
+
+@keyframes firereverseright
+    0%
+        transform: translateY(0) translateX(0) scale(0.3)
+
+    100%
+        transform: translateY(-175px) translateX(-50px) scale(1)

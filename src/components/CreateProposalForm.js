@@ -25,6 +25,8 @@ class CreateProposalForm extends Component {
     console.log("of amount: ", amount);
     console.log("Decription: ", description);
 
+    this.props.setStatusOf("Creating proposal ...", true);
+
     if (this.props.network === "Matic") {
       const governAddress = governorABI.networks[137]["address"];
       const governContract = new this.props.web3.eth.Contract(
@@ -59,6 +61,7 @@ class CreateProposalForm extends Component {
             (err, transactionHash) => {
               this.props.setMessage("Transaction Pending...", transactionHash);
               console.log("Transaction Pending...", transactionHash);
+              this.props.setStatusOf("Transaction Pending ...", true);
             }
           )
           .on("confirmation", (number, receipt) => {
@@ -67,9 +70,11 @@ class CreateProposalForm extends Component {
                 "Transaction Confirmed!",
                 receipt.transactionHash
               );
+              this.props.setStatusOf("Transaction Confirmed!", true);
               console.log("Transaction Confirmed!", receipt.transactionHash);
             }
             setTimeout(() => {
+              this.props.setStatusOf("", false);
               this.props.clearMessage();
             }, 5000);
           })
@@ -78,9 +83,14 @@ class CreateProposalForm extends Component {
               "Transaction Failed.",
               receipt ? receipt.transactionHash : null
             );
+            this.props.setStatusOf(
+              "Transaction Failed! Please try again.",
+              true
+            );
             console.log("Transaction Failed!");
           });
       } catch (error) {
+        this.props.setStatusOf("Transaction Failed! Please try again.", true);
         console.error("Error in create proposal method: ", error);
       }
     }

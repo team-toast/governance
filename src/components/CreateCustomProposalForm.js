@@ -33,6 +33,8 @@ class CreateCustomProposalForm extends React.Component {
 
     console.log("Decription: ", this.state.description);
 
+    this.props.setStatusOf("Creating custom proposal ...", true);
+
     if (this.props.network === "Matic") {
       const governAddress = governorABI.networks[137]["address"];
       const governContract = new this.props.web3.eth.Contract(
@@ -55,6 +57,7 @@ class CreateCustomProposalForm extends React.Component {
             (err, transactionHash) => {
               this.props.setMessage("Transaction Pending...", transactionHash);
               console.log("Transaction Pending...", transactionHash);
+              this.props.setStatusOf("Transaction Pending ...", true);
             }
           )
           .on("confirmation", (number, receipt) => {
@@ -64,8 +67,10 @@ class CreateCustomProposalForm extends React.Component {
                 receipt.transactionHash
               );
               console.log("Transaction Confirmed!", receipt.transactionHash);
+              this.props.setStatusOf("Transaction Confirmed!", true);
             }
             setTimeout(() => {
+              this.props.setStatusOf("", false);
               this.props.clearMessage();
             }, 5000);
           })
@@ -75,8 +80,13 @@ class CreateCustomProposalForm extends React.Component {
               receipt ? receipt.transactionHash : null
             );
             console.log("Transaction Failed!");
+            this.props.setStatusOf(
+              "Transaction Failed! Please try again.",
+              true
+            );
           });
       } catch (error) {
+        this.props.setStatusOf("Transaction Failed! Please try again.", true);
         console.error("Error in create proposal method: ", error);
       }
     }

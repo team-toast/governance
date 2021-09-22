@@ -15,6 +15,8 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
 import "./layout/config/_base.sass";
 
+import Status from "./components/Status";
+
 function initWeb3(provider) {
   const web3 = new Web3(provider);
 
@@ -67,6 +69,8 @@ class App extends Component {
       disableButtons: true,
       metaMaskMissing: false,
       disableMessage: "Your wallet is not connected",
+      firetext: "Delegating ...",
+      firetextShow: false,
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -485,7 +489,19 @@ class App extends Component {
     });
   };
 
+  setStatusOf = (text, show) => {
+    this.setState({
+      firetext: text,
+      firetextShow: show,
+    });
+  };
+
   delegate = async () => {
+    this.setState({
+      firetext: "Delegating ...",
+      firetextShow: true,
+    });
+
     const tokenAddress = contract.contractAddresses["token"]["address"];
 
     const tokenContract = new this.state.web3.eth.Contract(
@@ -499,6 +515,10 @@ class App extends Component {
         .send(
           { from: this.state.account, gasPrice: gasPrice },
           (err, transactionHash) => {
+            this.setState({
+              firetext: "Transaction Pending ...",
+              firetextShow: true,
+            });
             this.setMessage("Transaction Pending...", transactionHash);
             console.log("Transaction Pending...", transactionHash);
           }
@@ -509,9 +529,16 @@ class App extends Component {
             console.log("Transaction Confirmed!", receipt.transactionHash);
             this.getVotingPower(); // Update voting power that might have changed after delegating
             this.getDelegateToAddress();
+            this.setState({
+              firetext: "Transaction Confirmed!",
+              firetextShow: true,
+            });
           }
           setTimeout(() => {
             this.clearMessage();
+            this.setState({
+              firetextShow: false,
+            });
           }, 5000);
         })
         .on("error", (err, receipt) => {
@@ -519,13 +546,28 @@ class App extends Component {
             "Transaction Failed.",
             receipt ? receipt.transactionHash : null
           );
+          this.setState({
+            firetext: "Could not delegate. Please try again.",
+            firetextShow: true,
+          });
           console.log("Transaction Failed!");
         });
 
       console.log("Delegated to: ", this.state.delegateeAddress);
     } catch (error) {
+      this.setState({
+        firetext: "Could not delegate.",
+        firetextShow: true,
+      });
       console.error("Error in delegate method: ", error);
     }
+  };
+
+  hideLoader = () => {
+    this.setState({
+      firetext: "",
+      firetextShow: false,
+    });
   };
 
   updateDelegateeAddress = async (evt) => {
@@ -538,6 +580,12 @@ class App extends Component {
   render() {
     return (
       <div className="app">
+        {this.state.firetextShow && (
+          <Status
+            hidestatus={this.hideLoader}
+            firetext={this.state.firetext}
+          ></Status>
+        )}
         <Nav
           {...this.state}
           onConnect={this.onConnect}
@@ -577,6 +625,7 @@ class App extends Component {
               title="Create Dai Payment Proposal"
             >
               <CreateProposalForm
+                setStatusOf={this.setStatusOf}
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
                 getTreasuryBalance={this.getTreasuryBalance}
@@ -590,6 +639,7 @@ class App extends Component {
               title="Create Custom Proposal"
             >
               <CreateCustomProposalForm
+                setStatusOf={this.setStatusOf}
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
                 getGasPrice={this.getGasPrice}
