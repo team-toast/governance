@@ -145,6 +145,31 @@ class Proposal extends Component {
   };
 
   render() {
+    let percentageValue;
+
+    let infavorGrowth;
+    let againstGrowth;
+
+    if (parseFloat(this.props.infavor) > parseFloat(this.props.against)) {
+      percentageValue = 100 / parseFloat(this.props.infavor);
+      let perc =
+        (parseFloat(this.props.infavor) - parseFloat(this.props.against)) *
+        percentageValue;
+      console.log("for", perc);
+      infavorGrowth = {
+        width: isNaN(perc) ? "0%" : `${perc}%`,
+      };
+    } else {
+      percentageValue = 100 / parseFloat(this.props.against);
+      let perc =
+        (parseFloat(this.props.against) - parseFloat(this.props.infavor)) *
+        percentageValue;
+      console.log("against", perc);
+      againstGrowth = {
+        width: isNaN(perc) ? "0%" : `${perc}%`,
+      };
+    }
+
     let arrows;
 
     if (
@@ -178,20 +203,38 @@ class Proposal extends Component {
 
     return (
       <div className="proposal">
-        <h4 className="proposal__title">{this.props.title}</h4>
+        <div className="title-flex">
+          <div>
+            <h4 className="proposal__title">{this.props.title}</h4>
+            <span className="proposal__pill">{this.props.endDate}</span>
+            <span>{this.props.endBlock}</span>
+          </div>
+          <div className="proposal__status">
+            <div className={`status__${this.props.status}`}>
+              {this.props.status}
+            </div>
+          </div>
+        </div>
         <div className="proposal__info">
-          <h6>Proposal Info</h6>
-          <p className="proposal__votes">
-            {"Votes in Favour: "} {this.props.infavor}
-            <br />
-            {"Votes Against: "} {this.props.against}
-            <br />
-            {"Expiry Block: "} {this.props.endBlock}
-            <br />
-            {"Vote Close Time: "} {this.props.endDate}
-            <br />
-            {"Status: "} {this.props.status}
-            <br />
+          <div className="proposal__votes">
+            <div>
+              <h5>
+                <span>For</span> <span>{this.props.infavor}</span>
+              </h5>
+              <div className="bar-growth">
+                <div style={infavorGrowth}></div>
+              </div>
+            </div>
+            <div>
+              <h5>
+                <span>Against</span> <span>{this.props.against}</span>
+              </h5>
+              <div className="bar-growth against">
+                <div style={againstGrowth}></div>
+              </div>
+            </div>
+          </div>
+          <div className="payment__type">
             {this.props.isPayment[0] === true
               ? "This is a simple " +
                 this.props.isPayment[3] +
@@ -203,10 +246,9 @@ class Proposal extends Component {
                 this.props.isPayment[2].toString() +
                 ")"
               : null}
-          </p>
+          </div>
         </div>
         <div className="proposal__bottom">
-          <h6>Description</h6>
           <p className="proposal__description">{this.props.description}</p>
         </div>
         {arrows}
