@@ -33,6 +33,9 @@ form
     border-radius: 5px
     padding: 0.5rem 1.5rem
     outline: none
+    &:focus
+      border-color: #f60
+      box-shadow: 0 0 10px #f60
 
   h4
     padding-bottom: 1rem
@@ -49,6 +52,10 @@ form
     border-radius: 5px
     padding: 0.5rem 1.5rem
     outline: none
+
+    &:focus
+      border-color: #f60
+      box-shadow: 0 0 10px #f60
     
     &.error
       border-color: red
@@ -112,6 +119,9 @@ form
   & > input, & > button
     flex: 1 1 auto
     margin: 0 0 1rem 0
+  
+  & > button
+    flex: 0 0 30px
 
   .calldata
     margin-left: 1rem
