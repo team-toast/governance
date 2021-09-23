@@ -73,10 +73,25 @@
   &.connected-wallet
     background: #000
     border: solid 2px #fff
+    &::before
+      content: "Disconnect"
+      position: absolute
+      background: black
+      color: white
+      top: 0
+      left: 0
+      line-height: 36px
+      width: 100%
+      z-index: 1
+      text-align: center
+      display: none
+      border-radius: 21px
     &::after
       background-color: #fff
     &:hover
       box-shadow: 0 0 10px #fff
+      &::before
+        display: block
 
 .nav__wrapper
   background: $color-black
