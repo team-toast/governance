@@ -55,6 +55,13 @@
   align-items: right
   justify-content: right
   margin-right: 12px
+
+.proposal__pill
+  background: #000
+  color: #ffffff
+  padding: 0.35rem 0.7rem
+  border-radius: 9px
+  margin-right: 0.5rem
   
 .proposal__arrow
   height: 30px
@@ -112,7 +119,7 @@
 .proposal__status
   text-align: right
   align-self: center
-  .status__Executed
+  .status__Executed, .status__Succeeded
     padding: 0.5rem 1rem
     padding-right: 35px
     border-radius: 5px
@@ -120,6 +127,28 @@
     font-size: 0.875rem
     background: url(/check-circle-solid.svg) no-repeat right center
     background-size: 24px
+  .status__Pending
+    padding: 0.5rem 1rem
+    padding-right: 35px
+    border-radius: 5px
+    display: inline-block
+    font-size: 0.875rem
+    background: url(/clock-solid.svg) no-repeat right center
+    background-size: 24px
+  .status__Active
+    position: relative
+    padding-right: 2rem
+    &::after
+      content: ""
+      height: 12px
+      width: 12px
+      background: $color-green
+      display: block
+      position: absolute
+      top: 6px
+      right: 6px
+      border-radius: 12px
+      animation: activeAnimation 2s infinite
   .status__Queued
     padding: 0.5rem 1rem
     padding-right: 35px
@@ -184,3 +213,10 @@
     background-color: #999
     color: #333
     pointer-events: none
+
+@keyframes activeAnimation
+  0%
+    box-shadow: 0 0 0 0 rgba(0, 211, 149, 1)
+  100%
+    box-shadow: 0 0 0 6px rgba(0, 211, 149, 0)
+    

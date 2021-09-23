@@ -446,6 +446,8 @@ class Proposals extends Component {
       expiryDate.getSeconds() + parseInt(secondsTillExpiry)
     );
 
+    console.log(449, expiryDate);
+
     return expiryDate.toString();
   };
 
