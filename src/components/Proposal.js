@@ -145,30 +145,19 @@ class Proposal extends Component {
   };
 
   render() {
-    let percentageValue;
-
-    let infavorGrowth;
-    let againstGrowth;
-
-    if (parseFloat(this.props.infavor) > parseFloat(this.props.against)) {
-      percentageValue = 100 / parseFloat(this.props.infavor);
-      let perc =
-        (parseFloat(this.props.infavor) - parseFloat(this.props.against)) *
-        percentageValue;
-      console.log("for", perc);
-      infavorGrowth = {
-        width: isNaN(perc) ? "0%" : `${perc}%`,
-      };
-    } else {
-      percentageValue = 100 / parseFloat(this.props.against);
-      let perc =
-        (parseFloat(this.props.against) - parseFloat(this.props.infavor)) *
-        percentageValue;
-      console.log("against", perc);
-      againstGrowth = {
-        width: isNaN(perc) ? "0%" : `${perc}%`,
-      };
-    }
+    let totalValue =
+      parseFloat(this.props.infavor) + parseFloat(this.props.against);
+    let percentageValue = 100 / totalValue;
+    let againstGrowth = {
+      width: isNaN(parseFloat(this.props.against))
+        ? "0%"
+        : `${parseFloat(this.props.against) * percentageValue}%`,
+    };
+    let infavorGrowth = {
+      width: isNaN(parseFloat(this.props.infavor))
+        ? "0%"
+        : `${parseFloat(this.props.infavor) * percentageValue}%`,
+    };
 
     let arrows;
 
