@@ -11,11 +11,13 @@
   margin-bottom: 0px
   background: $color-black
   padding-top: 5.3rem
+  &.no-bottom-padding
+    padding-bottom: 0
   input
     width: 90%
     max-width: 400px
     background: #222
-    border: solid 1px #f7f7f7
+    border: solid 2px #2b3c54
     border-radius: 5px
     padding: 0.9rem 1.5rem
     outline: none
@@ -137,6 +139,37 @@
   &:hover::after
     transform: scaleX(1.4) scaleY(1.6)
     opacity: 0
+
+.delegate-block
+  text-align: center
+
+.delegate-block__button
+  cursor: pointer
+  color: #fff
+  margin-top: 3rem
+  background: url(/chevron-down-solid.svg) no-repeat center bottom
+  padding-bottom: 2rem
+  background-size: 2rem
+  &:hover
+    color: #2b3c54
+
+.flex-power
+  display: flex
+  @media screen and (max-width: 40rem)
+    display: block
+    width: 100%
+    text-align: center
+  > div
+    flex: 1 1 auto
+    background: rgba(255,255,255,0.1)
+    padding: 2rem 2rem
+    transition: all 0.15s
+    margin: 8px
+    border-radius: 2px
+    font-size: 12px
+    span
+      font-size: 1.39rem
+      display: block
 
 // .tooltip
 //   background-color: #000

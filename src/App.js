@@ -221,6 +221,7 @@ class App extends Component {
     this.setState({ connected: false, account: null });
     this.setState({ disableMessage: "Your wallet is not connected." });
     this.setState({ disableButtons: true });
+    this.setState({ delegatedAddress: "Unknown" });
   };
 
   getAccount = async () => {
