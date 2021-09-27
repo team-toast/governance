@@ -627,6 +627,7 @@ class App extends Component {
                 setStatusOf={this.setStatusOf}
                 setMessage={this.setMessage}
                 clearMessage={this.clearMessage}
+                getLatestBlock={this.getLatestBlock}
                 getTreasuryBalance={this.getTreasuryBalance}
                 getGasPrice={this.getGasPrice}
                 disableButtons={this.disableButtons}
@@ -643,6 +644,7 @@ class App extends Component {
                 clearMessage={this.clearMessage}
                 getGasPrice={this.getGasPrice}
                 disableButtons={this.disableButtons}
+                getLatestBlock={this.getLatestBlock}
                 {...this.state}
               ></CreateCustomProposalForm>
             </Tab>

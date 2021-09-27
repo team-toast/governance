@@ -66,6 +66,7 @@ class CreateCustomProposalForm extends React.Component {
                 "Transaction Confirmed!",
                 receipt.transactionHash
               );
+              this.props.getLatestBlock();
               console.log("Transaction Confirmed!", receipt.transactionHash);
               this.props.setStatusOf("Transaction Confirmed!", true);
             }

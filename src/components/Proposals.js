@@ -508,9 +508,10 @@ class Proposals extends Component {
     } else {
       if (this.props.account)
         return (
-          <div className="proposals">
-            <br />
-            <h5>Loading...</h5>
+          <div className="proposals fetching-proposals">
+            <h5>Fetching proposals...</h5>
+            <div className="proposals-demo"></div>
+            <div className="proposals-demo"></div>
           </div>
         );
       else {

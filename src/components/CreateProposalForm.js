@@ -73,6 +73,7 @@ class CreateProposalForm extends Component {
               this.props.setStatusOf("Transaction Confirmed!", true);
               console.log("Transaction Confirmed!", receipt.transactionHash);
             }
+            this.props.getLatestBlock();
             setTimeout(() => {
               this.props.clearMessage();
             }, 5000);
