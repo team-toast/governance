@@ -7,7 +7,18 @@ import "../layout/components/proposals.sass";
 import PopupHint from "./PopupHint";
 
 class Proposal extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      showBody: false,
+    };
+  }
+  toggleShowBody = () => {
+    this.setState({ showBody: true });
+  };
   handleVoteFor = async () => {
+    this.props.setStatusOf("Voting In Favour ...", true);
     const gasPrice = await this.props.getGasPrice();
     this.props.contract.methods
       .castVote(this.props.id, true)
@@ -15,6 +26,7 @@ class Proposal extends Component {
         { from: this.props.account, gasPrice: gasPrice },
         (err, transactionHash) => {
           this.props.setMessage("Transaction Pending...", transactionHash);
+          this.props.setStatusOf("Voting Pending ...", true);
         }
       )
       .on("confirmation", (number, receipt) => {
@@ -23,6 +35,7 @@ class Proposal extends Component {
             "Transaction Confirmed!",
             receipt.transactionHash
           );
+          this.props.setStatusOf("Voted Successfully!", true);
         }
         setTimeout(() => {
           this.props.clearMessage();
@@ -33,10 +46,12 @@ class Proposal extends Component {
           "Transaction Failed.",
           receipt ? receipt.transactionHash : null
         );
+        this.props.setStatusOf("Voting failed. Please try again.", true);
       });
   };
 
   handleVoteAgainst = async () => {
+    this.props.setStatusOf("Voting Against ...", true);
     const gasPrice = await this.props.getGasPrice();
     this.props.contract.methods
       .castVote(this.props.id, false)
@@ -44,6 +59,7 @@ class Proposal extends Component {
         { from: this.props.account, gasPrice: gasPrice },
         (err, transactionHash) => {
           this.props.setMessage("Transaction Pending...", transactionHash);
+          this.props.setStatusOf("Voting Pending ...", true);
         }
       )
       .on("confirmation", (number, receipt) => {
@@ -52,6 +68,7 @@ class Proposal extends Component {
             "Transaction Confirmed!",
             receipt.transactionHash
           );
+          this.props.setStatusOf("Voted Successfully.", true);
         }
         setTimeout(() => {
           this.props.clearMessage();
@@ -63,6 +80,7 @@ class Proposal extends Component {
           "Transaction Failed.",
           receipt ? receipt.transactionHash : null
         );
+        this.props.setStatusOf("Voting failed. Please try again.", true);
       });
   };
 
@@ -94,7 +112,6 @@ class Proposal extends Component {
           setTimeout(() => {
             this.props.clearMessage();
             //this.props.updateProposalStates();
-            this.props.setStatusOf("", false);
           }, 10000);
         })
         .on("error", (err, receipt) => {
@@ -129,7 +146,6 @@ class Proposal extends Component {
           setTimeout(() => {
             this.props.clearMessage();
             //this.props.updateProposalStates();
-            this.props.setStatusOf("", false);
           }, 10000);
         })
         .on("error", (err, receipt) => {
@@ -159,14 +175,28 @@ class Proposal extends Component {
         : `${parseFloat(this.props.infavor) * percentageValue}%`,
     };
 
-    let arrows;
+    let arrowsInFavour;
+    let arrowsAgainst;
 
     if (
       this.props.account &&
       this.props.end > this.props.latestBlock &&
       this.props.votingPower > 0
     ) {
-      arrows = (
+      arrowsAgainst = (
+        <div className="proposal__arrows">
+          <PopupHint message={this.props.disableMessage} position="left">
+            <button
+              className="vote__button against"
+              onClick={this.handleVoteAgainst}
+              disabled={!this.props.connected || this.props.buttonsDisabled}
+            >
+              Vote Against
+            </button>
+          </PopupHint>
+        </div>
+      );
+      arrowsInFavour = (
         <div className="proposal__arrows">
           <PopupHint message={this.props.disableMessage} position="left">
             <button
@@ -177,26 +207,23 @@ class Proposal extends Component {
               Vote In Favour
             </button>
           </PopupHint>
-          <PopupHint message={this.props.disableMessage} position="left">
-            <button
-              className="vote__button"
-              onClick={this.handleVoteAgainst}
-              disabled={!this.props.connected || this.props.buttonsDisabled}
-            >
-              Vote Against
-            </button>
-          </PopupHint>
         </div>
       );
     }
 
     return (
-      <div className="proposal">
-        <div className="title-flex">
+      <div
+        className={
+          this.state.showBody
+            ? `proposal noBorder current-state-${this.props.status}`
+            : `proposal showBorder current-state-${this.props.status}`
+        }
+      >
+        <div className="title-flex" onClick={this.toggleShowBody}>
           <div>
             <h4 className="proposal__title">{this.props.title}</h4>
             <span className="proposal__pill">{this.props.endDate}</span>
-            <span>{this.props.endBlock}</span>
+            <span className="proposal__block">{this.props.endBlock}</span>
           </div>
           <div className="proposal__status">
             <div className={`status__${this.props.status}`}>
@@ -204,44 +231,49 @@ class Proposal extends Component {
             </div>
           </div>
         </div>
-        <div className="proposal__info">
-          <div className="proposal__votes">
-            <div>
-              <h5>
-                <span>For</span> <span>{this.props.infavor}</span>
-              </h5>
-              <div className="bar-growth">
-                <div style={infavorGrowth}></div>
+        {this.state.showBody && (
+          <div className="proposal__info">
+            <div className="proposal__votes">
+              <div>
+                <h5>
+                  <span>For</span> <span>{this.props.infavor}</span>
+                </h5>
+                <div className="bar-growth">
+                  <div style={infavorGrowth}></div>
+                </div>
+                {arrowsInFavour}
+              </div>
+              <div>
+                <h5>
+                  <span>Against</span> <span>{this.props.against}</span>
+                </h5>
+                <div className="bar-growth against">
+                  <div style={againstGrowth}></div>
+                </div>
+                {arrowsAgainst}
               </div>
             </div>
-            <div>
-              <h5>
-                <span>Against</span> <span>{this.props.against}</span>
-              </h5>
-              <div className="bar-growth against">
-                <div style={againstGrowth}></div>
-              </div>
+            <div className="payment__type">
+              {this.props.isPayment[0] === true
+                ? "This is a simple " +
+                  this.props.isPayment[3] +
+                  " payment Proposal (" +
+                  this.props.isPayment[1].toString() +
+                  " " +
+                  this.props.isPayment[3] +
+                  " to 0x" +
+                  this.props.isPayment[2].toString() +
+                  ")"
+                : null}
             </div>
           </div>
-          <div className="payment__type">
-            {this.props.isPayment[0] === true
-              ? "This is a simple " +
-                this.props.isPayment[3] +
-                " payment Proposal (" +
-                this.props.isPayment[1].toString() +
-                " " +
-                this.props.isPayment[3] +
-                " to 0x" +
-                this.props.isPayment[2].toString() +
-                ")"
-              : null}
+        )}
+        {this.state.showBody && (
+          <div className="proposal__bottom">
+            <p className="proposal__description">{this.props.description}</p>
           </div>
-        </div>
-        <div className="proposal__bottom">
-          <p className="proposal__description">{this.props.description}</p>
-        </div>
-        {arrows}
-        {this.props.status === "Succeeded" ? (
+        )}
+        {this.props.status === "Succeeded" && this.state.showBody ? (
           <PopupHint message={this.props.disableMessage} position="bottom">
             <button
               className="proposal__button"
@@ -253,7 +285,7 @@ class Proposal extends Component {
             </button>
           </PopupHint>
         ) : null}
-        {this.props.status === "Queued" ? (
+        {this.props.status === "Queued" && this.state.showBody ? (
           <PopupHint message={this.props.disableMessage} position="bottom">
             <button
               className="proposal__button"

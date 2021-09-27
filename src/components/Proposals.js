@@ -16,9 +16,9 @@ class Proposals extends Component {
       proposals: [],
       loadedProposals: false,
       timeout: 0,
-      pageBookmark: 3,
+      pageBookmark: 6,
       numberOfProposals: 0,
-      proposalsPerPage: 3,
+      proposalsPerPage: 6,
       newerButtonDisable: true,
       olderButtonDisable: false,
     };
@@ -473,6 +473,7 @@ class Proposals extends Component {
               updateProposalStates={this.getProposals}
               buttonsDisabled={this.props.buttonsDisabled}
               getGasPrice={this.props.getGasPrice}
+              setStatusOf={this.props.setStatusOf}
               {...this.props}
             />
           );

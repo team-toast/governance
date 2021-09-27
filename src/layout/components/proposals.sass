@@ -19,12 +19,17 @@
   margin-bottom: 16px
   background: $color-white
   padding: 0 1rem 1rem
+  border-left: solid 2px #fff
+  &.showBorder
+    padding: 0 1rem
+    &:hover
+      border-left: solid 2px #f60
 
 .proposal__title
-  font-weight: 500
-  font-size: 25px
-  margin-top: 5px
-  padding: 1rem 0 0
+  font-weight: normal
+  font-size: 23px
+  margin-top: 0
+  padding: 0
   text-align: left
 
 .proposal__bottom
@@ -56,12 +61,27 @@
   justify-content: right
   margin-right: 12px
 
+.proposal__block
+  font-size: 12px
+
 .proposal__pill
-  background: #000
+  background: none
   color: #ffffff
-  padding: 0.35rem 0.7rem
+  padding: 3px 7px
   border-radius: 9px
   margin-right: 0.5rem
+  font-size: 12px
+  border: solid 1px #657786
+  color: #657786
+
+.current-state-Active, .current-state-Executed, .current-state-Succeeded
+  .proposal__pill
+    border-color: #00D395
+    color: #00D395
+.current-state-Queued, .current-state-Pending
+  .proposal__pill
+    border-color: #EB1A78
+    color: #EB1A78
   
 .proposal__arrow
   height: 30px
@@ -168,8 +188,16 @@
 
 .title-flex
   display: flex
+  padding: 1rem 0
   > div
     flex: 1 1 auto
+
+.proposal.showBorder
+  &:hover
+    opacity: 0.7
+  .title-flex
+    cursor: pointer
+
 
 .proposal__button
   display: block
@@ -181,7 +209,7 @@
   border: none
   font-size: 16px
   margin-top: 10px
-  margin-left: 10px
+  margin-left: 0
   margin-bottom: 10px
   &:hover
       background-color: #999
@@ -194,20 +222,50 @@
 .vote__button
   display: block
   width: 140px
-  padding: 5px 
+  padding: 5px 5px 5px 25px 
   appearance: none
-  border-radius: 5px
-  background-color: #444
-  color: #fff
-  border: none
+  border-radius: 16px
+  color: #000
+  border: solid 1px #000
   font-size: 14px
   margin-top: 1px
   margin-left: 10px
   margin-right: 10px
   margin-bottom: 10px
-
+  margin: auto
+  margin-top: 2rem
+  background: #fff url(/thumbs-up-solid.svg) no-repeat 9px center
+  background-size: 18px
+  position: relative
+  &.against
+    background: #fff url(/thumbs-down-solid.svg) no-repeat 9px center
+    background-size: 18px
+  &::before
+    content: ""
+    display: inline-block
+    height: 100%
+    width: 100%
+    border-radius: 100px
+    position: absolute
+    top: 0
+    left: 0
+    background-color: #00D395
+    z-index: 1
+    visibility: hidden
   &:hover
-    background-color: #999
+    border-color: #00D395
+    box-shadow: inset 0 0 0 1px #00D395
+  &.against
+    &:hover
+      border-color: #DF5F67
+      box-shadow: inset 0 0 0 1px #DF5F67
+    &::before
+      background-color: #DF5F67
+  &:hover::before
+    transition: all 0.4s
+    visibility: visible
+    transform: scaleX(1.4) scaleY(1.6)
+    opacity: 0
 
   &:disabled
     background-color: #999

@@ -70,7 +70,6 @@ class CreateCustomProposalForm extends React.Component {
               this.props.setStatusOf("Transaction Confirmed!", true);
             }
             setTimeout(() => {
-              this.props.setStatusOf("", false);
               this.props.clearMessage();
             }, 5000);
           })

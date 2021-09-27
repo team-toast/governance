@@ -536,9 +536,6 @@ class App extends Component {
           }
           setTimeout(() => {
             this.clearMessage();
-            this.setState({
-              firetextShow: false,
-            });
           }, 5000);
         })
         .on("error", (err, receipt) => {
