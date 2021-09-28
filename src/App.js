@@ -601,7 +601,7 @@ class App extends Component {
         />
         <div className="tabcontainer">
           <div className="tabs">
-            {this.state.page == "page__proposals" && (
+            {this.state.page === "page__proposals" && (
               <div id="page__proposals">
                 <Header
                   {...this.state}
@@ -626,7 +626,7 @@ class App extends Component {
                 </div>
               </div>
             )}
-            {this.state.page == "page__create_payment_proposal" && (
+            {this.state.page === "page__create_payment_proposal" && (
               <div id="page__create_payment_proposal">
                 <CustomHeader title="Create Payment Proposal"></CustomHeader>
                 <CreateProposalForm
@@ -641,7 +641,7 @@ class App extends Component {
                 ></CreateProposalForm>
               </div>
             )}
-            {this.state.page == "page__create_custom_proposal" && (
+            {this.state.page === "page__create_custom_proposal" && (
               <div id="page__create_custom_proposal">
                 <CustomHeader title="Create Custom Proposal"></CustomHeader>
                 <CreateCustomProposalForm

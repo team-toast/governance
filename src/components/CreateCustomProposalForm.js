@@ -145,8 +145,7 @@ class CreateCustomProposalForm extends React.Component {
             this.handleSubmit();
           }}
         >
-          <h4 className="title">Create a Custom Proposal</h4>
-          {/* ... */}
+          <h4 className="title">Contract call</h4>
 
           {this.state.methodCalls.map((entry, idx) => (
             <div key={idx} className="entry">

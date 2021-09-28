@@ -8,6 +8,17 @@ import "../layout/components/nav.sass";
 import logo from "../images/foundryWhiteLogo.png";
 
 class Nav extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showMobileMenu: false,
+    };
+  }
+  toggleMobileMenu = (data) => {
+    this.setState({
+      showMobileMenu: data,
+    });
+  };
   render() {
     let button;
 
@@ -80,42 +91,75 @@ class Nav extends Component {
           <h1 className="nav__brand-name">Foundry Governance</h1>
         </a>
         {this.props.connected && (
-          <div className="nav__links">
-            <button
-              onClick={() => this.props.updateCurrentPage("page__proposals")}
-              className={
-                this.props.currentPage === "page__proposals" ? "active" : ""
-              }
-            >
-              Proposals
-            </button>
-            <button
-              onClick={() =>
-                this.props.updateCurrentPage("page__create_payment_proposal")
-              }
-              className={
-                this.props.currentPage === "page__create_payment_proposal"
-                  ? "active"
-                  : ""
-              }
-            >
-              Create Dai Payment Proposal
-            </button>
-            <button
-              onClick={() =>
-                this.props.updateCurrentPage("page__create_custom_proposal")
-              }
-              className={
-                this.props.currentPage === "page__create_custom_proposal"
-                  ? "active"
-                  : ""
-              }
-            >
-              Create Custom Proposal
-            </button>
+          <div
+            className={
+              this.state.showMobileMenu
+                ? "nav__links show-mobile-nav"
+                : "nav__links"
+            }
+          >
+            {this.state.showMobileMenu && (
+              <div
+                onClick={() => this.toggleMobileMenu(false)}
+                className="nav-overlay"
+              ></div>
+            )}
+            <div className="nav-of-links">
+              <button
+                onClick={() => {
+                  this.props.updateCurrentPage("page__proposals");
+                  this.toggleMobileMenu(false);
+                }}
+                className={
+                  this.props.currentPage === "page__proposals" ? "active" : ""
+                }
+              >
+                Proposals
+              </button>
+              <button
+                onClick={() => {
+                  this.props.updateCurrentPage("page__create_payment_proposal");
+                  this.toggleMobileMenu(false);
+                }}
+                className={
+                  this.props.currentPage === "page__create_payment_proposal"
+                    ? "active"
+                    : ""
+                }
+              >
+                Create Dai Payment Proposal
+              </button>
+              <button
+                onClick={() => {
+                  this.props.updateCurrentPage("page__create_custom_proposal");
+                  this.toggleMobileMenu(false);
+                }}
+                className={
+                  this.props.currentPage === "page__create_custom_proposal"
+                    ? "active"
+                    : ""
+                }
+              >
+                Create Custom Proposal
+              </button>
+            </div>
           </div>
         )}
-        {button}
+        <div className="flex-equal-width">
+          {button}
+          <button
+            onClick={() => this.toggleMobileMenu(!this.state.showMobileMenu)}
+            className={
+              this.state.showMobileMenu
+                ? "mobile-menu-button menu-is-showing"
+                : "mobile-menu-button"
+            }
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
       </nav>
     );
   }

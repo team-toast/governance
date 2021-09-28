@@ -19,13 +19,13 @@ class Header extends Component {
     return (
       <section
         className={
-          this.props.delegatedAddress != "Unknown"
+          this.props.delegatedAddress !== "Unknown"
             ? "header"
             : "header no-bottom-padding"
         }
       >
         <h1 className="header__title">Foundry Governance Proposals</h1>
-        {this.props.delegatedAddress != "Unknown" && (
+        {this.props.delegatedAddress !== "Unknown" && (
           <div className="header__balance__white flex-power">
             <div>
               <span
@@ -69,12 +69,12 @@ class Header extends Component {
             </div>
           </div>
         )}
-        {!this.state.showDelegate && this.props.delegatedAddress != "Unknown" && (
+        {!this.state.showDelegate && this.props.delegatedAddress !== "Unknown" && (
           <div onClick={this.toggleDelegate} className="delegate-block__button">
             <h5>Delegate</h5>
           </div>
         )}
-        {this.state.showDelegate && this.props.delegatedAddress != "Unknown" && (
+        {this.state.showDelegate && this.props.delegatedAddress !== "Unknown" && (
           <div className="delegate-block">
             <input
               onChange={this.props.updateDelegateeAddress}
