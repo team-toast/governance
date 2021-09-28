@@ -147,18 +147,20 @@ class Nav extends Component {
         )}
         <div className="flex-equal-width">
           {button}
-          <button
-            onClick={() => this.toggleMobileMenu(!this.state.showMobileMenu)}
-            className={
-              this.state.showMobileMenu
-                ? "mobile-menu-button menu-is-showing"
-                : "mobile-menu-button"
-            }
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          {this.props.connected && (
+            <button
+              onClick={() => this.toggleMobileMenu(!this.state.showMobileMenu)}
+              className={
+                this.state.showMobileMenu
+                  ? "mobile-menu-button menu-is-showing"
+                  : "mobile-menu-button"
+              }
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          )}
         </div>
       </nav>
     );
