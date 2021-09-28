@@ -7,6 +7,7 @@ import timelockContract from "../contracts/timelock.json";
 import Dai from "../contracts/Dai.json";
 import Forwarder from "../contracts/Forwarder.json";
 import Pager from "../components/Pager";
+import CurrentPage from "./CurrentPage";
 
 class Proposals extends Component {
   constructor(props) {
@@ -482,16 +483,20 @@ class Proposals extends Component {
       return (
         <section className="proposals">
           {" "}
-          <Pager
-            refresh={this.refresh}
-            next={this.next}
-            back={this.back}
-            numberOfProposals={this.state.numberOfProposals}
-            bookmark={this.state.pageBookmark}
-            proposalsPerPage={this.state.proposalsPerPage}
-            newerButtonDisable={this.state.newerButtonDisable}
-            olderButtonDisable={this.state.olderButtonDisable}
-          ></Pager>
+          <div className="proposal" style={{ "margin-top": "-44px" }}>
+            <h4>
+              <CurrentPage
+                refresh={this.refresh}
+                next={this.next}
+                back={this.back}
+                numberOfProposals={this.state.numberOfProposals}
+                bookmark={this.state.pageBookmark}
+                proposalsPerPage={this.state.proposalsPerPage}
+                newerButtonDisable={this.state.newerButtonDisable}
+                olderButtonDisable={this.state.olderButtonDisable}
+              ></CurrentPage>
+            </h4>
+          </div>
           {proposals.reverse()}
           <Pager
             refresh={this.refresh}
@@ -509,7 +514,9 @@ class Proposals extends Component {
       if (this.props.account)
         return (
           <div className="proposals fetching-proposals">
-            <h5>Fetching proposals...</h5>
+            <div className="proposal" style={{ "margin-top": "-44px" }}>
+              <h4>Fetching Proposals...</h4>
+            </div>
             <div className="proposals-demo"></div>
             <div className="proposals-demo"></div>
           </div>
