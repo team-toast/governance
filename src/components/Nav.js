@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Tabs, Tab } from "react-bootstrap";
 
 import Message from "./Message";
 
@@ -78,7 +79,42 @@ class Nav extends Component {
           <img src={logo} alt="Compound" className="nav__brand-logo" />
           <h1 className="nav__brand-name">Foundry Governance</h1>
         </a>
-
+        {this.props.connected && (
+          <div className="nav__links">
+            <button
+              onClick={() => this.props.updateCurrentPage("page__proposals")}
+              className={
+                this.props.currentPage === "page__proposals" ? "active" : ""
+              }
+            >
+              Proposals
+            </button>
+            <button
+              onClick={() =>
+                this.props.updateCurrentPage("page__create_payment_proposal")
+              }
+              className={
+                this.props.currentPage === "page__create_payment_proposal"
+                  ? "active"
+                  : ""
+              }
+            >
+              Create Dai Payment Proposal
+            </button>
+            <button
+              onClick={() =>
+                this.props.updateCurrentPage("page__create_custom_proposal")
+              }
+              className={
+                this.props.currentPage === "page__create_custom_proposal"
+                  ? "active"
+                  : ""
+              }
+            >
+              Create Custom Proposal
+            </button>
+          </div>
+        )}
         {button}
       </nav>
     );

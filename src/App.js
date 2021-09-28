@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Tabs, Tab, Container } from "react-bootstrap";
 
 import Web3 from "web3";
 import Web3Connect from "web3connect";
@@ -14,6 +13,7 @@ import CreateProposalForm from "./components/CreateProposalForm";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
 import "./layout/config/_base.sass";
+import CustomHeader from "./components/CustomHeader";
 
 import Status from "./components/Status";
 
@@ -71,6 +71,7 @@ class App extends Component {
       disableMessage: "Your wallet is not connected",
       firetext: "Delegating ...",
       firetextShow: false,
+      page: "page__proposals",
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -213,6 +214,9 @@ class App extends Component {
   };
 
   disconnect = async () => {
+    this.setState({
+      page: "page__proposals",
+    });
     const { web3 } = this.state;
     if (web3 && web3.currentProvider && web3.currentProvider.close) {
       await web3.currentProvider.close();
@@ -575,6 +579,10 @@ class App extends Component {
     console.log(this.state.delegateeAddress);
   };
 
+  updateCurrentPage = (data) => {
+    this.setState({ page: data });
+  };
+
   render() {
     return (
       <div className="app">
@@ -588,68 +596,67 @@ class App extends Component {
           {...this.state}
           onConnect={this.onConnect}
           disconnect={this.disconnect}
+          updateCurrentPage={this.updateCurrentPage}
+          currentPage={this.state.page}
         />
-        <Header
-          {...this.state}
-          delegate={this.delegate}
-          updateDelegateeAddress={this.updateDelegateeAddress}
-          disableButtons={this.state.disableButtons}
-          disableMessage={this.state.disableMessage}
-        />
-        <Container className="tabcontainer">
-          <Tabs
-            fill
-            defaultActiveKey="proposals"
-            id="uncontrolled-tab"
-            className="tabs"
-          >
-            <Tab eventKey="proposals" title="View Proposals" color="white">
-              <div>
-                <Proposals
+        <div className="tabcontainer">
+          <div className="tabs">
+            {this.state.page == "page__proposals" && (
+              <div id="page__proposals">
+                <Header
                   {...this.state}
-                  xhr={this.xhr}
+                  delegate={this.delegate}
+                  updateDelegateeAddress={this.updateDelegateeAddress}
+                  disableButtons={this.state.disableButtons}
+                  disableMessage={this.state.disableMessage}
+                />
+                <div>
+                  <Proposals
+                    {...this.state}
+                    xhr={this.xhr}
+                    setMessage={this.setMessage}
+                    clearMessage={this.clearMessage}
+                    getLatestBlock={this.getLatestBlock}
+                    getNetworkName={this.getNetworkName}
+                    numberWithCommas={this.numberWithCommas}
+                    buttonsDisabled={this.state.disableButtons}
+                    getGasPrice={this.getGasPrice}
+                    setStatusOf={this.setStatusOf}
+                  />
+                </div>
+              </div>
+            )}
+            {this.state.page == "page__create_payment_proposal" && (
+              <div id="page__create_payment_proposal">
+                <CustomHeader title="Create Payment Proposal"></CustomHeader>
+                <CreateProposalForm
+                  setStatusOf={this.setStatusOf}
                   setMessage={this.setMessage}
                   clearMessage={this.clearMessage}
                   getLatestBlock={this.getLatestBlock}
-                  getNetworkName={this.getNetworkName}
-                  numberWithCommas={this.numberWithCommas}
-                  buttonsDisabled={this.state.disableButtons}
+                  getTreasuryBalance={this.getTreasuryBalance}
                   getGasPrice={this.getGasPrice}
-                  setStatusOf={this.setStatusOf}
-                />
+                  disableButtons={this.disableButtons}
+                  {...this.state}
+                ></CreateProposalForm>
               </div>
-            </Tab>
-            <Tab
-              eventKey="create_payment_proposal"
-              title="Create Dai Payment Proposal"
-            >
-              <CreateProposalForm
-                setStatusOf={this.setStatusOf}
-                setMessage={this.setMessage}
-                clearMessage={this.clearMessage}
-                getLatestBlock={this.getLatestBlock}
-                getTreasuryBalance={this.getTreasuryBalance}
-                getGasPrice={this.getGasPrice}
-                disableButtons={this.disableButtons}
-                {...this.state}
-              ></CreateProposalForm>
-            </Tab>
-            <Tab
-              eventKey="create_custom_proposal"
-              title="Create Custom Proposal"
-            >
-              <CreateCustomProposalForm
-                setStatusOf={this.setStatusOf}
-                setMessage={this.setMessage}
-                clearMessage={this.clearMessage}
-                getGasPrice={this.getGasPrice}
-                disableButtons={this.disableButtons}
-                getLatestBlock={this.getLatestBlock}
-                {...this.state}
-              ></CreateCustomProposalForm>
-            </Tab>
-          </Tabs>
-        </Container>
+            )}
+            {this.state.page == "page__create_custom_proposal" && (
+              <div id="page__create_custom_proposal">
+                <CustomHeader title="Create Custom Proposal"></CustomHeader>
+                <CreateCustomProposalForm
+                  setStatusOf={this.setStatusOf}
+                  setMessage={this.setMessage}
+                  clearMessage={this.clearMessage}
+                  getGasPrice={this.getGasPrice}
+                  disableButtons={this.disableButtons}
+                  getLatestBlock={this.getLatestBlock}
+                  {...this.state}
+                ></CreateCustomProposalForm>
+              </div>
+            )}
+          </div>
+        </div>
         <Footer {...this.state} />
       </div>
     );
