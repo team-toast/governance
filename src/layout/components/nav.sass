@@ -6,7 +6,7 @@
   display: flex
   align-items: center
   justify-content: space-between
-  padding: 0 16px
+  padding: 0
   height: $nav-height
   background: none
   position: sticky
@@ -24,8 +24,10 @@
     .flex-equal-width
       width: 233px
       text-align: right
+      padding-right: 1rem
       @media screen and (max-width: 60rem)
         width: initial
+        padding-right: 0
       .nav__account
         display: inline-block
   .nav__links
