@@ -57,14 +57,6 @@ class Pager extends Component {
             Older {">"}
           </button>
         </section>
-        <p className="pager__text">
-          (Showing proposals{" "}
-          {this.props.numberOfProposals - this.props.bookmark + 1 > 0
-            ? this.props.numberOfProposals - this.props.bookmark + 1
-            : 1}{" "}
-          to {this.props.numberOfProposals - this.props.bookmark + 3} of{" "}
-          {this.props.numberOfProposals})
-        </p>
       </section>
     );
   }
