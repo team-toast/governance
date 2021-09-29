@@ -25,6 +25,8 @@ class CreateProposalForm extends Component {
     console.log("of amount: ", amount);
     console.log("Decription: ", description);
 
+    this.props.setStatusOf("Creating proposal ...", true);
+
     if (this.props.network === "Matic") {
       const governAddress = governorABI.networks[137]["address"];
       const governContract = new this.props.web3.eth.Contract(
@@ -59,6 +61,7 @@ class CreateProposalForm extends Component {
             (err, transactionHash) => {
               this.props.setMessage("Transaction Pending...", transactionHash);
               console.log("Transaction Pending...", transactionHash);
+              this.props.setStatusOf("Transaction Pending ...", true);
             }
           )
           .on("confirmation", (number, receipt) => {
@@ -67,8 +70,10 @@ class CreateProposalForm extends Component {
                 "Transaction Confirmed!",
                 receipt.transactionHash
               );
+              this.props.setStatusOf("Transaction Confirmed!", true);
               console.log("Transaction Confirmed!", receipt.transactionHash);
             }
+            this.props.getLatestBlock();
             setTimeout(() => {
               this.props.clearMessage();
             }, 5000);
@@ -78,9 +83,14 @@ class CreateProposalForm extends Component {
               "Transaction Failed.",
               receipt ? receipt.transactionHash : null
             );
+            this.props.setStatusOf(
+              "Transaction Failed! Please try again.",
+              true
+            );
             console.log("Transaction Failed!");
           });
       } catch (error) {
+        this.props.setStatusOf("Transaction Failed! Please try again.", true);
         console.error("Error in create proposal method: ", error);
       }
     }
@@ -110,10 +120,9 @@ class CreateProposalForm extends Component {
   render() {
     return (
       <section className="form">
-        <h4 className="title">Create a Dai Payment Proposal</h4>
-        <h6 className="title">
-          {"(Treasury Balance: " + this.props.treasuryBalance + " Dai)"}
-        </h6>
+        <h4 className="title">
+          Treasury Balance: {this.props.treasuryBalance} Dai
+        </h4>
         <br />
         <form
           onSubmit={(e) => {
@@ -130,9 +139,9 @@ class CreateProposalForm extends Component {
             <input
               required
               type="text"
+              placeholder="0x..."
               value={this.state.value}
               onChange={this.handleAddressChange}
-              style={{ width: "400px" }}
             />
           </label>
           <br />
@@ -143,28 +152,32 @@ class CreateProposalForm extends Component {
               required
               type="number"
               step="0.01"
+              placeholder="1"
               value={this.state.value}
               onChange={this.handleAmountChange}
-              style={{ width: "400px" }}
             />
           </label>
           <br />
           <br />
-          <FloatingLabel controlId="floatingTextarea2" label="Description">
-            <Form.Control
-              required
-              as="textarea"
-              placeholder="Describe the payment proposal"
-              style={{ height: "200px" }}
-              onChange={this.handleDescriptionChange}
-            />
-          </FloatingLabel>
+          <label>
+            Description: <br />
+            <FloatingLabel controlId="floatingTextarea2">
+              <Form.Control
+                required
+                as="textarea"
+                placeholder="Describe the payment proposal"
+                style={{ height: "200px" }}
+                onChange={this.handleDescriptionChange}
+              />
+            </FloatingLabel>
+          </label>
+          <br />
           <br />
           <div className="center_div">
             <PopupHint message={this.props.disableMessage}>
               <input
                 disabled={!this.props.connected || this.props.disableButtons}
-                class="dai_proposal_button"
+                className="dai_proposal_button"
                 type="submit"
                 value="Create Proposal"
               />

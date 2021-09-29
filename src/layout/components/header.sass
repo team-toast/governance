@@ -3,7 +3,6 @@
 @import ../config/_breakpoints
   
 .header
-  height: $header-height
   display: flex
   flex-direction: column
   align-items: center
@@ -11,6 +10,23 @@
   padding-bottom: 58px
   margin-bottom: 0px
   background: $color-black
+  padding-top: 7.3rem
+  &.no-bottom-padding
+    padding-bottom: 0
+  input
+    width: 90%
+    max-width: 400px
+    background: #222
+    border: solid 2px #2b3c54
+    border-radius: 5px
+    padding: 0.9rem 1.5rem
+    outline: none
+    color: #ffffff
+    margin: 2rem 0 0
+    &:focus
+      border-color: #f60
+      box-shadow: 0 0 10px #f60
+      transition: all 0.25s ease
 
 .header__title
   font-size: 32px
@@ -85,22 +101,75 @@
   font-size: 16px
 
 .header__button
+  display: block
+  padding: 1rem 2rem
+  border-radius: 27px
+  color: #000
+  border: none
+  font-size: 16px
+  margin-top: 25px
+  background: #f60
+  width: 200px
+  max-width: 290px
+  margin: auto
+  margin-top: 2rem
+  color: #fff
+  position: relative
+  &:hover
+    background-color: #999
+  &:disabled
+    background-color: #999
+    color: #555
+    pointer-events: none
+  &::after
+    content: ""
+    display: inline-block
+    height: 100%
+    width: 100%
+    border-radius: 100px
+    position: absolute
+    top: 0
+    left: 0
+    z-index: -1
+    transition: all .4s
+
+  &::after
+    background-color: #f60
+
+  &:hover::after
+    transform: scaleX(1.4) scaleY(1.6)
+    opacity: 0
+
+.delegate-block
+  text-align: center
+
+.delegate-block__button
+  cursor: pointer
+  color: #fff
+  margin-top: 3rem
+  background: url(/chevron-down-solid.svg) no-repeat center bottom
+  padding-bottom: 2rem
+  background-size: 2rem
+  &:hover
+    color: #2b3c54
+
+.flex-power
+  display: flex
+  @media screen and (max-width: 40rem)
     display: block
-    padding: 5px 20px
-    border-radius: 5px
-    background-color: #fff
-    color: #000
-    border: none
-    font-size: 16px
-    margin-top: 25px
-
-    &:hover
-      background-color: #999
-
-    &:disabled
-      background-color: #999
-      color: #555
-      pointer-events: none
+    width: 100%
+    text-align: center
+  > div
+    flex: 1 1 auto
+    background: rgba(255,255,255,0.1)
+    padding: 2rem 2rem
+    transition: all 0.15s
+    margin: 8px
+    border-radius: 2px
+    font-size: 12px
+    span
+      font-size: 1.39rem
+      display: block
 
 // .tooltip
 //   background-color: #000

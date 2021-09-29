@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "../layout/components/pager.sass";
 
-class Pager extends Component {
+class CurrentPage extends Component {
   constructor(props) {
     super(props);
 
@@ -37,29 +37,23 @@ class Pager extends Component {
 
   render() {
     return (
-      <section className="pager-section">
-        <section className="pager">
-          <button
-            className="pager__button"
-            onClick={this.props.back}
-            disabled={this.state.newerDisabled}
-          >
-            {"<"} Newer
-          </button>
-          <button className="pager__button" onClick={this.props.refresh}>
-            Refresh
-          </button>
-          <button
-            className="pager__button"
-            onClick={this.props.next}
-            disabled={this.state.olderDisabled}
-          >
-            Older {">"}
-          </button>
-        </section>
-      </section>
+      <div>
+        <span className="hide-on-small">Showing </span>Proposals{" "}
+        {this.props.numberOfProposals - this.props.bookmark + 1 > 0
+          ? this.props.numberOfProposals - this.props.bookmark
+          : 1}{" "}
+        to{" "}
+        {this.props.numberOfProposals -
+          this.props.bookmark +
+          this.props.proposalsPerPage}{" "}
+        of {this.props.numberOfProposals}
+        <button
+          className="pager__button refresh-btn"
+          onClick={this.props.refresh}
+        ></button>
+      </div>
     );
   }
 }
 
-export default Pager;
+export default CurrentPage;

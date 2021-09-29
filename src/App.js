@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Tabs, Tab, Container } from "react-bootstrap";
 
 import Web3 from "web3";
 import Web3Connect from "web3connect";
@@ -14,6 +13,9 @@ import CreateProposalForm from "./components/CreateProposalForm";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
 import "./layout/config/_base.sass";
+import CustomHeader from "./components/CustomHeader";
+
+import Status from "./components/Status";
 
 function initWeb3(provider) {
   const web3 = new Web3(provider);
@@ -67,6 +69,9 @@ class App extends Component {
       disableButtons: true,
       metaMaskMissing: false,
       disableMessage: "Your wallet is not connected",
+      firetext: "Delegating ...",
+      firetextShow: false,
+      page: "page__proposals",
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -209,6 +214,9 @@ class App extends Component {
   };
 
   disconnect = async () => {
+    this.setState({
+      page: "page__proposals",
+    });
     const { web3 } = this.state;
     if (web3 && web3.currentProvider && web3.currentProvider.close) {
       await web3.currentProvider.close();
@@ -217,6 +225,7 @@ class App extends Component {
     this.setState({ connected: false, account: null });
     this.setState({ disableMessage: "Your wallet is not connected." });
     this.setState({ disableButtons: true });
+    this.setState({ delegatedAddress: "Unknown" });
   };
 
   getAccount = async () => {
@@ -485,7 +494,19 @@ class App extends Component {
     });
   };
 
+  setStatusOf = (text, show) => {
+    this.setState({
+      firetext: text,
+      firetextShow: show,
+    });
+  };
+
   delegate = async () => {
+    this.setState({
+      firetext: "Delegating ...",
+      firetextShow: true,
+    });
+
     const tokenAddress = contract.contractAddresses["token"]["address"];
 
     const tokenContract = new this.state.web3.eth.Contract(
@@ -499,6 +520,10 @@ class App extends Component {
         .send(
           { from: this.state.account, gasPrice: gasPrice },
           (err, transactionHash) => {
+            this.setState({
+              firetext: "Transaction Pending ...",
+              firetextShow: true,
+            });
             this.setMessage("Transaction Pending...", transactionHash);
             console.log("Transaction Pending...", transactionHash);
           }
@@ -509,6 +534,10 @@ class App extends Component {
             console.log("Transaction Confirmed!", receipt.transactionHash);
             this.getVotingPower(); // Update voting power that might have changed after delegating
             this.getDelegateToAddress();
+            this.setState({
+              firetext: "Transaction Confirmed!",
+              firetextShow: true,
+            });
           }
           setTimeout(() => {
             this.clearMessage();
@@ -519,13 +548,28 @@ class App extends Component {
             "Transaction Failed.",
             receipt ? receipt.transactionHash : null
           );
+          this.setState({
+            firetext: "Could not delegate. Please try again.",
+            firetextShow: true,
+          });
           console.log("Transaction Failed!");
         });
 
       console.log("Delegated to: ", this.state.delegateeAddress);
     } catch (error) {
+      this.setState({
+        firetext: "Could not delegate.",
+        firetextShow: true,
+      });
       console.error("Error in delegate method: ", error);
     }
+  };
+
+  hideLoader = () => {
+    this.setState({
+      firetext: "",
+      firetextShow: false,
+    });
   };
 
   updateDelegateeAddress = async (evt) => {
@@ -535,70 +579,84 @@ class App extends Component {
     console.log(this.state.delegateeAddress);
   };
 
+  updateCurrentPage = (data) => {
+    this.setState({ page: data });
+  };
+
   render() {
     return (
       <div className="app">
+        {this.state.firetextShow && (
+          <Status
+            hidestatus={this.hideLoader}
+            firetext={this.state.firetext}
+          ></Status>
+        )}
         <Nav
           {...this.state}
           onConnect={this.onConnect}
           disconnect={this.disconnect}
+          updateCurrentPage={this.updateCurrentPage}
+          currentPage={this.state.page}
         />
-        <Header
-          {...this.state}
-          delegate={this.delegate}
-          updateDelegateeAddress={this.updateDelegateeAddress}
-          disableButtons={this.state.disableButtons}
-          disableMessage={this.state.disableMessage}
-        />
-        <Container className="tabcontainer">
-          <Tabs
-            fill
-            defaultActiveKey="proposals"
-            id="uncontrolled-tab"
-            className="tabs"
-          >
-            <Tab eventKey="proposals" title="View Proposals" color="white">
-              <div>
-                <Proposals
+        <div className="tabcontainer">
+          <div className="tabs">
+            {this.state.page === "page__proposals" && (
+              <div id="page__proposals">
+                <Header
                   {...this.state}
-                  xhr={this.xhr}
+                  delegate={this.delegate}
+                  updateDelegateeAddress={this.updateDelegateeAddress}
+                  disableButtons={this.state.disableButtons}
+                  disableMessage={this.state.disableMessage}
+                />
+                <div>
+                  <Proposals
+                    {...this.state}
+                    xhr={this.xhr}
+                    setMessage={this.setMessage}
+                    clearMessage={this.clearMessage}
+                    getLatestBlock={this.getLatestBlock}
+                    getNetworkName={this.getNetworkName}
+                    numberWithCommas={this.numberWithCommas}
+                    buttonsDisabled={this.state.disableButtons}
+                    getGasPrice={this.getGasPrice}
+                    setStatusOf={this.setStatusOf}
+                  />
+                </div>
+              </div>
+            )}
+            {this.state.page === "page__create_payment_proposal" && (
+              <div id="page__create_payment_proposal">
+                <CustomHeader title="Create Payment Proposal"></CustomHeader>
+                <CreateProposalForm
+                  setStatusOf={this.setStatusOf}
                   setMessage={this.setMessage}
                   clearMessage={this.clearMessage}
                   getLatestBlock={this.getLatestBlock}
-                  getNetworkName={this.getNetworkName}
-                  numberWithCommas={this.numberWithCommas}
-                  buttonsDisabled={this.state.disableButtons}
+                  getTreasuryBalance={this.getTreasuryBalance}
                   getGasPrice={this.getGasPrice}
-                />
+                  disableButtons={this.disableButtons}
+                  {...this.state}
+                ></CreateProposalForm>
               </div>
-            </Tab>
-            <Tab
-              eventKey="create_payment_proposal"
-              title="Create Dai Payment Proposal"
-            >
-              <CreateProposalForm
-                setMessage={this.setMessage}
-                clearMessage={this.clearMessage}
-                getTreasuryBalance={this.getTreasuryBalance}
-                getGasPrice={this.getGasPrice}
-                disableButtons={this.disableButtons}
-                {...this.state}
-              ></CreateProposalForm>
-            </Tab>
-            <Tab
-              eventKey="create_custom_proposal"
-              title="Create Custom Proposal"
-            >
-              <CreateCustomProposalForm
-                setMessage={this.setMessage}
-                clearMessage={this.clearMessage}
-                getGasPrice={this.getGasPrice}
-                disableButtons={this.disableButtons}
-                {...this.state}
-              ></CreateCustomProposalForm>
-            </Tab>
-          </Tabs>
-        </Container>
+            )}
+            {this.state.page === "page__create_custom_proposal" && (
+              <div id="page__create_custom_proposal">
+                <CustomHeader title="Create Custom Proposal"></CustomHeader>
+                <CreateCustomProposalForm
+                  setStatusOf={this.setStatusOf}
+                  setMessage={this.setMessage}
+                  clearMessage={this.clearMessage}
+                  getGasPrice={this.getGasPrice}
+                  disableButtons={this.disableButtons}
+                  getLatestBlock={this.getLatestBlock}
+                  {...this.state}
+                ></CreateCustomProposalForm>
+              </div>
+            )}
+          </div>
+        </div>
         <Footer {...this.state} />
       </div>
     );

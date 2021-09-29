@@ -33,6 +33,8 @@ class CreateCustomProposalForm extends React.Component {
 
     console.log("Decription: ", this.state.description);
 
+    this.props.setStatusOf("Creating custom proposal ...", true);
+
     if (this.props.network === "Matic") {
       const governAddress = governorABI.networks[137]["address"];
       const governContract = new this.props.web3.eth.Contract(
@@ -55,6 +57,7 @@ class CreateCustomProposalForm extends React.Component {
             (err, transactionHash) => {
               this.props.setMessage("Transaction Pending...", transactionHash);
               console.log("Transaction Pending...", transactionHash);
+              this.props.setStatusOf("Transaction Pending ...", true);
             }
           )
           .on("confirmation", (number, receipt) => {
@@ -63,7 +66,9 @@ class CreateCustomProposalForm extends React.Component {
                 "Transaction Confirmed!",
                 receipt.transactionHash
               );
+              this.props.getLatestBlock();
               console.log("Transaction Confirmed!", receipt.transactionHash);
+              this.props.setStatusOf("Transaction Confirmed!", true);
             }
             setTimeout(() => {
               this.props.clearMessage();
@@ -75,8 +80,13 @@ class CreateCustomProposalForm extends React.Component {
               receipt ? receipt.transactionHash : null
             );
             console.log("Transaction Failed!");
+            this.props.setStatusOf(
+              "Transaction Failed! Please try again.",
+              true
+            );
           });
       } catch (error) {
+        this.props.setStatusOf("Transaction Failed! Please try again.", true);
         console.error("Error in create proposal method: ", error);
       }
     }
@@ -127,7 +137,7 @@ class CreateCustomProposalForm extends React.Component {
 
   render() {
     return (
-      <section>
+      <section className="createCustomProposalForm">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -135,11 +145,10 @@ class CreateCustomProposalForm extends React.Component {
             this.handleSubmit();
           }}
         >
-          <h4 className="title">Create a Custom Proposal</h4>
-          {/* ... */}
+          <h4 className="title">Contract call</h4>
 
           {this.state.methodCalls.map((entry, idx) => (
-            <div className="entry">
+            <div key={idx} className="entry">
               <input
                 required
                 type="text"
@@ -161,15 +170,13 @@ class CreateCustomProposalForm extends React.Component {
                 onClick={this.handleRemoveEntry(idx)}
                 className="remove"
                 //disabled={!this.props.connected || this.props.disableButtons}
-              >
-                Remove
-              </button>
+              ></button>
             </div>
           ))}
           <button
             type="button"
             onClick={this.handleAddEntry}
-            className="small"
+            className="add-new-call"
             //disabled={!this.props.connected || this.props.disableButtons}
           >
             Add Contract Call

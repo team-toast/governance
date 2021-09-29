@@ -10,34 +10,120 @@
   margin: auto
   margin-top: 10px
   min-height: calc(100vh - #{$nav-height + $header-height + $footer-height - 58px})
+  &.fetching-proposals
+    h5
+      margin-top: 2rem
+      margin-bottom: 2rem
+
+  .proposals-demo
+    margin-bottom: 1rem
+    width: 100%
+    margin-bottom: 16px
+    background: #FFF
+    position: relative
+    animation: pulseOpacity 1s infinite
+    border: solid 1px #e8e8e8
+    border-radius: 3px
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04)
+    &::before
+      height: 27px
+      background: #eee
+      width: 100%
+      max-width: 150px
+      margin: 10px
+      content: ""
+      display: block
+    &::after
+      height: 27px
+      background: #f6f6f6
+      width: 100%
+      max-width: 350px
+      margin: 10px
+      content: ""
+      display: block
+    &:first-child
+      margin-top: 4rem
+      &::before
+        max-width: 100px
+      &::after
+        max-width: 150px
+    &:last-child
+      margin-bottom: 4rem
+      &::before
+        max-width: 250px
+      &::after
+        max-width: 200px
+
+@keyframes pulseOpacity
+  0%
+    opacity: 1
+  50%
+    opacity: 0.2
+  100%
+    opacity: 1
 
 .proposal
   width: 100%
-  border: 1px solid $color-very-light-grey
+  border: solid 1px #e8e8e8
   border-radius: 3px
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04)
   margin-bottom: 16px
   background: $color-white
+  padding: 0 1rem 1rem
+  border-left: solid 2px #e8e8e8
+  &.showBorder
+    padding: 0 1rem
+    &:hover
+      border-left: solid 2px #f60
 
 .proposal__title
-  font-weight: 500
-  font-size: 25px
-  margin-top: 5px
+  font-weight: normal
+  font-size: 23px
+  margin-top: 0
+  padding: 0
+  text-align: left
 
 .proposal__bottom
-  display: flex
+  display: block
   align-items: flex-start
   justify-content: flex-start
-  border-top: 1px solid $color-very-light-grey
-  padding: 16px
+  border-top: none
+  padding: 1rem 0
 
 .proposal__info
-  display: flex
+  display: block
   align-items: flex-start
   justify-content: flex-start
-  border-top: 1px solid $color-very-light-grey
-  padding: 0px
+  border-top: none
+  padding: 1rem 0
   margin: 0
+  .payment__type
+    background: #eee
+    border-radius: 5px
+    font-size: 0.9rem
+    padding: 0.5rem
+    margin: 1rem 0 0
+    word-break: break-word
+    &.payment-Dai
+      padding-top: 9px
+      color: #fff
+      position: relative
+      background: #F5AC37
+      display: block
+      margin: 2rem auto 0
+      max-width: 400px
+      width: fit-content
+      padding-bottom: 11px
+      .payment-amount
+        background: #F5AC37 url(/dai-logo.svg) no-repeat left 3px
+        background-size: 24px
+        padding-left: 1.8rem
+        display: block
+        margin-bottom: 0.5rem
+        font-size: 1.3rem
+      .payment-text-area
+        display: block
+        padding-left: 0.3rem
 
 .proposal__arrows
   display: flex
@@ -45,6 +131,31 @@
   align-items: right
   justify-content: right
   margin-right: 12px
+
+.proposal__block
+  font-size: 12px
+
+.proposal__pill
+  background: none
+  color: #ffffff
+  padding: 3px 7px
+  border-radius: 9px
+  margin-right: 0.5rem
+  font-size: 12px
+  border: solid 1px #657786
+  color: #657786
+  @media screen and ( max-width: 60rem)
+    display: inline-block
+    
+
+.current-state-Active, .current-state-Executed, .current-state-Succeeded
+  .proposal__pill
+    border-color: #00D395
+    color: #00D395
+.current-state-Queued, .current-state-Pending
+  .proposal__pill
+    border-color: #EB1A78
+    color: #EB1A78
   
 .proposal__arrow
   height: 30px
@@ -58,21 +169,122 @@
 
 .proposal__votes
   margin: 0
-  margin: 5px
-  padding: 16px
-  font-size: 12px
+  margin: 0
+  padding: 0
+  word-break: break-all
+  display: flex
+  @media screen and (max-width: 40rem)
+    display: block
+  > div
+    flex: 1
+    margin: 0
+    padding: 1rem 0
+    border-radius: 10px
+    &:first-child
+      margin-right: 1rem
+    &:last-child
+      margin-left: 1rem
+    @media screen and (max-width: 40rem)
+      margin: 0 !important
+  h5
+    display: flex
+    margin-bottom: 1rem
+    > span
+      flex: 1 1 auto
+      &:last-child
+        text-align: right
+
+.bar-growth
+  height: 8px
+  border-radius: 4px
+  position: relative
+  background: #f1f3f5
+  overflow: hidden
+  > div
+    position: relative
+    height: 8px
+    background: $color-green
+    width: 0
+    border-radius: 4px
+    min-width: 1px
+  &.against
+    > div
+      background: #DF5F67
+
+.proposal__status
+  text-align: right
+  align-self: center
+  .status__Executed, .status__Succeeded
+    padding: 0.5rem 1rem
+    padding-right: 35px
+    border-radius: 5px
+    display: inline-block
+    font-size: 0.875rem
+    background: url(/check-circle-solid.svg) no-repeat right center
+    background-size: 24px
+  .status__Pending
+    padding: 0.5rem 1rem
+    padding-right: 35px
+    border-radius: 5px
+    display: inline-block
+    font-size: 0.875rem
+    background: url(/clock-solid.svg) no-repeat right center
+    background-size: 24px
+  .status__Active
+    position: relative
+    padding-right: 2rem
+    &::after
+      content: ""
+      height: 12px
+      width: 12px
+      background: $color-green
+      display: block
+      position: absolute
+      top: 6px
+      right: 6px
+      border-radius: 12px
+      animation: activeAnimation 2s infinite
+  .status__Queued
+    padding: 0.5rem 1rem
+    padding-right: 35px
+    border-radius: 5px
+    display: inline-block
+    font-size: 0.875rem
+    background: url(/arrow-circle-right-solid.svg) no-repeat right center
+    background-size: 24px
+  .status__Defeated
+    padding: 0.5rem 1rem
+    padding-right: 35px
+    border-radius: 5px
+    display: inline-block
+    font-size: 0.875rem
+    background: url(/times-circle-solid.svg) no-repeat right center
+    background-size: 24px
+
+.title-flex
+  display: flex
+  padding: 1rem 0
+  > div
+    flex: 1 1 auto
+
+.proposal.showBorder
+  &:hover
+    opacity: 0.7
+  .title-flex
+    cursor: pointer
+
 
 .proposal__button
   display: block
   padding: 5px 20px
   appearance: none
-  border-radius: 5px
-  background-color: #444
+  border-radius: 17px
+  background-color: $color-dark-grey
   color: #fff
   border: none
   font-size: 16px
   margin-top: 10px
-  margin-left: 10px
+  margin-left: 0
   margin-bottom: 10px
   &:hover
       background-color: #999
@@ -85,22 +297,59 @@
 .vote__button
   display: block
   width: 140px
-  padding: 5px 
+  padding: 5px 5px 5px 25px 
   appearance: none
-  border-radius: 5px
-  background-color: #444
-  color: #fff
-  border: none
+  border-radius: 16px
+  color: #000
+  border: solid 1px #000
   font-size: 14px
   margin-top: 1px
   margin-left: 10px
   margin-right: 10px
   margin-bottom: 10px
-
+  margin: auto
+  margin-top: 2rem
+  background: #fff url(/thumbs-up-solid.svg) no-repeat 9px center
+  background-size: 18px
+  position: relative
+  &.against
+    background: #fff url(/thumbs-down-solid.svg) no-repeat 9px center
+    background-size: 18px
+  &::before
+    content: ""
+    display: inline-block
+    height: 100%
+    width: 100%
+    border-radius: 100px
+    position: absolute
+    top: 0
+    left: 0
+    background-color: #00D395
+    z-index: 1
+    visibility: hidden
   &:hover
-    background-color: #999
+    border-color: #00D395
+    box-shadow: inset 0 0 0 1px #00D395
+  &.against
+    &:hover
+      border-color: #DF5F67
+      box-shadow: inset 0 0 0 1px #DF5F67
+    &::before
+      background-color: #DF5F67
+  &:hover::before
+    transition: all 0.4s
+    visibility: visible
+    transform: scaleX(1.4) scaleY(1.6)
+    opacity: 0
 
   &:disabled
     background-color: #999
     color: #333
     pointer-events: none
+
+@keyframes activeAnimation
+  0%
+    box-shadow: 0 0 0 0 rgba(0, 211, 149, 1)
+  100%
+    box-shadow: 0 0 0 6px rgba(0, 211, 149, 0)
+    

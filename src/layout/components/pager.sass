@@ -14,6 +14,10 @@
   justify-content: center
   margin-bottom: 10px
 
+.hide-on-small
+  @media screen and (max-width: 60rem)
+    display: none
+
 .pager__title
   font-size: 32px
   color: $color-white
@@ -96,19 +100,39 @@
 
 .pager__button
     display: block
-    padding: 6px 30px
+    flex: 1 1 auto
+    padding: 6px 1rem
     border-radius: 5px
-    background-color: $color-light-grey
-    color: #000
+    background-color: transparent
+    color: $color-dark-grey
     border: none
     font-size: 16px
     margin-top: 15px
     margin-left: 5px
     margin-right: 5px
 
-    &:hover
-      background-color: #999
-
     &:disabled
       background-color: $color-light-grey
       color:#999
+
+.refresh-btn
+    background: url(/sync-alt-solid.svg) no-repeat
+    background-position: right center
+    background-size: 25px
+    font-size: 1.3rem
+    padding-left: 2rem
+    margin: 1rem auto 0
+    display: inline-block
+    margin-top: 0
+    float: right
+    padding-top: 0
+    padding-bottom: 0
+    color: #2b3c54
+    width: 30px
+    height: 30px
+    padding: 0
+    @media screen and (max-width: 60rem)
+      display: block
+      margin: auto
+      float: none
+      margin-top: 1rem

@@ -6,9 +6,138 @@
   display: flex
   align-items: center
   justify-content: space-between
-  padding: 0 16px
+  padding: 0
   height: $nav-height
-  background: $color-black
+  background: none
+  position: sticky
+  top: 60px
+  &.top-nav
+    background: #000
+    box-shadow: 0 0 10px #000
+    position: fixed
+    top: 0
+    left: 0
+    width: 100%
+    z-index: 2
+    @media screen and (max-width: 60rem)
+      padding-right: 0
+    .flex-equal-width
+      width: 233px
+      text-align: right
+      padding-right: 1rem
+      @media screen and (max-width: 60rem)
+        width: initial
+        padding-right: 0
+      .nav__account
+        display: inline-block
+  .nav__links
+    button
+      color: #fff
+      text-decoration: none
+      margin: 0.7rem
+      font-size: 14px
+      font-weight: 500
+      position: relative
+      padding: 0.5rem 0
+      cursor: pointer
+      background: none
+      border: none
+      &::after
+        content: ""
+        height: 2px
+        background: #f60
+        width: 100%
+        position: absolute
+        bottom:4px
+        left: 0
+        visibility: hidden
+      &:hover
+        color: #f60
+        &::after
+          visibility: visible
+          bottom: 2px
+          transition: all 0.15s ease
+      &.active
+        color: #f60
+        cursor: default
+        &::after
+          visibility: visible
+          content: ""
+          height: 2px
+          background: #f60
+          width: 100%
+          position: absolute
+          bottom: 0
+          left: 0
+      @media screen and (max-width: 60rem)
+        display: none
+    &.show-mobile-nav
+      .nav-of-links
+        position: absolute
+        top: 59px
+        left: 0
+        width: 100%
+        height: 100vh
+        display: block
+        background: #000
+        text-align: right
+        padding: 0 1.5rem 1.5rem
+        button
+          display: block
+          width: 100%
+          text-align: right
+          margin: 0
+          padding: 1rem 0
+          font-size: 1rem
+
+.mobile-menu-button
+  display: none
+  color: #fff
+  text-decoration: none
+  margin: 0.7rem
+  font-size: 14px
+  font-weight: 500
+  position: relative
+  padding: 0.5rem 0
+  cursor: pointer
+  background: none
+  border: none
+  padding: 0
+  margin: 0
+  width: 70px
+  height: 35px
+  span
+    display: block
+    height: 3px
+    width: 35px
+    border-radius: 3px
+    background: #fff
+    position: absolute
+    left: 10px
+    top: 0
+    transition: all 0.25s ease 0s
+    &:nth-child(1)
+      transform: initial
+      top: 0
+    &:nth-child(2)
+      top: 13px
+      display: block
+    &:nth-child(3)
+      top: 26px
+      transform: initial
+  &.menu-is-showing
+    span
+      &:nth-child(2)
+        display: none
+      &:nth-child(1)
+        transform: rotateZ(45deg)
+        top: 13px
+      &:nth-child(3)
+        top: 13px
+        transform: rotateZ(135deg)
+  @media screen and (max-width: 60rem)
+    display: inline-block
+    margin-left: 1rem
 
 .nav__brand
   text-decoration: none
@@ -18,8 +147,10 @@
 
 .nav__brand-logo
   width: 25px
+  margin-left: 1rem
 
 .nav__brand-name
+  margin: 0
   margin-left: 8px
   font-size: 20px
   color: $color-white
@@ -30,17 +161,91 @@
 
 .nav__account
   color: $color-white
-  background: $color-dark-grey
-  border-radius: 3px
+  background: #f60
+  border-radius: 21px
   font-size: 14px
   padding: 8px 16px
   cursor: pointer
+  margin: 0
+  border: solid 2px #f60
+  transition: all .2s
+  position: relative
+  &:hover
+    box-shadow: 0 0 10px #f60
+    transition: all .2s
+  &::after
+    content: ""
+    display: inline-block
+    height: 100%
+    width: 100%
+    border-radius: 100px
+    position: absolute
+    top: 0
+    left: 0
+    z-index: -1
+    transition: all .4s
+    background-color: #f60
+
+  &:hover::after
+    transform: scaleX(1.4) scaleY(1.6)
+    opacity: 0
+  &.connected-wallet
+    background: #000
+    border: solid 2px #fff
+    &::before
+      content: "Disconnect"
+      position: absolute
+      background: black
+      color: white
+      top: 0
+      left: 0
+      line-height: 36px
+      width: 100%
+      z-index: 1
+      text-align: center
+      display: none
+      border-radius: 21px
+    &::after
+      background-color: #fff
+    &:hover
+      box-shadow: 0 0 10px #fff
+      &::before
+        display: block
 
 .nav__wrapper
   background: $color-black
+
+.nav-overlay
+  display: none
+  @media screen and (max-width: 60rem)
+    display: block
+    position: fixed
+    left: 0
+    top: 59px
+    height: 100%
+    width: 100%
+    background: rgba(255,255,255,0.1)
+    backdrop-filter: blur(2px)
 
 .nav__network
   margin: 0
   padding: 16px 0
   text-align: center
   color: #f60
+  position: fixed
+  top: 74px
+  right: 1rem
+  padding: 1rem 1.5rem
+  background: #fff
+  border-radius: 10px
+  box-shadow: 0 0 15px #000
+  &::after
+    content: ""
+    width: 0
+    height: 0
+    border-style: solid
+    border-width: 0 10px 13px 10px
+    border-color: transparent transparent #fff transparent
+    position: absolute
+    top: -12px
+    right: 1rem
