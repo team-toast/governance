@@ -449,7 +449,35 @@ class Proposals extends Component {
 
     console.log(449, expiryDate);
 
-    return expiryDate.toString();
+    const d = new Date(expiryDate);
+
+    const datevalues = [
+      d.getFullYear(),
+      d.getMonth() + 1,
+      (d.getDate() < 10 ? "0" : "") + d.getDate(),
+      (d.getHours() < 10 ? "0" : "") + d.getHours(),
+      (d.getMinutes() < 10 ? "0" : "") + d.getMinutes(),
+      (d.getSeconds() < 10 ? "0" : "") + d.getSeconds(),
+    ];
+
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    return `${months[datevalues[1] - 1]} ${datevalues[2]} ${datevalues[0]} ${
+      datevalues[3]
+    }:${datevalues[4]}:${datevalues[5]}`;
   };
 
   render() {
@@ -483,7 +511,7 @@ class Proposals extends Component {
       return (
         <section className="proposals">
           {" "}
-          <div className="proposal" style={{ "margin-top": "-44px" }}>
+          <div className="proposal" style={{ marginTop: "-44px" }}>
             <h4>
               <CurrentPage
                 refresh={this.refresh}
@@ -514,7 +542,7 @@ class Proposals extends Component {
       if (this.props.account)
         return (
           <div className="proposals fetching-proposals">
-            <div className="proposal" style={{ "margin-top": "-44px" }}>
+            <div className="proposal" style={{ marginTop: "-44px" }}>
               <h4>Fetching Proposals...</h4>
             </div>
             <div className="proposals-demo"></div>
