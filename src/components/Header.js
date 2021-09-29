@@ -28,6 +28,7 @@ class Header extends Component {
         {this.props.delegatedAddress !== "Unknown" && (
           <div className="header__balance__white flex-power">
             <div>
+              {"Voting Power"}
               <span
                 className={
                   this.props.votingPower === "0"
@@ -47,13 +48,13 @@ class Header extends Component {
                     : "Unknown"
                 }`}
               </span>
-              {"Voting Power"}
             </div>
             <div>
-              <span>${this.props.balance}</span>
               {`Token Balance`}
+              <span>{this.props.balance}</span>
             </div>
             <div>
+              Delegating to
               <span>
                 {this.props.delegatedAddress.length === 42
                   ? `${this.props.delegatedAddress.slice(
@@ -65,7 +66,6 @@ class Header extends Component {
                     )}`
                   : `${this.props.delegatedAddress}`}
               </span>
-              Delegating
             </div>
           </div>
         )}

@@ -11,7 +11,7 @@ class Proposal extends Component {
     super(props);
 
     this.state = {
-      showBody: false,
+      showBody: true,
     };
   }
   toggleShowBody = () => {
@@ -255,37 +255,41 @@ class Proposal extends Component {
                 {arrowsAgainst}
               </div>
             </div>
-            {(this.props.isPayment[0] === true && this.props.isPayment[3]) ==
-            "Dai" ? (
-              <div
-                className={`payment__type payment-${this.props.isPayment[3]}`}
-              >
-                <div className="payment-text-area">
-                  <span className="payment-amount">
-                    {`Payment Proposal of ${this.props.isPayment[1].toString()} ${
-                      this.props.isPayment[3]
-                    } to`}
-                  </span>
-                  <span className="payment-text-area">
-                    {`0x${this.props.isPayment[2].toString()}`}
-                  </span>
-                </div>
-              </div>
-            ) : (
-              <div
-                className={`payment__type payment-${this.props.isPayment[3]}`}
-              >
-                {this.props.isPayment[0] === true
-                  ? "This is a simple " +
-                    this.props.isPayment[3] +
-                    " payment Proposal (" +
-                    this.props.isPayment[1].toString() +
-                    " " +
-                    this.props.isPayment[3] +
-                    " to 0x" +
-                    this.props.isPayment[2].toString() +
-                    ")"
-                  : null}
+            {this.props.isPayment[3].length > 1 && (
+              <div>
+                {(this.props.isPayment[0] === true &&
+                  this.props.isPayment[3]) == "Dai" ? (
+                  <div
+                    className={`payment__type payment-${this.props.isPayment[3]}`}
+                  >
+                    <div className="payment-text-area">
+                      <span className="payment-amount">
+                        {`Payment Proposal of ${this.props.isPayment[1].toString()} ${
+                          this.props.isPayment[3]
+                        } to`}
+                      </span>
+                      <span className="payment-text-area">
+                        {`0x${this.props.isPayment[2].toString()}`}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className={`payment__type payment-${this.props.isPayment[3]}`}
+                  >
+                    {this.props.isPayment[0] === true
+                      ? "This is a simple " +
+                        this.props.isPayment[3] +
+                        " payment Proposal (" +
+                        this.props.isPayment[1].toString() +
+                        " " +
+                        this.props.isPayment[3] +
+                        " to 0x" +
+                        this.props.isPayment[2].toString() +
+                        ")"
+                      : null}
+                  </div>
+                )}
               </div>
             )}
           </div>

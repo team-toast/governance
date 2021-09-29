@@ -17,9 +17,9 @@ class Proposals extends Component {
       proposals: [],
       loadedProposals: false,
       timeout: 0,
-      pageBookmark: 6,
+      pageBookmark: 3,
       numberOfProposals: 0,
-      proposalsPerPage: 6,
+      proposalsPerPage: 3,
       newerButtonDisable: true,
       olderButtonDisable: false,
     };

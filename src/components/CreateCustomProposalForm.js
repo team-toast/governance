@@ -170,9 +170,7 @@ class CreateCustomProposalForm extends React.Component {
                 onClick={this.handleRemoveEntry(idx)}
                 className="remove"
                 //disabled={!this.props.connected || this.props.disableButtons}
-              >
-                X
-              </button>
+              ></button>
             </div>
           ))}
           <button
