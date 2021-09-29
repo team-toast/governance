@@ -47,6 +47,10 @@ class CurrentPage extends Component {
           this.props.bookmark +
           this.props.proposalsPerPage}{" "}
         of {this.props.numberOfProposals}
+        <button
+          className="pager__button refresh-btn"
+          onClick={this.props.refresh}
+        ></button>
       </div>
     );
   }
