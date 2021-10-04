@@ -489,23 +489,23 @@
       "address": "0x0d573c4b5DBb1633FE3ca722510898Fd5a0D49A9"
     },
     "137": {
-      "address": "0xd9FDa03E4dD889484f8556dDb00Ca114e6A1f575"
+      "address": "0xDaD7e2525c370E7a01200C996962bEB40Ca0a422"
     }
   },
   "contractAddresses": {
     "token": {
-      "address": "0x37FB45ecc93928Ef29f545153971a0669BdDBFFF"
+      "address": "0x1CE1E73eFC6efD899c102DfDfD30731A5cc34A97"
     },
     "dai": {
       "address": "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
       "transferSig": "0xa9059cbb"
     },
     "forwarder": {
-      "address": "0x90Cd855a544dd2a626069A9C3D0be8f4Eeb8C4Fa",
+      "address": "0x3658650fa063736242b100ca990Ef6557a631322",
       "forwardSig": "0xdc5fe025"
     },
     "timelock": {
-      "address": "0x976d2729FcD435eEB2d2B847D55a3A29f153f320"
+      "address": "0xD148016dc36C9612664690E9939b77A399B66aEb"
     }
   }
 }
