@@ -117,10 +117,7 @@
   position: relative
   &:hover
     background-color: #999
-  &:disabled
-    background-color: #999
-    color: #555
-    pointer-events: none
+
   &::after
     content: ""
     display: inline-block
@@ -139,6 +136,12 @@
   &:hover::after
     transform: scaleX(1.4) scaleY(1.6)
     opacity: 0
+      
+  &:disabled
+    background-color: #999
+    color: #555
+    pointer-events: none
+  
 
 .delegate-block
   text-align: center
