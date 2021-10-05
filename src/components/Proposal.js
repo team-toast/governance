@@ -236,8 +236,7 @@ class Proposal extends Component {
             <div className="proposal__votes">
               <div>
                 <h5>
-                  <span>For</span>{" "}
-                  <span>{Number(parseFloat(this.props.infavor))}</span>
+                  <span>For</span> <span>{this.props.infavor}</span>
                 </h5>
                 <div className="bar-growth">
                   <div style={infavorGrowth}></div>
@@ -246,8 +245,7 @@ class Proposal extends Component {
               </div>
               <div>
                 <h5>
-                  <span>Against</span>{" "}
-                  <span>{parseInt(parseFloat(this.props.against))}</span>
+                  <span>Against</span> <span>{this.props.against}</span>
                 </h5>
                 <div className="bar-growth against">
                   <div style={againstGrowth}></div>
