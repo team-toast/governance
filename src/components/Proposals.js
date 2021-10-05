@@ -22,6 +22,7 @@ class Proposals extends Component {
       proposalsPerPage: 3,
       newerButtonDisable: true,
       olderButtonDisable: false,
+      zeroProposals: false,
     };
   }
 
@@ -236,6 +237,11 @@ class Proposals extends Component {
       contract["networks"]["137"]["address"]
     );
     let numOfProposals = await govAlpha.methods.proposalCount().call();
+    if (numOfProposals === "0") {
+      this.setState({ zeroProposals: true });
+      console.log("ZERO PROPOSALS");
+    }
+
     this.setState({ numberOfProposals: numOfProposals });
     let proposals = [];
     let tmpProposal;
@@ -539,7 +545,15 @@ class Proposals extends Component {
         </section>
       );
     } else {
-      if (this.props.account)
+      if (this.state.zeroProposals) {
+        return (
+          <div className="proposals fetching-proposals">
+            <div className="proposal" style={{ marginTop: "-44px" }}>
+              <h4>No proposals submitted yet</h4>
+            </div>
+          </div>
+        );
+      } else if (this.props.account)
         return (
           <div className="proposals fetching-proposals">
             <div className="proposal" style={{ marginTop: "-44px" }}>
