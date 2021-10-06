@@ -82,9 +82,9 @@ class Header extends Component {
             />
             <PopupHint
               message={
-                this.props.disableMessage === "You don't have voting power"
-                  ? ""
-                  : this.props.disableMessage
+                this.props.balance === "0.00"
+                  ? "You don't have governance tokens"
+                  : ""
               }
             >
               <button
