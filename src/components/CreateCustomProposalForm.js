@@ -132,7 +132,6 @@ class CreateCustomProposalForm extends React.Component {
     this.setState({
       description: evt.target.value,
     });
-    console.log(this.state.description);
   };
 
   render() {

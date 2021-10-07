@@ -263,6 +263,17 @@ class App extends Component {
     }
   };
 
+  getBlockTimeStamp = async (blockNumber) => {
+    try {
+      const blockInfo = await this.state.web3.eth.getBlock(blockNumber);
+      return blockInfo["timestamp"];
+    } catch (error) {
+      console.error("Error executing getBlockTimeStamp", error);
+
+      return 0;
+    }
+  };
+
   getNetworkName = (netID = null) => {
     let { networkId } = this.state;
 
@@ -617,6 +628,7 @@ class App extends Component {
                     setMessage={this.setMessage}
                     clearMessage={this.clearMessage}
                     getLatestBlock={this.getLatestBlock}
+                    getBlockTimeStamp={this.getBlockTimeStamp}
                     getNetworkName={this.getNetworkName}
                     numberWithCommas={this.numberWithCommas}
                     buttonsDisabled={this.state.disableButtons}

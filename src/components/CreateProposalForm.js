@@ -100,21 +100,18 @@ class CreateProposalForm extends Component {
     this.setState({
       toAddress: evt.target.value,
     });
-    console.log(this.state.toAddress);
   };
 
   handleAmountChange = async (evt) => {
     this.setState({
       daiAmount: evt.target.value,
     });
-    console.log(this.state.daiAmount);
   };
 
   handleDescriptionChange = async (evt) => {
     this.setState({
       description: evt.target.value,
     });
-    console.log(this.state.description);
   };
 
   render() {

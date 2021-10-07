@@ -222,9 +222,17 @@ class Proposal extends Component {
         <div className="title-flex" onClick={this.toggleShowBody}>
           <div>
             <h4 className="proposal__title">{this.props.title}</h4>
-            <span className="proposal__pill">{this.props.endDate}</span>
+            <span className="proposal__pill">
+              Start time: {this.props.startDate}
+            </span>
+            <span className="proposal__block">{this.props.startBlock}</span>
+            <br></br>
+            <span className="proposal__pill">
+              End time: {this.props.endDate}
+            </span>
             <span className="proposal__block">{this.props.endBlock}</span>
           </div>
+
           <div className="proposal__status">
             <div className={`status__${this.props.status}`}>
               {this.props.status}

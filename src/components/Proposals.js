@@ -22,6 +22,8 @@ class Proposals extends Component {
       proposalsPerPage: 3,
       newerButtonDisable: true,
       olderButtonDisable: false,
+      historicBlockTimes: [],
+      avgBlockTime: null,
     };
   }
 
@@ -43,6 +45,36 @@ class Proposals extends Component {
     this.setState({ proposals: [] });
     this.setState({ pageBookmark: tmpBookmark });
     this.refresh();
+  };
+
+  timestampToDate = (timestamp) => {
+    let date = new Date(timestamp * 1000);
+
+    return this.formatDate(date);
+
+    // let day = date.getDay();
+    // let month = date.getMonth();
+    // let year = date.getFullYear();
+    // // Hours part from the timestamp
+    // let hours = date.getHours();
+    // // Minutes part from the timestamp
+    // let minutes = "0" + date.getMinutes();
+    // // Seconds part from the timestamp
+    // let seconds = "0" + date.getSeconds();
+
+    // // Will display time in 10:30:23 format
+    // let formattedTime =
+    //   day +
+    //   "/" +
+    //   month +
+    //   "/" +
+    //   year +
+    //   " " +
+    //   hours +
+    //   ":" +
+    //   minutes.substr(-2) +
+    //   ":" +
+    //   seconds.substr(-2);
   };
 
   getProposalsFromEvents = async (web3) => {
@@ -102,7 +134,7 @@ class Proposals extends Component {
               ).toFixed(2)
             ),
             proposalObjs[i]["endBlock"],
-            this.getProposalEndTime(proposalObjs[i]["endBlock"]),
+            await this.getProposalTimeFromBlock(proposalObjs[i]["endBlock"]),
             await this.getStatus2(
               proposalObjs[i],
               web3,
@@ -110,8 +142,9 @@ class Proposals extends Component {
               gracePeriod
             ),
             this.isPaymentProposal(eventDetail[5], eventDetail[2]),
+            proposalObjs[i]["startBlock"],
+            await this.getProposalTimeFromBlock(proposalObjs[i]["startBlock"]),
           ]);
-          //await this.sleep(20);
         }
         fectchedProposalObjects = true;
         console.log("Proposal array: ", tmpProposals);
@@ -304,28 +337,6 @@ class Proposals extends Component {
     return decoded;
   };
 
-  // get state Solidity code (translated to JS in getState2 function)
-  // function state(uint proposalId) public view returns (ProposalState) {
-  //       require(proposalCount >= proposalId && proposalId > 0, "GovernorAlpha::state: invalid proposal id");
-  //       Proposal storage proposal = proposals[proposalId];
-  //       if (proposal.canceled) {
-  //           return ProposalState.Canceled;
-  //       } else if (block.number <= proposal.startBlock) {
-  //           return ProposalState.Pending;
-  //       } else if (block.number <= proposal.endBlock) {
-  //           return ProposalState.Active;
-  //       } else if (proposal.forVotes <= proposal.againstVotes || proposal.forVotes < quorumVotes()) {
-  //           return ProposalState.Defeated;
-  //       } else if (proposal.eta == 0) {
-  //           return ProposalState.Succeeded;
-  //       } else if (proposal.executed) {
-  //           return ProposalState.Executed;
-  //       } else if (block.timestamp >= add256(proposal.eta, timelock.GRACE_PERIOD())) {
-  //           return ProposalState.Expired;
-  //       } else {
-  //           return ProposalState.Queued;
-  //       }
-  //   }
   getStatus2 = async (proposal, web3, quorumVotes, gracePeriod) => {
     if (proposal["canceled"] === true) {
       return "Canceled";
@@ -412,6 +423,8 @@ class Proposals extends Component {
 
   getProposals = async () => {
     try {
+      await this.getAverageBlockTime(this.props.web3);
+
       let matic = false;
       while (matic === false) {
         console.log("Getting Proposals");
@@ -431,26 +444,80 @@ class Proposals extends Component {
     }
   };
 
-  getProposalEndTime = (expiryBlock) => {
-    let expiryDate = new Date();
-    console.log("Current date: ", expiryDate.toString());
-    console.log("Expiry block", parseInt(expiryBlock));
-    console.log("Latest block", this.props.latestBlock);
-    let blockDifference =
-      parseInt(expiryBlock) - parseInt(this.props.latestBlock);
-    if (blockDifference < 0) {
-      return "Closed";
+  createArrayWithRange = (a, b) => {
+    if (b === undefined) {
+      b = a;
+      a = 1;
     }
-    console.log("Block Difference: ", blockDifference.toString());
-    let secondsTillExpiry = 2.7 * blockDifference;
-    expiryDate.setSeconds(
-      expiryDate.getSeconds() + parseInt(secondsTillExpiry)
-    );
+    return [...Array(b - a + 1).keys()].map((x) => x + a);
+  };
+
+  getAverageBlockTime = async (web3) => {
+    const n = 25;
+    const latest = await web3.eth.getBlockNumber();
+    const blockNumbers = this.createArrayWithRange(latest - n, latest + 1, 1);
+    const batch = new web3.eth.BatchRequest();
+
+    blockNumbers.forEach((blockNumber) => {
+      batch.add(web3.eth.getBlock.request(blockNumber, this.storeLocalCopy));
+    });
+
+    batch.execute();
+  };
+
+  storeLocalCopy = (err, data) => {
+    if (err === null) {
+      this.setState({
+        historicBlockTimes: this.state.historicBlockTimes.concat([
+          data["timestamp"],
+        ]),
+      });
+    }
+  };
+
+  getProposalTimeFromBlock = async (block) => {
+    let timestamp = await this.props.getBlockTimeStamp(block);
+    let expiryDate;
+    if (timestamp !== 0) {
+      expiryDate = this.timestampToDate(timestamp);
+    } else {
+      expiryDate = new Date();
+      //console.log("Current date: ", expiryDate.toString());
+      //console.log("Expiry block", parseInt(block));
+      //console.log("Latest block", this.props.latestBlock);
+      let blockDifference = parseInt(block) - parseInt(this.props.latestBlock);
+      if (blockDifference < 0) {
+        return "Closed on " + this.formatDate(expiryDate);
+      }
+      //console.log("Block Difference: ", blockDifference.toString());
+
+      let differences = [];
+      for (let i = 0; i < this.state.historicBlockTimes.length - 1; i++) {
+        differences.push(
+          this.state.historicBlockTimes[i + 1] -
+            this.state.historicBlockTimes[i]
+        );
+      }
+
+      let avg = differences.reduce((a, b) => a + b, 0) / differences.length;
+
+      //console.log("DIFFERENCES: ", differences);
+      //console.log("AVERAGE: ", avg);
+
+      let secondsTillExpiry = avg * blockDifference;
+      expiryDate.setSeconds(
+        expiryDate.getSeconds() + parseInt(secondsTillExpiry)
+      );
+    }
 
     console.log(449, expiryDate);
 
     const d = new Date(expiryDate);
 
+    return this.formatDate(d);
+  };
+
+  formatDate = (d) => {
     const datevalues = [
       d.getFullYear(),
       d.getMonth() + 1,
@@ -496,6 +563,8 @@ class Proposals extends Component {
               infavor={proposal[5]}
               against={proposal[6]}
               endBlock={proposal[7]}
+              startBlock={proposal[11]}
+              startDate={proposal[12]}
               endDate={proposal[8]}
               status={proposal[9]}
               isPayment={proposal[10]}
