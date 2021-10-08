@@ -553,7 +553,7 @@ class Proposals extends Component {
             </div>
           </div>
         );
-      } else if (this.props.account)
+      } else
         return (
           <div className="proposals fetching-proposals">
             <div className="proposal" style={{ marginTop: "-44px" }}>
@@ -563,14 +563,6 @@ class Proposals extends Component {
             <div className="proposals-demo"></div>
           </div>
         );
-      else {
-        return (
-          <div className="proposals">
-            <br />
-            <h5>Please connect wallet</h5>
-          </div>
-        );
-      }
     }
   }
 }
