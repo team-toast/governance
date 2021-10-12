@@ -288,8 +288,12 @@ class App extends Component {
 
   getBlockTimeStamp = async (blockNumber) => {
     try {
-      const blockInfo = await this.state.web3.eth.getBlock(blockNumber);
-      return blockInfo["timestamp"];
+      if (blockNumber < this.state.latestBlock) {
+        const blockInfo = await this.state.web3.eth.getBlock(blockNumber);
+        return blockInfo["timestamp"]; //1634039582;
+      } else {
+        return 0;
+      }
     } catch (error) {
       console.error("Error executing getBlockTimeStamp", error);
 
