@@ -303,7 +303,10 @@ class Proposal extends Component {
         )}
         {this.state.showBody && (
           <div className="proposal__bottom">
-            <p className="proposal__description">{this.props.description}</p>
+            {/* <p className="proposal__description">{this.props.description}</p> */}
+            <p className="proposal__description">
+              {this.props.description ? this.props.description : "Loading..."}
+            </p>
           </div>
         )}
         {this.props.status === "Succeeded" && this.state.showBody ? (

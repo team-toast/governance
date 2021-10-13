@@ -23,9 +23,9 @@ class Proposals extends Component {
       proposalEndTimesWithID: [],
       loadedProposals: false,
       timeout: 0,
-      pageBookmark: 3,
+      pageBookmark: 5,
       numberOfProposals: 0,
-      proposalsPerPage: 3,
+      proposalsPerPage: 5,
       newerButtonDisable: true,
       olderButtonDisable: false,
       historicBlockTimes: [],
@@ -90,7 +90,7 @@ class Proposals extends Component {
       try {
         let proposalObjs = await this.getAllProposalObjects(web3);
         this.setState({ proposalObjects: proposalObjs });
-        console.log("Set objects");
+        // console.log("Set objects");
 
         let quorumVotes = await this.getQuorumVotes(web3);
         let gracePeriod = await this.getGracePeriod(web3);
@@ -98,16 +98,16 @@ class Proposals extends Component {
         let eventDetail;
         let tmpProposals = [];
 
-        console.log(
-          "Events Bookmark Start: ",
-          proposalObjs.length - this.state.pageBookmark
-        );
-        console.log(
-          "Events Bookmark End: ",
-          proposalObjs.length -
-            this.state.pageBookmark +
-            this.state.proposalsPerPage
-        );
+        // console.log(
+        //   "Events Bookmark Start: ",
+        //   proposalObjs.length - this.state.pageBookmark
+        // );
+        // console.log(
+        //   "Events Bookmark End: ",
+        //   proposalObjs.length -
+        //     this.state.pageBookmark +
+        //     this.state.proposalsPerPage
+        // );
 
         let start = 0;
         if (proposalObjs.length - this.state.pageBookmark < 0) {
@@ -123,8 +123,8 @@ class Proposals extends Component {
           Ids.push(proposalObjs[i]["id"]);
         }
 
-        console.log("blocknumbers: ", blockNumbers);
-        console.log("Ids: ", Ids);
+        // console.log("blocknumbers: ", blockNumbers);
+        // console.log("Ids: ", Ids);
 
         this.getProposalEventParametersBatch(web3, blockNumbers, Ids);
 
@@ -192,7 +192,7 @@ class Proposals extends Component {
         }
 
         fectchedProposalObjects = true;
-        console.log("Proposal array: ", tmpProposals);
+        // console.log("Proposal array: ", tmpProposals);
         this.setState({ proposals: tmpProposals });
 
         if (tmpProposals.length > 0) {
@@ -253,14 +253,14 @@ class Proposals extends Component {
       );
 
       // .methods.balance(address).call.request()
-      console.log(blockNumbers[i]);
-      console.log(Ids[i]);
+      // console.log(blockNumbers[i]);
+      // console.log(Ids[i]);
     }
     //batch.execute();
   };
 
   processEvent = async (err, data) => {
-    console.log("Processing Event");
+    // console.log("Processing Event");
     let rawData = data[0]["raw"]["data"];
     let decoded = this.props.web3.eth.abi.decodeParameters(
       [
@@ -276,53 +276,11 @@ class Proposals extends Component {
       ],
       rawData
     );
-    console.log("Decoded: ", decoded);
-
-    // let tmpEvents = {}; //{id : decoded[0], {description : decoded[8]} {target : decoded[2]} {calldata : decoded[5]}}
-    // tmpEvents.id = {};
-    // tmpEvents.id = "decoded[0]";
-    // tmpEvents.id["description"] = {};
-    // tmpEvents.id["description"] = "decoded[8]";
-    // tmpEvents.id["target"] = {};
-    // tmpEvents.id["target"] = "decoded[2]";
-    // tmpEvents.id["calldata"] = {};
-    // tmpEvents.id["calldata"] = "decoded[5]";
-
-    // console.log("NEW EVENT OBJECT: ", tmpEvents);
+    //console.log("Decoded: ", decoded);
 
     this.setState({
       proposalEvents: this.state.proposalEvents.concat(decoded),
     });
-
-    //---------------------------------
-    // Title, description, id (key), id, end_time
-    // let tmpProposals = [];
-    // tmpProposals.push([
-    //   "Proposal " + parseInt(decoded[0]),
-    //   decoded[8],
-    //   decoded[0],
-    //   decoded[0],
-    //   decoded[7],
-    //   this.props.numberWithCommas(
-    //     parseFloat(
-    //       this.props.web3.utils.fromWei(proposalObjs[i]["forVotes"])
-    //     ).toFixed(2)
-    //   ),
-    //   this.props.numberWithCommas(
-    //     parseFloat(
-    //       this.props.web3.utils.fromWei(proposalObjs[i]["againstVotes"])
-    //     ).toFixed(2)
-    //   ),
-    //   proposalObjs[i]["endBlock"],
-    //   await this.getProposalTimeFromBlock(proposalObjs[i]["endBlock"]),
-    //   await this.getStatus2(proposalObjs[i], web3, quorumVotes, gracePeriod),
-    //   this.isPaymentProposal(decoded[5], decoded[2]),
-    //   proposalObjs[i]["startBlock"],
-    //   await this.getProposalTimeFromBlock(proposalObjs[i]["startBlock"]),
-    // ]);
-
-    // fectchedProposalObjects = true;
-    //---------------------------------
   };
 
   getAverageBlockTime = async (web3) => {
@@ -419,9 +377,6 @@ class Proposals extends Component {
       [paymentTokenAddress, generatedDaiTransferCallData, "0"]
     );
 
-    //console.log("Original call data: ", calldata);
-    //console.log("Generated call data: ", generatedForwardCallData);
-
     if (
       calldata.length === 1 &&
       contractAddress
@@ -473,7 +428,7 @@ class Proposals extends Component {
         let receiver = "";
         amount = parseInt("0x" + extratedTokenAmount, 16) / 10 ** 18;
         receiver = extratedReceiverAddress;
-        console.log("This is a PAYMENT");
+        //console.log("This is a PAYMENT");
         return [true, amount, receiver, tokenName];
       } else {
         return [false, 0, "", ""];
@@ -496,7 +451,6 @@ class Proposals extends Component {
     this.setState({ numberOfProposals: numOfProposals });
     let proposals = [];
     let tmpProposal;
-    //for (let i = 0; i < numOfProposals; i++) {
 
     let start = 0;
     if (numOfProposals - this.state.pageBookmark < 0) {
@@ -505,14 +459,14 @@ class Proposals extends Component {
       start = numOfProposals - this.state.pageBookmark;
     }
 
-    console.log(
-      "Objects Bookmark Start: ",
-      numOfProposals - this.state.pageBookmark
-    );
-    console.log(
-      "Objects Bookmark End: ",
-      numOfProposals - this.state.pageBookmark + this.state.proposalsPerPage
-    );
+    // console.log(
+    //   "Objects Bookmark Start: ",
+    //   numOfProposals - this.state.pageBookmark
+    // );
+    // console.log(
+    //   "Objects Bookmark End: ",
+    //   numOfProposals - this.state.pageBookmark + this.state.proposalsPerPage
+    // );
     for (
       let i = start;
       i <
@@ -522,10 +476,10 @@ class Proposals extends Component {
       tmpProposal = await govAlpha.methods.proposals(i + 1).call();
       proposals.push(tmpProposal);
     }
-    console.log("Proposal Objects: ");
-    proposals.forEach((element) => {
-      console.log(element);
-    });
+    // console.log("Proposal Objects: ");
+    // proposals.forEach((element) => {
+    //   console.log(element);
+    // });
     return proposals;
   };
 
@@ -571,7 +525,6 @@ class Proposals extends Component {
       console.error("Error in getQuorumVotes: ", error);
       return 40000 * 10 ** 18;
     }
-    //console.log("QUORUM:", quorumVotes);
     return quorumVotes;
   };
 
@@ -587,36 +540,7 @@ class Proposals extends Component {
       console.error("Error in getGracePeriod: ", error);
       return 1209600;
     }
-    //console.log("gracePeriod:", gracePeriod);
     return gracePeriod;
-  };
-
-  // componentWillUpdate = () => {
-  //   this.updateProposalState();
-  // };
-
-  updateProposalState = () => {
-    console.log("Component will update.");
-    console.log("ProposalEvents: ", this.state.proposalEvents);
-    if (
-      this.state.proposalEvents.length === this.state.proposals.length &&
-      this.state.proposalEvents.length > 0
-    ) {
-      if (this.state.proposals[0]["description"] === "Loading...") {
-        console.log("MERGE ARRAYS");
-        let tmpProps = this.state.proposals;
-        console.log("Objects: ", this.state.proposals);
-        let tmpEvents = this.state.proposalEvents;
-        tmpEvents.sort((a, b) => a[0].localeCompare(b[0]));
-        console.log("Sorted events: ", tmpEvents);
-
-        for (let i = 0; i < tmpEvents.length; i++) {
-          tmpProps[i]["description"] = tmpEvents[8];
-        }
-
-        this.setState({ proposals: tmpEvents });
-      }
-    }
   };
 
   componentDidMount = () => {
@@ -629,12 +553,12 @@ class Proposals extends Component {
       1000
     );
 
-    setInterval(() => {
-      if (this.props.network === "Matic") {
-        console.log("StartTimes: ", this.state.proposalStartTimesWithID);
-        console.log("EndTimes: ", this.state.proposalEndTimesWithID);
-      }
-    }, 5000);
+    // setInterval(() => {
+    //   if (this.props.network === "Matic") {
+    //     console.log("StartTimes: ", this.state.proposalStartTimesWithID);
+    //     console.log("EndTimes: ", this.state.proposalEndTimesWithID);
+    //   }
+    // }, 5000);
   };
 
   sleep = (milliseconds) => {
@@ -643,21 +567,20 @@ class Proposals extends Component {
 
   getProposals = async () => {
     try {
-      await this.getAverageBlockTime(this.props.web3);
-
       let matic = false;
       while (matic === false) {
         console.log("Getting Proposals");
         if (this.props.network === "Matic") {
           console.log("Populating Matic proposal data.");
           matic = true;
-          await this.getProposalsFromEvents(this.props.web3);
+          this.getProposalsFromEvents(this.props.web3);
         } else {
           console.log("Please select the Matic network.");
           matic = false;
           await this.sleep(2000);
         }
       }
+      this.getAverageBlockTime(this.props.web3);
     } catch (error) {
       await this.sleep(1000);
       console.log("Error in getProposals", error);
@@ -701,20 +624,15 @@ class Proposals extends Component {
 
   getProposalTimeFromBlock = async (block) => {
     let timestamp = await this.props.getBlockTimeStamp(block);
-    console.log("TIMUH STAMPUH", timestamp);
     let expiryDate;
     if (timestamp !== 0) {
       expiryDate = this.timestampToDate(timestamp);
     } else {
       expiryDate = new Date();
-      //console.log("Current date: ", expiryDate.toString());
-      //console.log("Expiry block", parseInt(block));
-      //console.log("Latest block", this.props.latestBlock);
       let blockDifference = parseInt(block) - parseInt(this.props.latestBlock);
       if (blockDifference < 0) {
         return "Closed on " + this.formatDate(expiryDate);
       }
-      //console.log("Block Difference: ", blockDifference.toString());
 
       let differences = [];
       for (let i = 0; i < this.state.historicBlockTimes.length - 1; i++) {
@@ -726,16 +644,13 @@ class Proposals extends Component {
 
       let avg = differences.reduce((a, b) => a + b, 0) / differences.length;
 
-      //console.log("DIFFERENCES: ", differences);
-      //console.log("AVERAGE: ", avg);
-
       let secondsTillExpiry = avg * blockDifference;
       expiryDate.setSeconds(
         expiryDate.getSeconds() + parseInt(secondsTillExpiry)
       );
     }
 
-    console.log(449, expiryDate);
+    //console.log(449, expiryDate);
 
     const d = new Date(expiryDate);
 
@@ -778,7 +693,7 @@ class Proposals extends Component {
         return this.state.proposalEvents[i][8];
       }
     }
-    return "Not Found";
+    return "";
   };
 
   getIsPayment = (id) => {
@@ -829,7 +744,7 @@ class Proposals extends Component {
               against={proposal["againstVotes"]}
               endBlock={proposal["endBlock"]}
               startBlock={proposal["startBlock"]}
-              startDate={this.getTime(true, proposal["id"])} // {this.state.proposalStartTimesW[i]}
+              startDate={this.getTime(true, proposal["id"])}
               endDate={this.getTime(false, proposal["id"])}
               status={proposal["status"]}
               isPayment={this.getIsPayment(proposal["id"])}
