@@ -19,6 +19,8 @@ class Proposals extends Component {
       proposalEvents: [],
       proposalStartTimes: [],
       proposalEndTimes: [],
+      proposalStartTimesWithID: [],
+      proposalEndTimesWithID: [],
       loadedProposals: false,
       timeout: 0,
       pageBookmark: 3,
@@ -133,11 +135,19 @@ class Proposals extends Component {
           //   proposalObjs[i]["id"]
           // );
           // console.log(eventDetail);
-          this.addDateToArray(true, proposalObjs[i]["startBlock"]);
-          this.addDateToArray(false, proposalObjs[i]["endBlock"]);
+          this.addDateToArray(
+            true,
+            proposalObjs[i]["startBlock"],
+            proposalObjs[i]["id"]
+          );
+          this.addDateToArray(
+            false,
+            proposalObjs[i]["endBlock"],
+            proposalObjs[i]["id"]
+          );
           tmpProposals.push({
             title: "Proposal " + parseInt(proposalObjs[i]["id"]),
-            description: "Loading...", //eventDetail[8],
+            description: "Loading...",
 
             id: parseInt(proposalObjs[i]["id"]),
 
@@ -196,19 +206,28 @@ class Proposals extends Component {
     }
   };
 
-  addDateToArray = async (start, block) => {
+  addDateToArray = async (start, block, id) => {
     if (start) {
       let time = await this.getProposalTimeFromBlock(block);
+      let timeAndID = { id: id, time: time };
       this.setState({
         proposalStartTimes: this.state.proposalStartTimes.concat(time),
       });
+      this.setState({
+        proposalStartTimesWithID:
+          this.state.proposalStartTimesWithID.concat(timeAndID),
+      });
     } else {
       let time = await this.getProposalTimeFromBlock(block);
+      let timeAndID = { id: id, time: time };
       this.setState({
         proposalEndTimes: this.state.proposalEndTimes.concat(time),
       });
+      this.setState({
+        proposalEndTimesWithID:
+          this.state.proposalEndTimesWithID.concat(timeAndID),
+      });
     }
-    console.log("ADDED TIME TO START TIMES: ", this.state.proposalStartTimes);
   };
 
   getProposalEventParametersBatch = async (web3, blockNumbers, Ids) => {
@@ -610,12 +629,12 @@ class Proposals extends Component {
       1000
     );
 
-    // setInterval(() => {
-    //   if (this.props.network === "Matic") {
-    //     this.props.getLatestBlock();
-    //     this.getProposals();
-    //   }
-    // }, 20000);
+    setInterval(() => {
+      if (this.props.network === "Matic") {
+        console.log("StartTimes: ", this.state.proposalStartTimesWithID);
+        console.log("EndTimes: ", this.state.proposalEndTimesWithID);
+      }
+    }, 5000);
   };
 
   sleep = (milliseconds) => {
@@ -682,6 +701,7 @@ class Proposals extends Component {
 
   getProposalTimeFromBlock = async (block) => {
     let timestamp = await this.props.getBlockTimeStamp(block);
+    console.log("TIMUH STAMPUH", timestamp);
     let expiryDate;
     if (timestamp !== 0) {
       expiryDate = this.timestampToDate(timestamp);
@@ -773,6 +793,24 @@ class Proposals extends Component {
     return [false, 0, "", ""];
   };
 
+  getTime = (start, id) => {
+    if (start) {
+      for (let i = 0; i < this.state.proposalStartTimesWithID.length; i++) {
+        if (this.state.proposalStartTimesWithID[i]["id"] === id.toString()) {
+          return this.state.proposalStartTimesWithID[i]["time"];
+        }
+      }
+      return "";
+    } else {
+      for (let i = 0; i < this.state.proposalEndTimesWithID.length; i++) {
+        if (this.state.proposalEndTimesWithID[i]["id"] === id.toString()) {
+          return this.state.proposalEndTimesWithID[i]["time"];
+        }
+      }
+      return "";
+    }
+  };
+
   render() {
     let proposals = [];
 
@@ -791,8 +829,8 @@ class Proposals extends Component {
               against={proposal["againstVotes"]}
               endBlock={proposal["endBlock"]}
               startBlock={proposal["startBlock"]}
-              startDate={this.state.proposalStartTimes[i]}
-              endDate={this.state.proposalEndTimes[i]}
+              startDate={this.getTime(true, proposal["id"])} // {this.state.proposalStartTimesW[i]}
+              endDate={this.getTime(false, proposal["id"])}
               status={proposal["status"]}
               isPayment={this.getIsPayment(proposal["id"])}
               updateProposalStates={this.getProposals}
