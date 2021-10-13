@@ -107,6 +107,7 @@ class App extends Component {
         web3,
         network: "Matic",
       });
+      this.getLatestBlock();
     }
   };
 
@@ -288,8 +289,17 @@ class App extends Component {
 
   getBlockTimeStamp = async (blockNumber) => {
     try {
-      const blockInfo = await this.state.web3.eth.getBlock(blockNumber);
-      return blockInfo["timestamp"];
+      while (this.state.web3 === null) {
+        this.sleep(50);
+        console.log("sleeping");
+      }
+
+      if (blockNumber < this.state.latestBlock) {
+        const blockInfo = await this.state.web3.eth.getBlock(blockNumber);
+        return blockInfo["timestamp"];
+      } else {
+        return 0;
+      }
     } catch (error) {
       console.error("Error executing getBlockTimeStamp", error);
 
