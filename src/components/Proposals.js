@@ -58,30 +58,6 @@ class Proposals extends Component {
     let date = new Date(timestamp * 1000);
 
     return this.formatDate(date);
-
-    // let day = date.getDay();
-    // let month = date.getMonth();
-    // let year = date.getFullYear();
-    // // Hours part from the timestamp
-    // let hours = date.getHours();
-    // // Minutes part from the timestamp
-    // let minutes = "0" + date.getMinutes();
-    // // Seconds part from the timestamp
-    // let seconds = "0" + date.getSeconds();
-
-    // // Will display time in 10:30:23 format
-    // let formattedTime =
-    //   day +
-    //   "/" +
-    //   month +
-    //   "/" +
-    //   year +
-    //   " " +
-    //   hours +
-    //   ":" +
-    //   minutes.substr(-2) +
-    //   ":" +
-    //   seconds.substr(-2);
   };
 
   getProposalsFromEvents = async (web3) => {
@@ -304,38 +280,6 @@ class Proposals extends Component {
         ]),
       });
     }
-  };
-
-  getProposalEventParameters = async (web3, blockNumber, Id) => {
-    const govAlpha = new web3.eth.Contract(
-      contract.abi,
-      contract["networks"]["137"]["address"]
-    );
-    let found = await govAlpha.getPastEvents(
-      0xda95691a, // method id
-      {
-        filter: { id: Id },
-        fromBlock: blockNumber - 10,
-        toBlock: blockNumber,
-      }
-    );
-    let rawData = found[0]["raw"]["data"];
-    let decoded = web3.eth.abi.decodeParameters(
-      [
-        "uint256",
-        "address",
-        "address[]",
-        "uint256[]",
-        "string[]",
-        "bytes[]",
-        "uint256",
-        "uint256",
-        "string",
-      ],
-      rawData
-    );
-
-    return decoded;
   };
 
   isPaymentProposal = (
