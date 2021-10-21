@@ -68,7 +68,7 @@ class Nav extends Component {
                   target="_blank"
                   href="https://metamask.io/"
                 >
-                  {`Note: To use Foundy Governance you need MetaMask`}
+                  {`Note: To use Foundry Governance you need MetaMask`}
                 </a>
               </p>
             </div>
