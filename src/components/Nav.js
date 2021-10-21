@@ -61,17 +61,17 @@ class Nav extends Component {
             </p>
           )}
           {this.props.metaMaskMissing && (
-            <p className="nav__network">
-              {`Note: You need `}
-              <a
-                className="nav__network"
-                target="_blank"
-                href="https://metamask.io/"
-              >
-                MetaMask
-              </a>
-              {` to use Foundry Governance`}
-            </p>
+            <div>
+              <p className="nav__network">
+                <a
+                  className="nav__network"
+                  target="_blank"
+                  href="https://metamask.io/"
+                >
+                  {`Note: To use Foundy Governance you need MetaMask`}
+                </a>
+              </p>
+            </div>
           )}
           <nav className="nav top-nav">
             <a className="nav__brand" href="/">
