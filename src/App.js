@@ -82,7 +82,10 @@ class App extends Component {
   }
 
   componentDidMount = async () => {
-    if (this.web3Connect.cachedProvider) {
+    if (
+      this.web3Connect.cachedProvider &&
+      typeof window.ethereum !== "undefined"
+    ) {
       this.onConnect();
     } else {
       // Todo default connect
@@ -92,23 +95,17 @@ class App extends Component {
 
   defaultConnect = async () => {
     console.log("Default Connect");
-    if (typeof window.ethereum === "undefined") {
-      console.log("WEB3 not available");
-      this.setState({ metaMaskMissing: true });
-      return;
-    } else {
-      const web3 = new Web3(
-        new Web3.providers.HttpProvider("https://polygon-rpc.com/")
-      );
-      const netId = await web3.eth.net.getId();
+    const web3 = new Web3(
+      new Web3.providers.HttpProvider("https://polygon-rpc.com/")
+    );
+    const netId = await web3.eth.net.getId();
 
-      console.log("Net ID test: ", netId);
-      await this.setState({
-        web3,
-        network: "Matic",
-      });
-      this.getLatestBlock();
-    }
+    console.log("Net ID test: ", netId);
+    await this.setState({
+      web3,
+      network: "Matic",
+    });
+    this.getLatestBlock();
   };
 
   onConnect = async () => {
