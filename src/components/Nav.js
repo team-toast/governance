@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Tabs, Tab } from "react-bootstrap";
 
 import Message from "./Message";
 
@@ -145,6 +144,7 @@ class Nav extends Component {
             </div>
           </div>
         )}
+
         <div className="flex-equal-width">
           {button}
           {this.props.connected && (
