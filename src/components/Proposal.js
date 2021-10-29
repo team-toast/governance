@@ -12,10 +12,14 @@ class Proposal extends Component {
 
     this.state = {
       showBody: true,
+      showData: false,
     };
   }
   toggleShowBody = () => {
     this.setState({ showBody: true });
+  };
+  toggleShowData = () => {
+    this.setState({ showData: true });
   };
   handleVoteFor = async () => {
     this.props.setStatusOf("Voting In Favour ...", true);
@@ -312,25 +316,33 @@ class Proposal extends Component {
             )}
             {this.props.isPayment[0] === false && this.props.isPayment[3] && (
               <div>
-                <div
-                  className={`payment__type payment-${this.props.isPayment[3]}`}
-                >
-                  <div className="payment-text-area">
-                    <span className="payment-amount">
-                      {`Custom Proposal Input`}
-                      <br></br>
-                      <br></br>
-                    </span>
-                    <span className="payment-text-area">
-                      {" "}
-                      {`Target: `} <br></br>
-                      {`${this.props.isPayment[3]} `}
-                      <br></br> <br></br>
-                      {`Call Data:`} <br></br>
-                      {` ${this.props.isPayment[4]} `}
-                    </span>
+                {!this.state.showData && (
+                  <div
+                    className="calldata-block__button"
+                    onClick={this.toggleShowData}
+                  >
+                    <h6>Show Call Data</h6>
                   </div>
-                </div>
+                )}
+
+                {this.state.showData && (
+                  <div
+                    className={`payment__type payment-${this.props.isPayment[3]}`}
+                  >
+                    <div className="payment-text-area">
+                      <span className="payment-amount"></span>
+                      <span className="payment-text-area">
+                        {" "}
+                        {`Target: `} <br></br>
+                        {`${this.props.isPayment[3]} `}
+                        <br></br> <br></br>
+                        {`Call Data:`} <br></br>
+                        {` ${this.props.isPayment[4]} `}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <div></div>
               </div>
             )}
           </div>
