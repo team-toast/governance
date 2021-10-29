@@ -383,8 +383,13 @@ class Proposals extends Component {
       let contractAddresses = "";
       let calldatas = "";
       for (let i = 0; i < contractAddress.length; i++) {
-        contractAddresses = contractAddresses + ", " + contractAddress[i];
-        calldatas = calldatas + ", " + calldata;
+        if (i === 0) {
+          contractAddresses = contractAddress[i];
+          calldatas = calldata[i];
+        } else {
+          contractAddresses = contractAddresses + ", " + contractAddress[i];
+          calldatas = calldatas + ", " + calldata[i];
+        }
       }
       return [false, 0, "", contractAddresses, calldatas];
     }
