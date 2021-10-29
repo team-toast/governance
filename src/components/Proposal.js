@@ -333,10 +333,10 @@ class Proposal extends Component {
                       <span className="payment-amount"></span>
                       <span className="payment-text-area">
                         {" "}
-                        {`Target: `} <br></br>
+                        <h6>Target(s): </h6> <br></br>
                         {`${this.props.isPayment[3]} `}
                         <br></br> <br></br>
-                        {`Call Data:`} <br></br>
+                        <h6>Call Data(s): </h6> <br></br>
                         {` ${this.props.isPayment[4]} `}
                       </span>
                     </div>
