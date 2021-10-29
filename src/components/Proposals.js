@@ -373,12 +373,22 @@ class Proposals extends Component {
         amount = parseInt("0x" + extratedTokenAmount, 16) / 10 ** 18;
         receiver = extratedReceiverAddress;
         //console.log("This is a PAYMENT");
-        return [true, amount, receiver, tokenName];
+        return [true, amount, receiver, tokenName, "", ""];
       } else {
-        return [false, 0, "", ""];
+        return [false, 0, "", contractAddress, calldata];
       }
     }
-    return [false, 0, "", ""];
+    // TODO format array data for output
+    if (calldata.length > 1) {
+      let contractAddresses = "";
+      let calldatas = "";
+      for (let i = 0; i < contractAddress.length; i++) {
+        contractAddresses = contractAddresses + ", " + contractAddress[i];
+        calldatas = calldatas + ", " + calldata;
+      }
+      return [false, 0, "", contractAddresses, calldatas];
+    }
+    return [false, 0, "", contractAddress, calldata];
   };
 
   getAllProposalObjects = async (web3) => {
@@ -649,7 +659,7 @@ class Proposals extends Component {
         );
       }
     }
-    return [false, 0, "", ""];
+    return [false, 0, "", "", "", ""];
   };
 
   getTime = (start, id) => {

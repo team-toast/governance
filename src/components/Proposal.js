@@ -265,7 +265,7 @@ class Proposal extends Component {
             {this.props.isPayment[3].length > 1 && (
               <div>
                 {(this.props.isPayment[0] === true &&
-                  this.props.isPayment[3]) == "Dai" ? (
+                  this.props.isPayment[3]) === "Dai" ? (
                   <div
                     className={`payment__type payment-${this.props.isPayment[3]}`}
                   >
@@ -299,14 +299,40 @@ class Proposal extends Component {
                 )}
               </div>
             )}
-          </div>
-        )}
-        {this.state.showBody && (
-          <div className="proposal__bottom">
-            {/* <p className="proposal__description">{this.props.description}</p> */}
-            <p className="proposal__description">
-              {this.props.description ? this.props.description : "Loading..."}
-            </p>
+
+            {this.state.showBody && (
+              <div className="proposal__bottom">
+                {/* <p className="proposal__description">{this.props.description}</p> */}
+                <p className="proposal__description">
+                  {this.props.description
+                    ? this.props.description
+                    : "Loading..."}
+                </p>
+              </div>
+            )}
+            {this.props.isPayment[0] === false && this.props.isPayment[3] && (
+              <div>
+                <div
+                  className={`payment__type payment-${this.props.isPayment[3]}`}
+                >
+                  <div className="payment-text-area">
+                    <span className="payment-amount">
+                      {`Custom Proposal Input`}
+                      <br></br>
+                      <br></br>
+                    </span>
+                    <span className="payment-text-area">
+                      {" "}
+                      {`Target: `} <br></br>
+                      {`${this.props.isPayment[3]} `}
+                      <br></br> <br></br>
+                      {`Call Data:`} <br></br>
+                      {` ${this.props.isPayment[4]} `}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
         {this.props.status === "Succeeded" && this.state.showBody ? (
