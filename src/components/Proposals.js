@@ -220,8 +220,8 @@ class Proposals extends Component {
           0xda95691a, // method id
           {
             filter: { id: Ids[i] },
-            fromBlock: blockNumbers[i] - 10,
-            toBlock: blockNumbers[i],
+            fromBlock: blockNumbers[i] - 20,
+            toBlock: blockNumbers[i] + 20,
           },
           this.processEvent
         )
@@ -325,6 +325,7 @@ class Proposals extends Component {
       calldata.length === 1 &&
       contractAddress
         .toString()
+        .toLowerCase()
         .includes(contract["contractAddresses"]["forwarder"]["address"]) &&
       calldata[0].length === expectedCalldataLength
     ) {
@@ -375,7 +376,7 @@ class Proposals extends Component {
         //console.log("This is a PAYMENT");
         return [true, amount, receiver, tokenName, "", ""];
       } else {
-        return [false, 0, "", contractAddress, calldata];
+        return [false, 0, "", "", contractAddress, calldata];
       }
     }
     // TODO format array data for output
@@ -391,9 +392,9 @@ class Proposals extends Component {
           calldatas = calldatas + ", " + calldata[i];
         }
       }
-      return [false, 0, "", contractAddresses, calldatas];
+      return [false, 0, "", "", contractAddresses, calldatas];
     }
-    return [false, 0, "", contractAddress, calldata];
+    return [false, 0, "", "", contractAddress, calldata];
   };
 
   getAllProposalObjects = async (web3) => {

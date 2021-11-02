@@ -306,7 +306,6 @@ class Proposal extends Component {
 
             {this.state.showBody && (
               <div className="proposal__bottom">
-                {/* <p className="proposal__description">{this.props.description}</p> */}
                 <p className="proposal__description">
                   {this.props.description
                     ? this.props.description
@@ -314,7 +313,7 @@ class Proposal extends Component {
                 </p>
               </div>
             )}
-            {this.props.isPayment[0] === false && this.props.isPayment[3] && (
+            {this.props.isPayment[0] === false && (
               <div>
                 {!this.state.showData && (
                   <div
@@ -329,15 +328,13 @@ class Proposal extends Component {
                   <div
                     className={`payment__type payment-${this.props.isPayment[3]}`}
                   >
-                    <div className="payment-text-area">
-                      <span className="payment-amount"></span>
+                    <div>
                       <span className="payment-text-area">
-                        {" "}
                         <h6>Target(s): </h6> <br></br>
-                        {`${this.props.isPayment[3]} `}
+                        {`${this.props.isPayment[4]} `}
                         <br></br> <br></br>
                         <h6>Call Data(s): </h6> <br></br>
-                        {` ${this.props.isPayment[4]} `}
+                        {` ${this.props.isPayment[5]} `}
                       </span>
                     </div>
                   </div>
