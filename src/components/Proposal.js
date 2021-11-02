@@ -315,7 +315,7 @@ class Proposal extends Component {
             )}
             {this.props.isPayment[0] === false && (
               <div>
-                {!this.state.showData && (
+                {!this.state.showData && this.props.isPayment[4] && (
                   <div
                     className="calldata-block__button"
                     onClick={this.toggleShowData}
