@@ -12,10 +12,14 @@ class Proposal extends Component {
 
     this.state = {
       showBody: true,
+      showData: false,
     };
   }
   toggleShowBody = () => {
     this.setState({ showBody: true });
+  };
+  toggleShowData = () => {
+    this.setState({ showData: true });
   };
   handleVoteFor = async () => {
     this.props.setStatusOf("Voting In Favour ...", true);
@@ -265,7 +269,7 @@ class Proposal extends Component {
             {this.props.isPayment[3].length > 1 && (
               <div>
                 {(this.props.isPayment[0] === true &&
-                  this.props.isPayment[3]) == "Dai" ? (
+                  this.props.isPayment[3]) === "Dai" ? (
                   <div
                     className={`payment__type payment-${this.props.isPayment[3]}`}
                   >
@@ -299,14 +303,45 @@ class Proposal extends Component {
                 )}
               </div>
             )}
-          </div>
-        )}
-        {this.state.showBody && (
-          <div className="proposal__bottom">
-            {/* <p className="proposal__description">{this.props.description}</p> */}
-            <p className="proposal__description">
-              {this.props.description ? this.props.description : "Loading..."}
-            </p>
+
+            {this.state.showBody && (
+              <div className="proposal__bottom">
+                <p className="proposal__description">
+                  {this.props.description
+                    ? this.props.description
+                    : "Loading..."}
+                </p>
+              </div>
+            )}
+            {this.props.isPayment[0] === false && (
+              <div>
+                {!this.state.showData && this.props.isPayment[4] && (
+                  <div
+                    className="calldata-block__button"
+                    onClick={this.toggleShowData}
+                  >
+                    <h6>Show Call Data</h6>
+                  </div>
+                )}
+
+                {this.state.showData && (
+                  <div
+                    className={`payment__type payment-${this.props.isPayment[3]}`}
+                  >
+                    <div>
+                      <span className="payment-text-area">
+                        <h6>Target(s): </h6> <br></br>
+                        {`${this.props.isPayment[4]} `}
+                        <br></br> <br></br>
+                        <h6>Call Data(s): </h6> <br></br>
+                        {` ${this.props.isPayment[5]} `}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <div></div>
+              </div>
+            )}
           </div>
         )}
         {this.props.status === "Succeeded" && this.state.showBody ? (
