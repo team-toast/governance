@@ -658,7 +658,7 @@ class App extends Component {
             votingPower: address1Changes.newValue,
           });
           power = address1Changes.newValue;
-        } else {
+        } else if (address2Changes.address === this.state.account) {
           this.setState({
             votingPower: address2Changes.newValue,
           });
