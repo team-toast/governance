@@ -195,7 +195,7 @@ class App extends Component {
   subscribeProvider = async (provider) => {
     provider.on("disconnect", () => {
       this.setState({ disableMessage: "Your wallet is not connected." });
-      console.log("DISCONNECTIONNGNGNGN");
+      console.log("Disconnecting");
       this.disconnect();
     });
 
@@ -554,9 +554,13 @@ class App extends Component {
       compTokenContract,
       tokenAddress
     );
+
+    //this.subscribeToDelegateEvent();
     try {
       const gasPrice = await this.getGasPrice();
-      tokenContract.methods
+      let transactionReceipt;
+
+      await tokenContract.methods
         .delegate(this.state.delegateeAddress)
         .send(
           { from: this.state.account, gasPrice: gasPrice },
@@ -573,12 +577,13 @@ class App extends Component {
           if (number === 0) {
             this.setMessage("Transaction Confirmed!", receipt.transactionHash);
             console.log("Transaction Confirmed!", receipt.transactionHash);
-            this.getVotingPower(); // Update voting power that might have changed after delegating
-            this.getDelegateToAddress();
+            this.readDelegateEvents(receipt);
             this.setState({
               firetext: "Transaction Confirmed!",
               firetextShow: true,
             });
+
+            //console.log("Delegate Event Logs: ", receipt);
           }
           setTimeout(() => {
             this.clearMessage();
@@ -604,6 +609,52 @@ class App extends Component {
       });
       console.error("Error in delegate method: ", error);
     }
+  };
+
+  readDelegateEvents = async (receipt) => {
+    let address1Changes;
+    let address2Changes;
+
+    console.log("Event Receipts: ", receipt);
+
+    address1Changes = {
+      address: receipt.events.DelegateVotesChanged[0].returnValues[0],
+      prevValue: receipt.events.DelegateVotesChanged[0].returnValues[1],
+      newValue: receipt.events.DelegateVotesChanged[0].returnValues[2],
+    };
+    address2Changes = {
+      address: receipt.events.DelegateVotesChanged[1].returnValues[0],
+      prevValue: receipt.events.DelegateVotesChanged[1].returnValues[1],
+      newValue: receipt.events.DelegateVotesChanged[1].returnValues[2],
+    };
+    console.log("Address 1 Changes: ", address1Changes);
+    console.log("Address 2 Changes: ", address2Changes);
+  };
+
+  subscribeToDelegateEvent = () => {
+    let url = "wss://rpc-mainnet.matic.quiknode.pro";
+    let web3 = new Web3(url);
+
+    let options = {
+      address: contract.contractAddresses["token"]["address"],
+      topics: [
+        "0xdec2bacdd2f05b59de34da9b523dff8be42e5e38e818c82fdb0bae774387a724",
+      ],
+    };
+
+    let subscription = web3.eth
+      .subscribe("logs", options, function (error, result) {
+        if (!error) console.log("got result: ", result);
+        else console.log(error);
+      })
+      .on("data", function (log) {
+        console.log("got data", log);
+      })
+      .on("changed", function (log) {
+        console.log("changed");
+      });
+
+    this.getDelegateToAddress();
   };
 
   hideLoader = () => {
