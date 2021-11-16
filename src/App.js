@@ -555,7 +555,6 @@ class App extends Component {
       tokenAddress
     );
 
-    //this.subscribeToDelegateEvent();
     try {
       const gasPrice = await this.getGasPrice();
       let transactionReceipt;
@@ -612,49 +611,84 @@ class App extends Component {
   };
 
   readDelegateEvents = async (receipt) => {
-    let address1Changes;
-    let address2Changes;
+    try {
+      let address1Changes = null;
+      let address2Changes = null;
+      let delegationChanges;
 
-    console.log("Event Receipts: ", receipt);
+      console.log("Event Receipts: ", receipt);
 
-    address1Changes = {
-      address: receipt.events.DelegateVotesChanged[0].returnValues[0],
-      prevValue: receipt.events.DelegateVotesChanged[0].returnValues[1],
-      newValue: receipt.events.DelegateVotesChanged[0].returnValues[2],
-    };
-    address2Changes = {
-      address: receipt.events.DelegateVotesChanged[1].returnValues[0],
-      prevValue: receipt.events.DelegateVotesChanged[1].returnValues[1],
-      newValue: receipt.events.DelegateVotesChanged[1].returnValues[2],
-    };
-    console.log("Address 1 Changes: ", address1Changes);
-    console.log("Address 2 Changes: ", address2Changes);
-  };
+      if (Array.isArray(receipt.events.DelegateVotesChanged)) {
+        address1Changes = {
+          address: receipt.events.DelegateVotesChanged[0].returnValues.delegate,
+          prevValue:
+            receipt.events.DelegateVotesChanged[0].returnValues.previousBalance,
+          newValue:
+            receipt.events.DelegateVotesChanged[0].returnValues.newBalance,
+        };
 
-  subscribeToDelegateEvent = () => {
-    let url = "wss://rpc-mainnet.matic.quiknode.pro";
-    let web3 = new Web3(url);
+        address2Changes = {
+          address: receipt.events.DelegateVotesChanged[1].returnValues.delegate,
+          prevValue:
+            receipt.events.DelegateVotesChanged[1].returnValues.previousBalance,
+          newValue:
+            receipt.events.DelegateVotesChanged[1].returnValues.newBalance,
+        };
+      } else {
+        address1Changes = {
+          address: receipt.events.DelegateVotesChanged.returnValues.delegate,
+          prevValue:
+            receipt.events.DelegateVotesChanged.returnValues.previousBalance,
+          newValue: receipt.events.DelegateVotesChanged.returnValues.newBalance,
+        };
+      }
 
-    let options = {
-      address: contract.contractAddresses["token"]["address"],
-      topics: [
-        "0xdec2bacdd2f05b59de34da9b523dff8be42e5e38e818c82fdb0bae774387a724",
-      ],
-    };
+      delegationChanges =
+        receipt.events.DelegateChanged.returnValues.toDelegate;
 
-    let subscription = web3.eth
-      .subscribe("logs", options, function (error, result) {
-        if (!error) console.log("got result: ", result);
-        else console.log(error);
-      })
-      .on("data", function (log) {
-        console.log("got data", log);
-      })
-      .on("changed", function (log) {
-        console.log("changed");
-      });
+      // console.log("Address 1 Changes: ", address1Changes);
+      // console.log("Address 2 Changes: ", address2Changes);
+      // console.log("Delegation Changes: ", delegationChanges);
 
-    this.getDelegateToAddress();
+      let newAddress = "Unknown";
+      let power = "0";
+      if (address1Changes && address2Changes) {
+        if (address1Changes.address === this.state.account) {
+          this.setState({
+            votingPower: address1Changes.newValue,
+          });
+          power = address1Changes.newValue;
+        } else {
+          this.setState({
+            votingPower: address2Changes.newValue,
+          });
+          power = address2Changes.newValue;
+        }
+      } else {
+        this.setState({
+          votingPower: address1Changes.newValue,
+        });
+        power = address1Changes.newValue;
+      }
+      if (power === "0") {
+        this.setState({ disableButtons: true });
+        this.setState({ disableMessage: "You don't have voting power" });
+      } else {
+        this.setState({ disableButtons: false });
+        this.setState({ disableMessage: "" });
+      }
+      newAddress = delegationChanges;
+
+      if (newAddress === this.state.account) {
+        this.setState({ delegatedAddress: "Self" });
+      } else if (newAddress === "0x0000000000000000000000000000000000000000") {
+        this.setState({ delegatedAddress: "Not yet delegated" });
+      } else {
+        this.setState({ delegatedAddress: newAddress });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   hideLoader = () => {
