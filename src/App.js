@@ -646,12 +646,12 @@ class App extends Component {
       delegationChanges =
         receipt.events.DelegateChanged.returnValues.toDelegate;
 
-      // console.log("Address 1 Changes: ", address1Changes);
-      // console.log("Address 2 Changes: ", address2Changes);
-      // console.log("Delegation Changes: ", delegationChanges);
+      console.log("Address 1 Changes: ", address1Changes);
+      console.log("Address 2 Changes: ", address2Changes);
+      console.log("Delegation Changes: ", delegationChanges);
 
       let newAddress = "Unknown";
-      let power = "0";
+      let power = "-1";
       if (address1Changes && address2Changes) {
         if (address1Changes.address === this.state.account) {
           this.setState({
@@ -665,12 +665,14 @@ class App extends Component {
           power = address2Changes.newValue;
         }
       } else {
-        this.setState({
-          votingPower: address1Changes.newValue,
-        });
-        power = address1Changes.newValue;
+        if (address1Changes.address === this.state.account) {
+          this.setState({
+            votingPower: address1Changes.newValue,
+          });
+          power = address1Changes.newValue;
+        }
       }
-      if (power === "0") {
+      if (power !== "-1" && power === "0") {
         this.setState({ disableButtons: true });
         this.setState({ disableMessage: "You don't have voting power" });
       } else {
