@@ -195,7 +195,7 @@ class App extends Component {
   subscribeProvider = async (provider) => {
     provider.on("disconnect", () => {
       this.setState({ disableMessage: "Your wallet is not connected." });
-      console.log("DISCONNECTIONNGNGNGN");
+      console.log("Disconnecting");
       this.disconnect();
     });
 
@@ -554,9 +554,12 @@ class App extends Component {
       compTokenContract,
       tokenAddress
     );
+
     try {
       const gasPrice = await this.getGasPrice();
-      tokenContract.methods
+      let transactionReceipt;
+
+      await tokenContract.methods
         .delegate(this.state.delegateeAddress)
         .send(
           { from: this.state.account, gasPrice: gasPrice },
@@ -573,12 +576,13 @@ class App extends Component {
           if (number === 0) {
             this.setMessage("Transaction Confirmed!", receipt.transactionHash);
             console.log("Transaction Confirmed!", receipt.transactionHash);
-            this.getVotingPower(); // Update voting power that might have changed after delegating
-            this.getDelegateToAddress();
+            this.readDelegateEvents(receipt);
             this.setState({
               firetext: "Transaction Confirmed!",
               firetextShow: true,
             });
+
+            //console.log("Delegate Event Logs: ", receipt);
           }
           setTimeout(() => {
             this.clearMessage();
@@ -603,6 +607,89 @@ class App extends Component {
         firetextShow: true,
       });
       console.error("Error in delegate method: ", error);
+    }
+  };
+
+  readDelegateEvents = async (receipt) => {
+    try {
+      let address1Changes = null;
+      let address2Changes = null;
+      let delegationChanges;
+
+      console.log("Event Receipts: ", receipt);
+
+      if (Array.isArray(receipt.events.DelegateVotesChanged)) {
+        address1Changes = {
+          address: receipt.events.DelegateVotesChanged[0].returnValues.delegate,
+          prevValue:
+            receipt.events.DelegateVotesChanged[0].returnValues.previousBalance,
+          newValue:
+            receipt.events.DelegateVotesChanged[0].returnValues.newBalance,
+        };
+
+        address2Changes = {
+          address: receipt.events.DelegateVotesChanged[1].returnValues.delegate,
+          prevValue:
+            receipt.events.DelegateVotesChanged[1].returnValues.previousBalance,
+          newValue:
+            receipt.events.DelegateVotesChanged[1].returnValues.newBalance,
+        };
+      } else {
+        address1Changes = {
+          address: receipt.events.DelegateVotesChanged.returnValues.delegate,
+          prevValue:
+            receipt.events.DelegateVotesChanged.returnValues.previousBalance,
+          newValue: receipt.events.DelegateVotesChanged.returnValues.newBalance,
+        };
+      }
+
+      delegationChanges =
+        receipt.events.DelegateChanged.returnValues.toDelegate;
+
+      console.log("Address 1 Changes: ", address1Changes);
+      console.log("Address 2 Changes: ", address2Changes);
+      console.log("Delegation Changes: ", delegationChanges);
+
+      let newAddress = "Unknown";
+      let power = "-1";
+      if (address1Changes && address2Changes) {
+        if (address1Changes.address === this.state.account) {
+          this.setState({
+            votingPower: address1Changes.newValue,
+          });
+          power = address1Changes.newValue;
+        } else if (address2Changes.address === this.state.account) {
+          this.setState({
+            votingPower: address2Changes.newValue,
+          });
+          power = address2Changes.newValue;
+        }
+      } else {
+        if (address1Changes.address === this.state.account) {
+          this.setState({
+            votingPower: address1Changes.newValue,
+          });
+          power = address1Changes.newValue;
+        }
+      }
+      if (power !== "-1" && power === "0") {
+        this.setState({ disableButtons: true });
+        this.setState({ disableMessage: "You don't have voting power" });
+      } else {
+        this.setState({ disableButtons: false });
+        this.setState({ disableMessage: "" });
+      }
+      newAddress = delegationChanges;
+
+      if (newAddress === this.state.account) {
+        this.setState({ delegatedAddress: "Self" });
+      } else if (newAddress === "0x0000000000000000000000000000000000000000") {
+        this.setState({ delegatedAddress: "Not yet delegated" });
+      } else {
+        this.setState({ delegatedAddress: newAddress });
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
