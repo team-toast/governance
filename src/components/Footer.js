@@ -16,7 +16,7 @@ class Footer extends Component {
         <a
           className="source_code"
           target="_blank"
-          href="https://polygonscan.com/address/0xD11749591742C84eE8922c9C72E3B0317013974d#code"
+          href="https://polygonscan.com/address/0x082B551ce61B15B036d0A3613545f0Afb838D629#code"
         >
           {`Smart Contracts`}
         </a>
