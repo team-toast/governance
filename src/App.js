@@ -14,6 +14,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
 import "./layout/config/_base.sass";
 import CustomHeader from "./components/CustomHeader";
+import TokenActions from "./components/TokenActions";
 
 import Status from "./components/Status";
 
@@ -739,6 +740,7 @@ class App extends Component {
                   disableMessage={this.state.disableMessage}
                 />
                 <div>
+                  <TokenActions {...this.state} />
                   <Proposals
                     {...this.state}
                     xhr={this.xhr}
