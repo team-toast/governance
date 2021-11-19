@@ -31,7 +31,7 @@ class TokenActions extends Component {
       );
       await fryToken.methods
         .approve(
-          contract.contractAddresses["fry"]["address"],
+          contract.contractAddresses["governator"]["address"],
           this.state.uintMax
         )
         .send(
