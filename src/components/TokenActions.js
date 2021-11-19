@@ -151,77 +151,79 @@ class TokenActions extends Component {
 
   render() {
     return (
-      <div className="actionsSection">
-        <div className="action">
-          <div>
-            <h1>Token Actions</h1>
-            {/* Always display balances */}
+      this.props.delegatedAddress !== "Unknown" && (
+        <div className="actionsSection">
+          <div className="action">
             <div>
-              <h3>Balances</h3>
-              <h5>FRY: {this.props.fryBalance}</h5>
-              <h5>gFRY: {this.props.balance}</h5>
-              <h5>
-                Voting Power:{" "}
-                {(parseInt(this.props.votingPower) / 10 ** 18).toFixed(2)}
-              </h5>
-            </div>
-          </div>
-          {/* No Fry or gFry */}
-          {this.props.fryBalance === "0" && this.props.balance === "0" && (
-            <div>
-              <h3 className="sectionHeader">
-                Display no FRY getting started help message and link.
-              </h3>
-            </div>
-          )}
-          {/* Has gFry */}
-          {this.props.balance !== "0" && (
-            <div>
+              <h1>Token Actions</h1>
+              {/* Always display balances */}
               <div>
-                <h3 className="sectionHeader">Delegate</h3>
-                <input
-                  onChange={this.props.updateDelegateeAddress}
-                  placeholder="0x... Address to Delegate to"
-                />
-                <PopupHint
-                  message={
-                    this.props.balance === "0.00"
-                      ? "You don't have governance tokens"
-                      : ""
-                  }
-                >
-                  <button onClick={this.props.delegate}>Delegate</button>
-                </PopupHint>
+                <h3>Balances</h3>
+                <h5>FRY: {this.props.fryBalance}</h5>
+                <h5>gFRY: {this.props.balance}</h5>
+                <h5>
+                  Voting Power:{" "}
+                  {(parseInt(this.props.votingPower) / 10 ** 18).toFixed(2)}
+                </h5>
               </div>
+            </div>
+            {/* No Fry or gFry */}
+            {this.props.fryBalance === "0" && this.props.balance === "0" && (
               <div>
-                <h3 className="sectionHeader">Convert gFRY to FRY</h3>
+                <h3 className="sectionHeader">
+                  Display no FRY getting started help message and link.
+                </h3>
+              </div>
+            )}
+            {/* Has gFry */}
+            {this.props.balance !== "0" && (
+              <div>
+                <div>
+                  <h3 className="sectionHeader">Delegate</h3>
+                  <input
+                    onChange={this.props.updateDelegateeAddress}
+                    placeholder="0x... Address to Delegate to"
+                  />
+                  <PopupHint
+                    message={
+                      this.props.balance === "0.00"
+                        ? "You don't have governance tokens"
+                        : ""
+                    }
+                  >
+                    <button onClick={this.props.delegate}>Delegate</button>
+                  </PopupHint>
+                </div>
+                <div>
+                  <h3 className="sectionHeader">Convert gFRY to FRY</h3>
+                  <input
+                    type="number"
+                    step="1"
+                    min="0"
+                    onChange={this.updateGFryAmount}
+                    placeholder="Amount of gFRY"
+                  />
+                  <button onClick={this.gFryToFry}>gFRY {">"} FRY</button>
+                </div>
+              </div>
+            )}
+            {/* Has FRY */}
+            {this.props.fryBalance !== "0" && (
+              <div>
+                <h3 className="sectionHeader">Convert FRY to gFRY.</h3>
                 <input
                   type="number"
                   step="1"
                   min="0"
-                  onChange={this.updateGFryAmount}
-                  placeholder="Amount of gFRY"
+                  onChange={this.updateFryAmount}
+                  placeholder="Amount of FRY"
                 />
-                <button onClick={this.gFryToFry}>gFRY {">"} FRY</button>
+                <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
               </div>
-            </div>
-          )}
-          {/* Has FRY */}
-          {this.props.fryBalance !== "0" && (
-            <div>
-              <h3 className="sectionHeader">Convert FRY to gFRY.</h3>
-              <input
-                type="number"
-                step="1"
-                min="0"
-                onChange={this.updateFryAmount}
-                placeholder="Amount of FRY"
-              />
-              <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      )
     );
   }
 }
