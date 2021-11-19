@@ -56,6 +56,7 @@ class App extends Component {
       latestBlock: "",
       network: null,
       balance: "Unknown",
+      fryBalance: "Unknown",
       votingPower: "Unknown",
       totalSupply: 0,
       message: null,
@@ -177,7 +178,16 @@ class App extends Component {
     if (netName === "Matic") {
       this.getLatestBlock();
       this.getTotalSupply();
-      this.getTokenBalance();
+      this.setState({
+        balance: await this.getTokenBalance(
+          contract.contractAddresses["token"]["address"]
+        ),
+      });
+      this.setState({
+        fryBalance: await this.getTokenBalance(
+          contract.contractAddresses["fry"]["address"]
+        ),
+      });
       this.getDelegateToAddress();
       this.getTreasuryBalance();
       if ((await this.getVotingPower()) === "0") {
@@ -205,7 +215,16 @@ class App extends Component {
       this.setState({ account: accounts2[0] });
       await this.getVotingPower(accounts2[0]);
       await this.getTotalSupply(accounts2[0]);
-      await this.getTokenBalance(accounts2[0]);
+      this.setState({
+        balance: await this.getTokenBalance(
+          contract.contractAddresses["token"]["address"]
+        ),
+      });
+      this.setState({
+        fryBalance: await this.getTokenBalance(
+          contract.contractAddresses["fry"]["address"]
+        ),
+      });
       await this.getDelegateToAddress(accounts2[0]);
     });
 
@@ -343,10 +362,8 @@ class App extends Component {
     };
   };
 
-  getTokenBalance = async (account = "none") => {
+  getTokenBalance = async (tokenAddress, account = "none") => {
     if (this.state.network === "Matic") {
-      const tokenAddress = contract.contractAddresses["token"]["address"];
-
       const tokenContract = new this.state.web3.eth.Contract(
         compTokenContract,
         tokenAddress
@@ -370,7 +387,7 @@ class App extends Component {
           console.log("BALANCE: ", balance);
           balance = this.numberWithCommas(parseFloat(balance).toFixed(2));
           //if (balance > 0) {
-          this.setState({ balance });
+          return balance;
           //}
           balanceUpdated = true;
         } catch (error) {
@@ -582,8 +599,6 @@ class App extends Component {
               firetext: "Transaction Confirmed!",
               firetextShow: true,
             });
-
-            //console.log("Delegate Event Logs: ", receipt);
           }
           setTimeout(() => {
             this.clearMessage();
@@ -740,7 +755,13 @@ class App extends Component {
                   disableMessage={this.state.disableMessage}
                 />
                 <div>
-                  <TokenActions {...this.state} />
+                  <TokenActions
+                    {...this.state}
+                    delegate={this.delegate}
+                    updateDelegateeAddress={this.updateDelegateeAddress}
+                    setStatus={this.setStatusOf}
+                    getGasPrice={this.getGasPrice}
+                  />
                   <Proposals
                     {...this.state}
                     xhr={this.xhr}
