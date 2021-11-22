@@ -75,8 +75,8 @@ class TokenActions extends Component {
         )
         .on("confirmation", (number, receipt) => {
           if (number === 0) {
-            console.log("Transaction Confirmed!", receipt.transactionHash);
-            //this.readDelegateEvents(receipt);
+            console.log("Transaction Confirmed!", receipt);
+            this.interpretEventAndUpdateFryToGFry(receipt);
             this.props.setStatus("Transaction Confirmed!", true);
           }
         })
@@ -88,6 +88,40 @@ class TokenActions extends Component {
       console.log("Governate Successful");
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  interpretEventAndUpdateFryToGFry = async (receipt) => {
+    console.log("Interpreting Governate Events");
+    console.log("Event count: ", receipt.events.length);
+    for (var key of Object.keys(receipt.events)) {
+      console.log("In for loop");
+      if (
+        receipt.events[key].address &&
+        receipt.events[key].raw.data &&
+        receipt.events[key].raw.topics[2]
+      ) {
+        let tmpAddress = receipt.events[key].address;
+        let tmpAmount = receipt.events[key].raw.data;
+        let tmpAccount = receipt.events[key].raw.topics[2];
+        tmpAccount = "0x" + tmpAccount.substring(26);
+        tmpAmount = parseFloat(this.props.web3.utils.fromWei(tmpAmount));
+
+        console.log("tmpAddress: ", tmpAddress);
+        console.log("tmpAmount: ", tmpAmount);
+        console.log("tmpAccount: ", tmpAccount);
+        if (
+          tmpAddress.toLowerCase() ===
+            contract.contractAddresses["token"]["address"].toLowerCase() &&
+          tmpAccount.toLowerCase() === this.props.account.toLowerCase()
+        ) {
+          console.log(
+            "Found gFry Governate transfer event entry. Amount: +",
+            tmpAmount
+          );
+          this.props.fryGfryMod(-1 * tmpAmount, tmpAmount);
+        }
+      }
     }
   };
 
@@ -116,8 +150,8 @@ class TokenActions extends Component {
         )
         .on("confirmation", (number, receipt) => {
           if (number === 0) {
-            console.log("Transaction Confirmed!", receipt.transactionHash);
-            //this.readDelegateEvents(receipt);
+            console.log("Transaction Confirmed!", receipt);
+            this.interpretEventAndUpdateGFryToFry(receipt);
             this.props.setStatus("Transaction Confirmed!", true);
           }
         })
@@ -132,6 +166,41 @@ class TokenActions extends Component {
       console.log("Degovernate Successful");
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  interpretEventAndUpdateGFryToFry = async (receipt) => {
+    console.log("Interpreting Governate Events");
+    console.log("Event count: ", receipt.events.length);
+    for (var key of Object.keys(receipt.events)) {
+      console.log("In for loop");
+      if (
+        receipt.events[key].address &&
+        receipt.events[key].raw.data &&
+        receipt.events[key].raw.topics[1]
+      ) {
+        let tmpAddress = receipt.events[key].address;
+        let tmpAmount = receipt.events[key].raw.data;
+        let tmpAccount = receipt.events[key].raw.topics[1];
+        tmpAccount = "0x" + tmpAccount.substring(26);
+        tmpAmount = parseFloat(this.props.web3.utils.fromWei(tmpAmount));
+
+        console.log("tmpAddress: ", tmpAddress);
+        console.log("tmpAmount: ", tmpAmount);
+        console.log("tmpAccount: ", tmpAccount);
+        if (
+          tmpAddress.toLowerCase() ===
+            contract.contractAddresses["token"]["address"].toLowerCase() &&
+          tmpAccount.toLowerCase() === this.props.account.toLowerCase()
+        ) {
+          console.log(
+            "Found gFry Governate transfer event entry. Amount: +",
+            tmpAmount
+          );
+          this.props.fryGfryMod(tmpAmount, -1 * tmpAmount);
+          break;
+        }
+      }
     }
   };
 

@@ -83,6 +83,36 @@ class App extends Component {
     });
   }
 
+  fryGfryMod = (fryMod, gFryMod) => {
+    this.setState({
+      fryBalance: (parseFloat(this.state.fryBalance) + fryMod).toString(),
+      balance: (parseFloat(this.state.balance) + gFryMod).toString(),
+    });
+    if (this.state.delegatedAddress.toLowerCase() === "self") {
+      console.log("UPDATING VOTING POWER");
+
+      console.log(
+        "From wei voting power: ",
+        this.state.web3.utils.fromWei(this.state.votingPower)
+      );
+
+      this.setState({
+        votingPower: this.state.web3.utils.toWei(
+          (
+            parseFloat(this.state.web3.utils.fromWei(this.state.votingPower)) +
+            gFryMod
+          ).toString()
+        ),
+        totalSupply: this.state.web3.utils.toWei(
+          (
+            parseFloat(this.state.web3.utils.fromWei(this.state.totalSupply)) +
+            gFryMod
+          ).toString()
+        ),
+      });
+    }
+  };
+
   componentDidMount = async () => {
     if (
       this.web3Connect.cachedProvider &&
@@ -761,6 +791,7 @@ class App extends Component {
                     updateDelegateeAddress={this.updateDelegateeAddress}
                     setStatus={this.setStatusOf}
                     getGasPrice={this.getGasPrice}
+                    fryGfryMod={this.fryGfryMod}
                   />
                   <Proposals
                     {...this.state}
