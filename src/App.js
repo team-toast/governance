@@ -84,29 +84,51 @@ class App extends Component {
   }
 
   fryGfryMod = (fryMod, gFryMod) => {
+    let tmpFry = this.state.fryBalance.replace(/,/g, "");
+    let tmpGfry = this.state.balance.replace(/,/g, "");
+    let tmpVP = this.state.votingPower.replace(/,/g, "");
+    let tmpTS = this.state.totalSupply;
+    console.log("fryBalance: ", tmpFry);
+    console.log("gfryBalance: ", tmpGfry);
+
+    console.log(
+      "From wei fryBalance: ",
+      parseFloat(this.state.fryBalance) + parseFloat(fryMod)
+    );
+    console.log(
+      "From wei gfryBalance: ",
+      parseFloat(this.state.balance) + parseFloat(gFryMod)
+    );
+
     this.setState({
-      fryBalance: (parseFloat(this.state.fryBalance) + fryMod).toString(),
-      balance: (parseFloat(this.state.balance) + gFryMod).toString(),
+      fryBalance: this.numberWithCommas(
+        (parseFloat(tmpFry) + parseFloat(fryMod)).toString()
+      ),
+      balance: this.numberWithCommas(
+        (parseFloat(tmpGfry) + parseFloat(gFryMod)).toString()
+      ),
     });
+
     if (this.state.delegatedAddress.toLowerCase() === "self") {
       console.log("UPDATING VOTING POWER");
 
+      console.log("voting power: ", tmpVP);
       console.log(
         "From wei voting power: ",
-        this.state.web3.utils.fromWei(this.state.votingPower)
+        this.state.web3.utils.fromWei(tmpVP)
       );
 
       this.setState({
         votingPower: this.state.web3.utils.toWei(
           (
-            parseFloat(this.state.web3.utils.fromWei(this.state.votingPower)) +
-            gFryMod
+            parseFloat(this.state.web3.utils.fromWei(tmpVP)) +
+            parseFloat(gFryMod)
           ).toString()
         ),
         totalSupply: this.state.web3.utils.toWei(
           (
-            parseFloat(this.state.web3.utils.fromWei(this.state.totalSupply)) +
-            gFryMod
+            parseFloat(this.state.web3.utils.fromWei(tmpTS)) +
+            parseFloat(gFryMod)
           ).toString()
         ),
       });

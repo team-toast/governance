@@ -194,7 +194,7 @@ class TokenActions extends Component {
           tmpAccount.toLowerCase() === this.props.account.toLowerCase()
         ) {
           console.log(
-            "Found gFry Governate transfer event entry. Amount: +",
+            "Found gFry Governate transfer event entry. Amount: ",
             tmpAmount
           );
           this.props.fryGfryMod(tmpAmount, -1 * tmpAmount);
