@@ -126,6 +126,29 @@ class Proposal extends Component {
           this.props.setStatusOf("Transaction failed! Please try again.", true);
         });
     } else if (this.props.status === "Queued") {
+      await this.props.contract.methods.execute(this.props.id).estimateGas(
+        {
+          from: this.props.account,
+          gasPrice: gasPrice,
+        },
+        function (error, result) {
+          if (error) {
+            if (
+              error.message.indexOf(
+                "Transaction hasn't surpassed time lock."
+              ) != -1
+            ) {
+              alert(
+                "This proposal has not surpassed the timelock period of two days. Please try again later."
+              );
+            } else {
+              alert(error);
+            }
+            return;
+          }
+        }
+      );
+
       this.props.setStatusOf("Executing proposal ...", true);
       this.props.contract.methods
         .execute(this.props.id)
