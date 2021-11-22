@@ -92,8 +92,6 @@ class TokenActions extends Component {
   };
 
   interpretEventAndUpdateFryToGFry = async (receipt) => {
-    console.log("Interpreting Governate Events");
-    console.log("Event count: ", receipt.events.length);
     for (var key of Object.keys(receipt.events)) {
       console.log("In for loop");
       if (
@@ -107,18 +105,11 @@ class TokenActions extends Component {
         tmpAccount = "0x" + tmpAccount.substring(26);
         tmpAmount = parseFloat(this.props.web3.utils.fromWei(tmpAmount));
 
-        console.log("tmpAddress: ", tmpAddress);
-        console.log("tmpAmount: ", tmpAmount);
-        console.log("tmpAccount: ", tmpAccount);
         if (
           tmpAddress.toLowerCase() ===
             contract.contractAddresses["token"]["address"].toLowerCase() &&
           tmpAccount.toLowerCase() === this.props.account.toLowerCase()
         ) {
-          console.log(
-            "Found gFry Governate transfer event entry. Amount: +",
-            tmpAmount
-          );
           this.props.fryGfryMod(-1 * tmpAmount, tmpAmount);
         }
       }
@@ -170,8 +161,6 @@ class TokenActions extends Component {
   };
 
   interpretEventAndUpdateGFryToFry = async (receipt) => {
-    console.log("Interpreting Governate Events");
-    console.log("Event count: ", receipt.events.length);
     for (var key of Object.keys(receipt.events)) {
       console.log("In for loop");
       if (
@@ -185,18 +174,11 @@ class TokenActions extends Component {
         tmpAccount = "0x" + tmpAccount.substring(26);
         tmpAmount = parseFloat(this.props.web3.utils.fromWei(tmpAmount));
 
-        console.log("tmpAddress: ", tmpAddress);
-        console.log("tmpAmount: ", tmpAmount);
-        console.log("tmpAccount: ", tmpAccount);
         if (
           tmpAddress.toLowerCase() ===
             contract.contractAddresses["token"]["address"].toLowerCase() &&
           tmpAccount.toLowerCase() === this.props.account.toLowerCase()
         ) {
-          console.log(
-            "Found gFry Governate transfer event entry. Amount: ",
-            tmpAmount
-          );
           this.props.fryGfryMod(tmpAmount, -1 * tmpAmount);
           break;
         }
@@ -208,14 +190,12 @@ class TokenActions extends Component {
     this.setState({
       fryConvertAmount: evt.target.value,
     });
-    console.log("FRY", this.state.fryConvertAmount);
   };
 
   updateGFryAmount = async (evt) => {
     this.setState({
       gFryConvertAmount: evt.target.value,
     });
-    console.log("GFRY: ", this.state.gFryConvertAmount);
   };
 
   render() {

@@ -88,17 +88,6 @@ class App extends Component {
     let tmpGfry = this.state.balance.replace(/,/g, "");
     let tmpVP = this.state.votingPower.replace(/,/g, "");
     let tmpTS = this.state.totalSupply;
-    console.log("fryBalance: ", tmpFry);
-    console.log("gfryBalance: ", tmpGfry);
-
-    console.log(
-      "From wei fryBalance: ",
-      parseFloat(this.state.fryBalance) + parseFloat(fryMod)
-    );
-    console.log(
-      "From wei gfryBalance: ",
-      parseFloat(this.state.balance) + parseFloat(gFryMod)
-    );
 
     this.setState({
       fryBalance: this.numberWithCommas(
@@ -110,14 +99,6 @@ class App extends Component {
     });
 
     if (this.state.delegatedAddress.toLowerCase() === "self") {
-      console.log("UPDATING VOTING POWER");
-
-      console.log("voting power: ", tmpVP);
-      console.log(
-        "From wei voting power: ",
-        this.state.web3.utils.fromWei(tmpVP)
-      );
-
       this.setState({
         votingPower: this.state.web3.utils.toWei(
           (
@@ -132,6 +113,32 @@ class App extends Component {
           ).toString()
         ),
       });
+      console.log(
+        "VOTING POWER: ",
+        parseFloat(this.state.web3.utils.fromWei(tmpVP)) + parseFloat(gFryMod)
+      );
+      console.log(
+        "Have voting power? ",
+        parseFloat(this.state.web3.utils.fromWei(tmpVP)) + parseFloat(gFryMod) >
+          0.0
+      );
+      if (
+        parseFloat(this.state.web3.utils.fromWei(tmpVP)) +
+          parseFloat(gFryMod) ===
+        0
+      ) {
+        console.log("Account does not have voting power");
+        this.setState({
+          disableButtons: true,
+        });
+        this.setState({ disableMessage: "You don't have voting power" });
+      } else {
+        console.log("Account has voting power");
+        this.setState({
+          disableButtons: false,
+        });
+        this.setState({ disableMessage: "" });
+      }
     }
   };
 
