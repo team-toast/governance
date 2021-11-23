@@ -11,7 +11,9 @@ class TokenActions extends Component {
     super(props);
 
     this.state = {
-      uintMax:
+      uintMaxHex:
+        "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      uintMaxInt:
         "115792089237316195423570985008687907853269984665640564039457584007913129639935",
       fryConvertAmount: 0,
       gFryConvertAmount: 0,
@@ -21,37 +23,51 @@ class TokenActions extends Component {
   fryToGfry = async () => {
     try {
       let gasPrice = await this.props.getGasPrice();
-      this.props.setStatus("Approving ...", true);
+
       console.log("Converting FRY to gFRY");
-      // Approve
 
       const fryToken = new this.props.web3.eth.Contract(
         compTokenContract,
         contract.contractAddresses["fry"]["address"]
       );
-      await fryToken.methods
-        .approve(
-          contract.contractAddresses["governator"]["address"],
-          this.state.uintMax
+
+      // Check allowance
+      let fryAllowance = await fryToken.methods
+        .allowance(
+          this.props.account,
+          contract.contractAddresses["governator"]["address"]
         )
-        .send(
-          { from: this.props.account, gasPrice: gasPrice },
-          (err, transactionHash) => {
-            this.props.setStatus("Transaction Pending ...", true);
-            console.log("Transaction Pending...", transactionHash);
-          }
-        )
-        .on("confirmation", (number, receipt) => {
-          if (number === 0) {
-            console.log("Transaction Confirmed!", receipt.transactionHash);
-            //this.readDelegateEvents(receipt);
-            this.props.setStatus("Transaction Confirmed!", true);
-          }
-        })
-        .on("error", (err, receipt) => {
-          this.props.setStatus("Could not approve. Please try again.", true);
-          console.log("Transaction Failed!");
-        });
+        .call();
+
+      if (fryAllowance.length !== this.state.uintMaxInt.length) {
+        // Approve
+
+        this.props.setStatus("Approving ...", true);
+
+        await fryToken.methods
+          .approve(
+            contract.contractAddresses["governator"]["address"],
+            this.state.uintMaxHex
+          )
+          .send(
+            { from: this.props.account, gasPrice: gasPrice },
+            (err, transactionHash) => {
+              this.props.setStatus("Transaction Pending ...", true);
+              console.log("Transaction Pending...", transactionHash);
+            }
+          )
+          .on("confirmation", (number, receipt) => {
+            if (number === 0) {
+              console.log("Transaction Confirmed!", receipt.transactionHash);
+              //this.readDelegateEvents(receipt);
+              this.props.setStatus("Transaction Confirmed!", true);
+            }
+          })
+          .on("error", (err, receipt) => {
+            this.props.setStatus("Could not approve. Please try again.", true);
+            console.log("Transaction Failed!");
+          });
+      }
 
       // Convert
       gasPrice = await this.props.getGasPrice();

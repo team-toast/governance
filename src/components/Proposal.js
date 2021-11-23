@@ -126,7 +126,7 @@ class Proposal extends Component {
           this.props.setStatusOf("Transaction failed! Please try again.", true);
         });
     } else if (this.props.status === "Queued") {
-      await this.props.contract.methods.execute(this.props.id).estimateGas(
+      this.props.contract.methods.execute(this.props.id).estimateGas(
         {
           from: this.props.account,
           gasPrice: gasPrice,
@@ -139,12 +139,11 @@ class Proposal extends Component {
               ) != -1
             ) {
               alert(
-                "This proposal has not surpassed the timelock period of two days. Please try again later."
+                "This proposal has not surpassed the timelock period of two days. Execution will fail. Please try again later."
               );
             } else {
               alert(error);
             }
-            return;
           }
         }
       );
