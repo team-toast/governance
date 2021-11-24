@@ -584,6 +584,7 @@ class Proposals extends Component {
 
   getProposalTimeFromBlock = async (block) => {
     let timestamp = await this.props.getBlockTimeStamp(block);
+
     let expiryDate;
     let latestBlock = "";
     if (this.props.latestBlock === "") {
@@ -610,6 +611,11 @@ class Proposals extends Component {
       }
 
       let avg = differences.reduce((a, b) => a + b, 0) / differences.length;
+
+      //console.log("AVERAGE: ", avg);
+      //if (avg === NaN) {
+      avg = 2.0;
+      //}
 
       let secondsTillExpiry = avg * blockDifference;
       expiryDate.setSeconds(
