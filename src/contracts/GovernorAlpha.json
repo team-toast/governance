@@ -496,6 +496,9 @@
     "token": {
       "address": "0xc00f77673b8e7acda57eae4589b76c4866a61436"
     },
+    "fry": {
+      "address": "0xbe0ab1b97bccaabb616c572b5dc3b519ef4a8243"
+    },
     "dai": {
       "address": "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
       "transferSig": "0xa9059cbb"
@@ -506,6 +509,9 @@
     },
     "timelock": {
       "address": "0xd758691b170a09b3e19305fd7c807704ad64dadd"
+    },
+    "governator": {
+      "address": "0x3a8ce2df8497ae353b94af277db328390142bed2"
     }
   }
 }

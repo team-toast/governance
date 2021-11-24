@@ -14,6 +14,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
 import "./layout/config/_base.sass";
 import CustomHeader from "./components/CustomHeader";
+import TokenActions from "./components/TokenActions";
 
 import Status from "./components/Status";
 
@@ -55,6 +56,7 @@ class App extends Component {
       latestBlock: "",
       network: null,
       balance: "Unknown",
+      fryBalance: "Unknown",
       votingPower: "Unknown",
       totalSupply: 0,
       message: null,
@@ -80,6 +82,65 @@ class App extends Component {
       providerOptions,
     });
   }
+
+  fryGfryMod = (fryMod, gFryMod) => {
+    let tmpFry = this.state.fryBalance.replace(/,/g, "");
+    let tmpGfry = this.state.balance.replace(/,/g, "");
+    let tmpVP = this.state.votingPower.replace(/,/g, "");
+    let tmpTS = this.state.totalSupply;
+
+    this.setState({
+      fryBalance: this.numberWithCommas(
+        (parseFloat(tmpFry) + parseFloat(fryMod)).toString()
+      ),
+      balance: this.numberWithCommas(
+        (parseFloat(tmpGfry) + parseFloat(gFryMod)).toString()
+      ),
+    });
+
+    if (this.state.delegatedAddress.toLowerCase() === "self") {
+      this.setState({
+        votingPower: this.state.web3.utils.toWei(
+          (
+            parseFloat(this.state.web3.utils.fromWei(tmpVP)) +
+            parseFloat(gFryMod)
+          ).toString()
+        ),
+        totalSupply: this.state.web3.utils.toWei(
+          (
+            parseFloat(this.state.web3.utils.fromWei(tmpTS)) +
+            parseFloat(gFryMod)
+          ).toString()
+        ),
+      });
+      console.log(
+        "VOTING POWER: ",
+        parseFloat(this.state.web3.utils.fromWei(tmpVP)) + parseFloat(gFryMod)
+      );
+      console.log(
+        "Have voting power? ",
+        parseFloat(this.state.web3.utils.fromWei(tmpVP)) + parseFloat(gFryMod) >
+          0.0
+      );
+      if (
+        parseFloat(this.state.web3.utils.fromWei(tmpVP)) +
+          parseFloat(gFryMod) ===
+        0
+      ) {
+        console.log("Account does not have voting power");
+        this.setState({
+          disableButtons: true,
+        });
+        this.setState({ disableMessage: "You don't have voting power" });
+      } else {
+        console.log("Account has voting power");
+        this.setState({
+          disableButtons: false,
+        });
+        this.setState({ disableMessage: "" });
+      }
+    }
+  };
 
   componentDidMount = async () => {
     if (
@@ -176,7 +237,16 @@ class App extends Component {
     if (netName === "Matic") {
       this.getLatestBlock();
       this.getTotalSupply();
-      this.getTokenBalance();
+      this.setState({
+        balance: await this.getTokenBalance(
+          contract.contractAddresses["token"]["address"]
+        ),
+      });
+      this.setState({
+        fryBalance: await this.getTokenBalance(
+          contract.contractAddresses["fry"]["address"]
+        ),
+      });
       this.getDelegateToAddress();
       this.getTreasuryBalance();
       if ((await this.getVotingPower()) === "0") {
@@ -204,7 +274,16 @@ class App extends Component {
       this.setState({ account: accounts2[0] });
       await this.getVotingPower(accounts2[0]);
       await this.getTotalSupply(accounts2[0]);
-      await this.getTokenBalance(accounts2[0]);
+      this.setState({
+        balance: await this.getTokenBalance(
+          contract.contractAddresses["token"]["address"]
+        ),
+      });
+      this.setState({
+        fryBalance: await this.getTokenBalance(
+          contract.contractAddresses["fry"]["address"]
+        ),
+      });
       await this.getDelegateToAddress(accounts2[0]);
     });
 
@@ -342,10 +421,8 @@ class App extends Component {
     };
   };
 
-  getTokenBalance = async (account = "none") => {
+  getTokenBalance = async (tokenAddress, account = "none") => {
     if (this.state.network === "Matic") {
-      const tokenAddress = contract.contractAddresses["token"]["address"];
-
       const tokenContract = new this.state.web3.eth.Contract(
         compTokenContract,
         tokenAddress
@@ -369,7 +446,7 @@ class App extends Component {
           console.log("BALANCE: ", balance);
           balance = this.numberWithCommas(parseFloat(balance).toFixed(2));
           //if (balance > 0) {
-          this.setState({ balance });
+          return balance;
           //}
           balanceUpdated = true;
         } catch (error) {
@@ -581,8 +658,6 @@ class App extends Component {
               firetext: "Transaction Confirmed!",
               firetextShow: true,
             });
-
-            //console.log("Delegate Event Logs: ", receipt);
           }
           setTimeout(() => {
             this.clearMessage();
@@ -739,6 +814,14 @@ class App extends Component {
                   disableMessage={this.state.disableMessage}
                 />
                 <div>
+                  <TokenActions
+                    {...this.state}
+                    delegate={this.delegate}
+                    updateDelegateeAddress={this.updateDelegateeAddress}
+                    setStatus={this.setStatusOf}
+                    getGasPrice={this.getGasPrice}
+                    fryGfryMod={this.fryGfryMod}
+                  />
                   <Proposals
                     {...this.state}
                     xhr={this.xhr}
