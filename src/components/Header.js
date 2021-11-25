@@ -24,48 +24,68 @@ class Header extends Component {
             : "header no-bottom-padding"
         }
       >
-        <h1 className="header__title">Foundry Governance Proposals</h1>
-        {this.props.delegatedAddress !== "Unknown" && (
-          <div className="header__balance__white flex-power">
+        {this.props.delegatedAddress !== "Unknown" ? (
+          <div>
+            <h1 className="header__title">Foundry Governance Proposals</h1>
+            <div className="header__balance__white flex-power">
+              <div>
+                {"Voting Power"}
+                <span
+                  className={
+                    this.props.votingPower === "0"
+                      ? "header__balance__orange"
+                      : "header__balance__white"
+                  }
+                >
+                  {` ${
+                    this.props.votingPower !== "0" &&
+                    this.props.votingPower !== 0 &&
+                    this.props.votingPower !== "Unknown"
+                      ? (
+                          (this.props.votingPower / this.props.totalSupply) *
+                          100
+                        )
+                          .toFixed(2)
+                          .toString() + "%"
+                      : this.props.votingPower !== "Unknown"
+                      ? "0% (Delegation Required)"
+                      : "Unknown"
+                  }`}
+                </span>
+              </div>
+              <div>
+                {`Token Balance`}
+                <span>{this.props.balance}</span>
+              </div>
+              <div>
+                Delegating to
+                <span>
+                  {this.props.delegatedAddress.length === 42
+                    ? `${this.props.delegatedAddress.slice(
+                        0,
+                        4
+                      )}...${this.props.delegatedAddress.slice(
+                        this.props.delegatedAddress.length - 4,
+                        this.props.delegatedAddress.length
+                      )}`
+                    : `${this.props.delegatedAddress}`}
+                </span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="connect-wallet">
+            <h1>Foundry Governance</h1>
             <div>
-              {"Voting Power"}
-              <span
-                className={
-                  this.props.votingPower === "0"
-                    ? "header__balance__orange"
-                    : "header__balance__white"
-                }
+              <p className="connect-wallet-p">
+                Connect a wallet to view actions & balances
+              </p>
+              <button
+                onClick={this.props.onConnect}
+                className="connect-wallet-btn"
               >
-                {` ${
-                  this.props.votingPower !== "0" &&
-                  this.props.votingPower !== 0 &&
-                  this.props.votingPower !== "Unknown"
-                    ? ((this.props.votingPower / this.props.totalSupply) * 100)
-                        .toFixed(2)
-                        .toString() + "%"
-                    : this.props.votingPower !== "Unknown"
-                    ? "0% (Delegation Required)"
-                    : "Unknown"
-                }`}
-              </span>
-            </div>
-            <div>
-              {`Token Balance`}
-              <span>{this.props.balance}</span>
-            </div>
-            <div>
-              Delegating to
-              <span>
-                {this.props.delegatedAddress.length === 42
-                  ? `${this.props.delegatedAddress.slice(
-                      0,
-                      4
-                    )}...${this.props.delegatedAddress.slice(
-                      this.props.delegatedAddress.length - 4,
-                      this.props.delegatedAddress.length
-                    )}`
-                  : `${this.props.delegatedAddress}`}
-              </span>
+                CONNECT WALLET
+              </button>
             </div>
           </div>
         )}
