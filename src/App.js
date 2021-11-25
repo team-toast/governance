@@ -274,6 +274,7 @@ class App extends Component {
       this.setState({ account: accounts2[0] });
       await this.getVotingPower(accounts2[0]);
       await this.getTotalSupply(accounts2[0]);
+      this.determineButtonsDisabled(this.state.web3);
       this.setState({
         balance: await this.getTokenBalance(
           contract.contractAddresses["token"]["address"]
