@@ -540,7 +540,7 @@ class Proposals extends Component {
           await this.sleep(2000);
         }
       }
-      this.getAverageBlockTime(this.props.web3);
+      // this.getAverageBlockTime(this.props.web3);
     } catch (error) {
       await this.sleep(1000);
       console.log("Error in getProposals", error);
@@ -594,15 +594,23 @@ class Proposals extends Component {
         return "Closed on " + this.formatDate(expiryDate);
       }
 
-      let differences = [];
-      for (let i = 0; i < this.state.historicBlockTimes.length - 1; i++) {
-        differences.push(
-          this.state.historicBlockTimes[i + 1] -
-            this.state.historicBlockTimes[i]
-        );
-      }
+      // console.log(
+      //   "HISTORICAL BLOCKTIME LENGTH: ",
+      //   this.state.historicBlockTimes.length
+      // );
+      // console.log("HISTORICAL BLOCKTIMES: ", this.state.historicBlockTimes);
 
-      let avg = differences.reduce((a, b) => a + b, 0) / differences.length;
+      // let differences = [];
+      // for (let i = 0; i < this.state.historicBlockTimes.length - 1; i++) {
+      //   differences.push(
+      //     this.state.historicBlockTimes[i + 1] -
+      //       this.state.historicBlockTimes[i]
+      //   );
+      // }
+
+      let avg = 2.1; // from https://polygonscan.com/chart/blocktime
+      // let avg = differences.reduce((a, b) => a + b, 0) / differences.length;
+      // console.log("AVERAGE: ", avg);
 
       let secondsTillExpiry = avg * blockDifference;
       expiryDate.setSeconds(
