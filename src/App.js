@@ -356,11 +356,17 @@ class App extends Component {
   };
 
   getLatestBlock = async () => {
-    try {
-      const block = await this.state.web3.eth.getBlock("latest");
-      this.setState({ latestBlock: block.number });
-    } catch (error) {
-      console.error("Error executing getLatestBlock");
+    let gotLatestBlock = false;
+    while (gotLatestBlock === false) {
+      try {
+        const block = await this.state.web3.eth.getBlock("latest");
+        this.setState({ latestBlock: block.number });
+        gotLatestBlock = true;
+        return block;
+      } catch (error) {
+        console.error("Error executing getLatestBlock");
+        this.sleep(500);
+      }
     }
   };
 
