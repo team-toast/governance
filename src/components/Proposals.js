@@ -608,6 +608,7 @@ class Proposals extends Component {
       // );
       // console.log("HISTORICAL BLOCKTIMES: ", this.state.historicBlockTimes);
 
+      // Calculate average blocktime
       // let differences = [];
       // for (let i = 0; i < this.state.historicBlockTimes.length - 1; i++) {
       //   differences.push(
@@ -617,13 +618,6 @@ class Proposals extends Component {
       // }
 
       let avg = 2.1; // from https://polygonscan.com/chart/blocktime
-      // let avg = differences.reduce((a, b) => a + b, 0) / differences.length;
-      // console.log("AVERAGE: ", avg);
-
-      //console.log("AVERAGE: ", avg);
-      //if (avg === NaN) {
-      avg = 2.0;
-      //}
 
       let secondsTillExpiry = avg * blockDifference;
       expiryDate.setSeconds(
