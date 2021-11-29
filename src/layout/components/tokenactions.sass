@@ -3,7 +3,7 @@
   
 .actionsSection
   background-color: $color-light-grey
-  border: 1px solid $color-darkish-grey
+  // border: 1px solid $color-darkish-grey
   align-items: center
   padding-left: 20px
   //margin-bottom: 20px
@@ -20,4 +20,59 @@
   margin-top: 30px
 
 
-  
+.flex
+  display: flex
+  > *
+    flex: 1
+    margin: 0 1rem
+    padding: 1rem 1.5rem
+    background: #4e5882
+    color: #fff
+    border-radius: 5px
+    .value-display
+      font-size: 1.6rem
+      font-weight: 500
+
+.flex-actions
+  display: flex
+  > *
+    flex: 1
+    margin: 0 1rem
+    padding: 0
+    color: #fff
+    border-radius: 5px
+    display: flex
+    margin-top: 2rem
+    .value-display
+      font-size: 1.6rem
+      font-weight: 500
+.header
+  .flex-actions
+    display: flex
+    @media screen and ( max-width: 75rem )
+      margin: auto
+      width: max-content
+    > *
+      flex: 1
+    input
+      background: #4e5882
+      border: none
+      color: #fff
+      border-radius: 5px 0 0 5px
+      margin: 0
+      &::placeholder
+        color: #fff
+    button
+      height: 53px
+      width: 150px
+      border: none
+      border-radius: 0 5px 5px 0
+      background: #fff
+      color: #1A1D2B
+      &:hover
+        background: transparent linear-gradient(90deg, #ff2959, #ffc440) 0 0 no-repeat padding-box
+        color: #fff
+
+@media screen and ( max-width: 75rem )
+    .xs-noflex
+      display: block !important

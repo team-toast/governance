@@ -219,32 +219,59 @@ class TokenActions extends Component {
       this.props.delegatedAddress !== "Unknown" && (
         <div className="actionsSection">
           <div className="action">
-            <div>
-              <h1>Token Actions</h1>
-              {/* Always display balances */}
+            <div className="flex">
               <div>
-                <h3>Balances</h3>
-                <h5>FRY: {this.props.fryBalance}</h5>
-                <h5>gFRY: {this.props.balance}</h5>
-                <h5>
-                  Voting Power:{" "}
+                FRY Balance
+                <div className="value-display">{this.props.fryBalance}</div>
+              </div>
+              <div>
+                gFRY Balance{" "}
+                <div className="value-display">{this.props.balance}</div>
+              </div>
+              <div>
+                Voting Power
+                <div className="value-display">
                   {(parseInt(this.props.votingPower) / 10 ** 18).toFixed(2)}
-                </h5>
+                </div>
               </div>
             </div>
             {/* No Fry or gFry */}
             {this.props.fryBalance === "0" && this.props.balance === "0" && (
               <div>
-                <h3 className="sectionHeader">
+                <h3 className="sectionHeader text-center">
                   Display no FRY getting started help message and link.
                 </h3>
               </div>
             )}
-            {/* Has gFry */}
-            {this.props.balance !== "0" && (
-              <div>
-                <div>
-                  <h3 className="sectionHeader">Delegate</h3>
+            <div className="flex-actions xs-noflex">
+              {/* Has FRY */}
+              {this.props.fryBalance !== "0" && (
+                <div className="flex-input">
+                  <input
+                    type="number"
+                    step="1"
+                    min="0"
+                    onChange={this.updateFryAmount}
+                    placeholder="Amount of FRY"
+                  />
+                  <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
+                </div>
+              )}
+              {this.props.balance !== "0" && (
+                <div className="flex-input">
+                  <input
+                    type="number"
+                    step="1"
+                    min="0"
+                    onChange={this.updateGFryAmount}
+                    placeholder="Amount of gFRY"
+                  />
+                  <button onClick={this.gFryToFry}>gFRY {">"} FRY</button>
+                </div>
+              )}
+              {/* Has gFry */}
+              {this.props.balance !== "0" && (
+                <div className="flex-input">
                   <input
                     onChange={this.props.updateDelegateeAddress}
                     placeholder="0x... Address to Delegate to"
@@ -259,33 +286,8 @@ class TokenActions extends Component {
                     <button onClick={this.props.delegate}>Delegate</button>
                   </PopupHint>
                 </div>
-                <div>
-                  <h3 className="sectionHeader">Convert gFRY to FRY</h3>
-                  <input
-                    type="number"
-                    step="1"
-                    min="0"
-                    onChange={this.updateGFryAmount}
-                    placeholder="Amount of gFRY"
-                  />
-                  <button onClick={this.gFryToFry}>gFRY {">"} FRY</button>
-                </div>
-              </div>
-            )}
-            {/* Has FRY */}
-            {this.props.fryBalance !== "0" && (
-              <div>
-                <h3 className="sectionHeader">Convert FRY to gFRY.</h3>
-                <input
-                  type="number"
-                  step="1"
-                  min="0"
-                  onChange={this.updateFryAmount}
-                  placeholder="Amount of FRY"
-                />
-                <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )

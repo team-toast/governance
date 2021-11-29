@@ -14,7 +14,6 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
 import "./layout/config/_base.sass";
 import CustomHeader from "./components/CustomHeader";
-import TokenActions from "./components/TokenActions";
 
 import Status from "./components/Status";
 
@@ -817,19 +816,15 @@ class App extends Component {
                   {...this.state}
                   delegate={this.delegate}
                   updateDelegateeAddress={this.updateDelegateeAddress}
+                  setStatus={this.setStatusOf}
                   disableButtons={this.state.disableButtons}
                   disableMessage={this.state.disableMessage}
+                  getGasPrice={this.getGasPrice}
+                  fryGfryMod={this.fryGfryMod}
                   onConnect={this.onConnect}
+                  stateprops={this.state}
                 />
                 <div>
-                  <TokenActions
-                    {...this.state}
-                    delegate={this.delegate}
-                    updateDelegateeAddress={this.updateDelegateeAddress}
-                    setStatus={this.setStatusOf}
-                    getGasPrice={this.getGasPrice}
-                    fryGfryMod={this.fryGfryMod}
-                  />
                   <Proposals
                     {...this.state}
                     xhr={this.xhr}
