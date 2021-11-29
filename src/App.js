@@ -819,6 +819,7 @@ class App extends Component {
                   updateDelegateeAddress={this.updateDelegateeAddress}
                   disableButtons={this.state.disableButtons}
                   disableMessage={this.state.disableMessage}
+                  onConnect={this.onConnect}
                 />
                 <div>
                   <TokenActions
