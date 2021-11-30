@@ -288,7 +288,7 @@ class TokenActions extends Component {
                           this.state.modal,
                           this.fryToGfry,
                           "converting",
-                          `You are about to convert ${this.updateFryAmount} FRY to ${this.updateFryAmount} gFRY`
+                          `You are about to convert ${this.state.fryConvertAmount} FRY to ${this.state.fryConvertAmount} gFRY`
                         )
                       }
                     >
@@ -316,7 +316,7 @@ class TokenActions extends Component {
                         this.state.modal,
                         this.gFryToFry,
                         "converting",
-                        `You are about to convert ${this.updateGFryAmount} gFRY to ${this.updateGFryAmount} FRY`
+                        `You are about to convert ${this.state.gFryConvertAmount} gFRY to ${this.state.gFryConvertAmount} FRY`
                       )
                     }
                   >
