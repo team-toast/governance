@@ -17,10 +17,22 @@ class TokenActions extends Component {
         "115792089237316195423570985008687907853269984665640564039457584007913129639935",
       fryConvertAmount: 0,
       gFryConvertAmount: 0,
+      modal: false,
+      callFunction: null,
+      processtype: "",
+      processMessage: "",
     };
   }
 
+  toggleModal = (data, callFunction, processtype, processMessage) => {
+    this.setState({ modal: !data });
+    this.setState({ callFunction });
+    this.setState({ processtype });
+    this.setState({ processMessage });
+  };
+
   fryToGfry = async () => {
+    this.setState({ modal: false });
     try {
       let gasPrice = await this.props.getGasPrice();
 
@@ -218,6 +230,22 @@ class TokenActions extends Component {
     return (
       this.props.delegatedAddress !== "Unknown" && (
         <div className="actionsSection">
+          {this.state.modal && (
+            <div className="modal-question">
+              <div className="content">
+                <img src="/Converting.svg" />
+                <div className="action-message">{this.state.processtype}</div>
+                <h2>Proceed?</h2>
+                <p>{this.state.processMessage}</p>
+                <div>
+                  <button onClick={this.state.callFunction}>Confirm</button>
+                  <button className="second" onClick={this.toggleModal}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="action">
             <div className="flex xs-xs-noflex">
               <div className="margin-top-1">
@@ -254,7 +282,18 @@ class TokenActions extends Component {
                       onChange={this.updateFryAmount}
                       placeholder="Amount of FRY"
                     />
-                    <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
+                    <button
+                      onClick={() =>
+                        this.toggleModal(
+                          this.state.modal,
+                          this.fryToGfry,
+                          "converting",
+                          "You are about to convert 1000 FRY to 120 gFRY"
+                        )
+                      }
+                    >
+                      FRY {">"} gFRY
+                    </button>
                   </div>
                 )}
                 <div
@@ -271,7 +310,18 @@ class TokenActions extends Component {
                     onChange={this.updateGFryAmount}
                     placeholder="Amount of gFRY"
                   />
-                  <button onClick={this.gFryToFry}>gFRY {">"} FRY</button>
+                  <button
+                    onClick={() =>
+                      this.toggleModal(
+                        this.state.modal,
+                        this.gFryToFry,
+                        "converting",
+                        "You are about to convert 1000 FRY to 120 gFRY"
+                      )
+                    }
+                  >
+                    gFRY {">"} FRY
+                  </button>
                 </div>
                 {/* Has gFry */}
                 <div
@@ -292,7 +342,18 @@ class TokenActions extends Component {
                         : ""
                     }
                   >
-                    <button onClick={this.props.delegate}>Delegate</button>
+                    <button
+                      onClick={() =>
+                        this.toggleModal(
+                          this.state.modal,
+                          this.delegate,
+                          "delegating",
+                          `You are delegating voting power to address ${this.props.convertedAddress}`
+                        )
+                      }
+                    >
+                      Delegate
+                    </button>
                   </PopupHint>
                 </div>
               </div>

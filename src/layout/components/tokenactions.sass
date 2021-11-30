@@ -115,6 +115,61 @@
 .margin-top-1
   margin-top: 1rem
 
+.modal-question
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100vh
+  background: rgba(255,255,255,0.5)
+  z-index: 4
+  backdrop-filter: blur(3px)
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  .content
+    background: #343A56
+    padding: 2rem
+    border-radius: 10px
+    box-shadow: 0px 3px 25px #1A1D2B29
+    width: 90%
+    max-width: 800px
+    color: #fff
+    text-align: center
+    .action-message
+      text-transform: uppercase
+      font-family: lemonmilk
+      margin: 1rem 0 2rem
+    img
+      width: 93px
+    p
+      margin: 2rem 0
+    button
+      border: none
+      box-shadow: inset 0 0 0 1px #FFFFFF
+      border-radius: 25px
+      background: none
+      height: 50px
+      width: 250px
+      display: block
+      margin: 0 auto 1rem
+      color: #fff
+      text-transform: uppercase
+      &:hover
+        box-shadow: none
+        background: transparent linear-gradient(90deg, #ff2959, #ffc440) 0 0 no-repeat padding-box
+      &.second
+        box-shadow: none
+        border: none
+        &:hover
+          background: none
+          color: #FF794C
+
+.color-yellow
+  color: #FFC440
+  display: inline-block !important
+
 @media screen and ( max-width: 75rem )
   .xs-noflex
     display: block !important
