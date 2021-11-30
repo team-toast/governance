@@ -236,29 +236,34 @@ class TokenActions extends Component {
               </div>
             </div>
             {/* No Fry or gFry */}
-            {this.props.fryBalance === "0" && this.props.balance === "0" && (
+            {this.props.fryBalance === "0" && this.props.balance === "0" ? (
               <div>
                 <h3 className="sectionHeader text-center">
                   Display no FRY getting started help message and link.
                 </h3>
               </div>
-            )}
-            <div className="flex-actions xs-noflex">
-              {/* Has FRY */}
-              {this.props.fryBalance !== "0" && (
-                <div className="flex-input">
-                  <input
-                    type="number"
-                    step="1"
-                    min="0"
-                    onChange={this.updateFryAmount}
-                    placeholder="Amount of FRY"
-                  />
-                  <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
-                </div>
-              )}
-              {this.props.balance !== "0" && (
-                <div className="flex-input">
+            ) : (
+              <div className="flex-actions xs-noflex">
+                {/* Has FRY */}
+                {this.props.fryBalance !== "0" && (
+                  <div className="flex-input">
+                    <input
+                      type="number"
+                      step="1"
+                      min="0"
+                      onChange={this.updateFryAmount}
+                      placeholder="Amount of FRY"
+                    />
+                    <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
+                  </div>
+                )}
+                <div
+                  className={
+                    this.props.balance !== "0"
+                      ? "flex-input"
+                      : "inactive flex-input"
+                  }
+                >
                   <input
                     type="number"
                     step="1"
@@ -268,10 +273,14 @@ class TokenActions extends Component {
                   />
                   <button onClick={this.gFryToFry}>gFRY {">"} FRY</button>
                 </div>
-              )}
-              {/* Has gFry */}
-              {this.props.balance !== "0" && (
-                <div className="flex-input">
+                {/* Has gFry */}
+                <div
+                  className={
+                    this.props.balance !== "0"
+                      ? "flex-input"
+                      : "inactive flex-input"
+                  }
+                >
                   <input
                     onChange={this.props.updateDelegateeAddress}
                     placeholder="0x... Address to Delegate to"
@@ -286,8 +295,8 @@ class TokenActions extends Component {
                     <button onClick={this.props.delegate}>Delegate</button>
                   </PopupHint>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )

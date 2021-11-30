@@ -73,6 +73,40 @@
         background: transparent linear-gradient(90deg, #ff2959, #ffc440) 0 0 no-repeat padding-box
         color: #fff
 
+.inactive
+  position: relative
+  &::before
+    content: " "
+    position: absolute
+    left: 0
+    top: 0
+    height: 100%
+    width: 100%
+    cursor: not-allowed
+    z-index: 1
+    background: rgba(0,0,0,0.5)
+  &::after
+    content: "Your gFRY balance is 0 and therefor you can't use these functions."
+    position: absolute
+    left: 50%
+    top: 3rem
+    padding: 1rem
+    width: 90%
+    cursor: not-allowed
+    z-index: 1
+    text-align: center
+    background: red
+    color: white
+    border-radius: 5px
+    transform: translateX(-50%)
+    opacity: 0
+    visibility: hidden
+  &:hover
+    &::after
+      opacity: 1
+      visibility: visible
+      transition: opacity 0.25s ease, visibility 0.25s ease
+
 @media screen and ( max-width: 75rem )
     .xs-noflex
       display: block !important
