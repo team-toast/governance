@@ -11,6 +11,8 @@
   margin-top: 30px
   margin-bottom: 60px
   width: 30%
+  @media screen and ( max-width: 75rem )
+    width: 100%
   align-self: center
 
 .action
@@ -35,6 +37,7 @@
 
 .flex-actions
   display: flex
+  max-width: 100%
   > *
     flex: 1
     margin: 0 1rem
@@ -69,6 +72,8 @@
       border-radius: 0 5px 5px 0
       background: #fff
       color: #1A1D2B
+      @media screen and ( max-width: 75rem )
+        width: 113px
       &:hover
         background: transparent linear-gradient(90deg, #ff2959, #ffc440) 0 0 no-repeat padding-box
         color: #fff
@@ -107,6 +112,13 @@
       visibility: visible
       transition: opacity 0.25s ease, visibility 0.25s ease
 
+.margin-top-1
+  margin-top: 1rem
+
 @media screen and ( max-width: 75rem )
-    .xs-noflex
-      display: block !important
+  .xs-noflex
+    display: block !important
+
+@media screen and ( max-width: 40rem )
+  .xs-xs-noflex
+    display: block !important

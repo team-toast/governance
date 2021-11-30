@@ -219,16 +219,16 @@ class TokenActions extends Component {
       this.props.delegatedAddress !== "Unknown" && (
         <div className="actionsSection">
           <div className="action">
-            <div className="flex">
-              <div>
+            <div className="flex xs-xs-noflex">
+              <div className="margin-top-1">
                 FRY Balance
                 <div className="value-display">{this.props.fryBalance}</div>
               </div>
-              <div>
+              <div className="margin-top-1">
                 gFRY Balance{" "}
                 <div className="value-display">{this.props.balance}</div>
               </div>
-              <div>
+              <div className="margin-top-1">
                 Voting Power
                 <div className="value-display">
                   {(parseInt(this.props.votingPower) / 10 ** 18).toFixed(2)}
