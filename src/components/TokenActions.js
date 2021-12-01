@@ -260,8 +260,8 @@ class TokenActions extends Component {
                 <div
                   className={
                     this.props.balance !== "0"
-                      ? "flex-input"
-                      : "inactive flex-input"
+                      ? "flex-input justify-right"
+                      : "inactive flex-input justify-right"
                   }
                 >
                   <input

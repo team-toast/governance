@@ -65,9 +65,15 @@
       margin: 0
       &::placeholder
         color: #fff
+      &[type='number']
+        -moz-appearance:textfield
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button
+          -webkit-appearance: none
     button
       height: 53px
-      width: 150px
+      width: 153px
       border: none
       border-radius: 0 5px 5px 0
       background: #fff
@@ -114,6 +120,9 @@
 
 .margin-top-1
   margin-top: 1rem
+
+.justify-right
+  justify-content: right
 
 @media screen and ( max-width: 75rem )
   .xs-noflex
