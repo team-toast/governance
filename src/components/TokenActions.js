@@ -245,24 +245,30 @@ class TokenActions extends Component {
             ) : (
               <div className="flex-actions xs-noflex">
                 {/* Has FRY */}
-                {this.props.fryBalance !== "0" && (
-                  <div className="flex-input">
-                    <input
-                      type="number"
-                      step="1"
-                      min="0"
-                      onChange={this.updateFryAmount}
-                      placeholder="Amount of FRY"
-                    />
-                    <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
-                  </div>
-                )}
+                <div
+                  className={
+                    this.props.fryBalance !== "0"
+                      ? "flex-input"
+                      : "inactive flex-input"
+                  }
+                  data-title="Your FRY balance is 0 and therefor you can't use this function."
+                >
+                  <input
+                    type="number"
+                    step="1"
+                    min="0"
+                    onChange={this.updateFryAmount}
+                    placeholder="Amount of FRY"
+                  />
+                  <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
+                </div>
                 <div
                   className={
                     this.props.balance !== "0"
                       ? "flex-input justify-right"
                       : "inactive flex-input justify-right"
                   }
+                  data-title="Your gFRY balance is 0 and therefor you can't use this function."
                 >
                   <input
                     type="number"
@@ -280,6 +286,7 @@ class TokenActions extends Component {
                       ? "flex-input"
                       : "inactive flex-input"
                   }
+                  data-title="Your gFRY balance is 0 and therefor you can't use this function."
                 >
                   <input
                     onChange={this.props.updateDelegateeAddress}
