@@ -275,7 +275,12 @@ class TokenActions extends Component {
                       placeholder="Amount of FRY"
                     />
                     <button
-                      className="width-basis"
+                      className={
+                        this.state.fryConvertAmount === 0 ||
+                        this.state.fryConvertAmount === ""
+                          ? "disabled width-basis"
+                          : "width-basis"
+                      }
                       onClick={() =>
                         this.toggleModal(
                           this.state.modal,
@@ -312,7 +317,12 @@ class TokenActions extends Component {
                       placeholder="Amount of gFRY"
                     />
                     <button
-                      className="width-basis"
+                      className={
+                        this.state.gFryConvertAmount === 0 ||
+                        this.state.gFryConvertAmount === ""
+                          ? "disabled width-basis"
+                          : "width-basis"
+                      }
                       onClick={() =>
                         this.toggleModal(
                           this.state.modal,
@@ -349,7 +359,11 @@ class TokenActions extends Component {
                       placeholder="0x... Address to Delegate to"
                     />
                     <PopupHint
-                      classToBeUsed="width-basis"
+                      classToBeUsed={
+                        this.props.convertedAddress === ""
+                          ? "disabled width-basis"
+                          : "width-basis"
+                      }
                       message={
                         this.props.balance === "0.00"
                           ? "You don't have governance tokens"
