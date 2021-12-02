@@ -25,22 +25,33 @@
 .flex
   display: flex
   > *
-    flex: 1
+    flex: 1 0 0
     margin: 0 1rem
-    padding: 1rem 1.5rem
-    background: #4e5882
-    color: #fff
-    border-radius: 5px
+    .inner-box
+      padding: 1rem 1.5rem
+      background: #4e5882
+      color: #fff
+      border-radius: 5px
     .value-display
       font-size: 1.6rem
       font-weight: 500
+    &:last-child
+      .flex-actions
+        margin-bottom: 0
+
+.width-basis
+  flex-basis: 150px
+  button
+    width: 100%
+  @media screen and ( max-width: 75rem )
+    flex-basis: 113px
 
 .flex-actions
   display: flex
   max-width: 100%
   > *
-    flex: 1
-    margin: 0 1rem
+    flex: 1 0 0
+    margin: 0
     padding: 0
     color: #fff
     border-radius: 5px
@@ -54,26 +65,35 @@
     display: flex
     @media screen and ( max-width: 75rem )
       margin: auto
-      width: max-content
+      margin-bottom: 4rem
     > *
       flex: 1
+      display: flex
+      > *
+        flex: 1
     input
       background: #4e5882
       border: none
       color: #fff
       border-radius: 5px 0 0 5px
       margin: 0
+      @media screen and ( min-width: 768px ) and (max-width: 1024px)
+        display: inline-block
+        width: 130px
       &::placeholder
         color: #fff
+      &[type='number']
+        -moz-appearance: textfield
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button
+          -webkit-appearance: none
     button
       height: 53px
-      width: 150px
       border: none
       border-radius: 0 5px 5px 0
       background: #fff
       color: #1A1D2B
-      @media screen and ( max-width: 75rem )
-        width: 113px
       &:hover
         background: transparent linear-gradient(90deg, #ff2959, #ffc440) 0 0 no-repeat padding-box
         color: #fff
@@ -91,7 +111,7 @@
     z-index: 1
     background: rgba(0,0,0,0.5)
   &::after
-    content: "Your gFRY balance is 0 and therefor you can't use these functions."
+    content: attr(data-title)
     position: absolute
     left: 50%
     top: 3rem
@@ -170,6 +190,9 @@
 .color-yellow
   color: #FFC440
   display: inline-block !important
+  
+.justify-right
+  justify-content: right
 
 @media screen and ( max-width: 75rem )
   .xs-noflex

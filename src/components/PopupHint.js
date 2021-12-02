@@ -22,6 +22,7 @@ class PopupHint extends Component {
         placement={this.props.position}
       >
         <div
+          className={this.props.classToBeUsed}
           style={{
             display: "inline-block",
             disabled: this.props.message === "",

@@ -32,7 +32,6 @@ class TokenActions extends Component {
   };
 
   fryToGfry = async () => {
-    this.setState({ modal: false });
     try {
       let gasPrice = await this.props.getGasPrice();
 
@@ -226,6 +225,11 @@ class TokenActions extends Component {
     });
   };
 
+  renderFunction = () => {
+    this.setState({ modal: false });
+    this.state.callFunction();
+  };
+
   render() {
     return (
       this.props.delegatedAddress !== "Unknown" && (
@@ -238,7 +242,7 @@ class TokenActions extends Component {
                 <h2>Proceed?</h2>
                 <p>{this.state.processMessage}</p>
                 <div>
-                  <button onClick={this.state.callFunction}>Confirm</button>
+                  <button onClick={this.renderFunction}>Confirm</button>
                   <button className="second" onClick={this.toggleModal}>
                     Cancel
                   </button>
@@ -249,32 +253,20 @@ class TokenActions extends Component {
           <div className="action">
             <div className="flex xs-xs-noflex">
               <div className="margin-top-1">
-                FRY Balance
-                <div className="value-display">{this.props.fryBalance}</div>
-              </div>
-              <div className="margin-top-1">
-                gFRY Balance{" "}
-                <div className="value-display">{this.props.balance}</div>
-              </div>
-              <div className="margin-top-1">
-                Voting Power
-                <div className="value-display">
-                  {(parseInt(this.props.votingPower) / 10 ** 18).toFixed(2)}
+                <div className="inner-box">
+                  FRY Balance
+                  <div className="value-display">{this.props.fryBalance}</div>
                 </div>
-              </div>
-            </div>
-            {/* No Fry or gFry */}
-            {this.props.fryBalance === "0" && this.props.balance === "0" ? (
-              <div>
-                <h3 className="sectionHeader text-center">
-                  Display no FRY getting started help message and link.
-                </h3>
-              </div>
-            ) : (
-              <div className="flex-actions xs-noflex">
                 {/* Has FRY */}
-                {this.props.fryBalance !== "0" && (
-                  <div className="flex-input">
+                <div className="flex-actions">
+                  <div
+                    className={
+                      this.props.fryBalance !== "0"
+                        ? "flex-input"
+                        : "inactive flex-input"
+                    }
+                    data-title="Your FRY balance is 0 and therefor you can't use this function."
+                  >
                     <input
                       type="number"
                       step="1"
@@ -283,6 +275,7 @@ class TokenActions extends Component {
                       placeholder="Amount of FRY"
                     />
                     <button
+                      className="width-basis"
                       onClick={() =>
                         this.toggleModal(
                           this.state.modal,
@@ -295,67 +288,97 @@ class TokenActions extends Component {
                       FRY {">"} gFRY
                     </button>
                   </div>
-                )}
-                <div
-                  className={
-                    this.props.balance !== "0"
-                      ? "flex-input"
-                      : "inactive flex-input"
-                  }
-                >
-                  <input
-                    type="number"
-                    step="1"
-                    min="0"
-                    onChange={this.updateGFryAmount}
-                    placeholder="Amount of gFRY"
-                  />
-                  <button
-                    onClick={() =>
-                      this.toggleModal(
-                        this.state.modal,
-                        this.gFryToFry,
-                        "converting",
-                        `You are about to convert ${this.state.gFryConvertAmount} gFRY to ${this.state.gFryConvertAmount} FRY`
-                      )
-                    }
-                  >
-                    gFRY {">"} FRY
-                  </button>
                 </div>
-                {/* Has gFry */}
-                <div
-                  className={
-                    this.props.balance !== "0"
-                      ? "flex-input"
-                      : "inactive flex-input"
-                  }
-                >
-                  <input
-                    onChange={this.props.updateDelegateeAddress}
-                    placeholder="0x... Address to Delegate to"
-                  />
-                  <PopupHint
-                    message={
-                      this.props.balance === "0.00"
-                        ? "You don't have governance tokens"
-                        : ""
+              </div>
+              <div className="margin-top-1">
+                <div className="inner-box">
+                  gFRY Balance{" "}
+                  <div className="value-display">{this.props.balance}</div>
+                </div>
+                <div className="flex-actions">
+                  <div
+                    className={
+                      this.props.balance !== "0"
+                        ? "flex-input justify-right"
+                        : "inactive flex-input justify-right"
                     }
+                    data-title="Your gFRY balance is 0 and therefor you can't use this function."
                   >
+                    <input
+                      type="number"
+                      step="1"
+                      min="0"
+                      onChange={this.updateGFryAmount}
+                      placeholder="Amount of gFRY"
+                    />
                     <button
+                      className="width-basis"
                       onClick={() =>
                         this.toggleModal(
                           this.state.modal,
-                          this.delegate,
-                          "delegating",
-                          `You are delegating voting power to address ${this.props.convertedAddress}`
+                          this.gFryToFry,
+                          "converting",
+                          `You are about to convert ${this.state.gFryConvertAmount} gFRY to ${this.state.gFryConvertAmount} FRY`
                         )
                       }
                     >
-                      Delegate
+                      gFRY {">"} FRY
                     </button>
-                  </PopupHint>
+                  </div>
                 </div>
+              </div>
+              <div className="margin-top-1">
+                <div className="inner-box">
+                  Voting Power
+                  <div className="value-display">
+                    {(parseInt(this.props.votingPower) / 10 ** 18).toFixed(2)}
+                  </div>
+                </div>
+                <div className="flex-actions">
+                  {/* Has gFry */}
+                  <div
+                    className={
+                      this.props.balance !== "0"
+                        ? "flex-input"
+                        : "inactive flex-input"
+                    }
+                    data-title="Your gFRY balance is 0 and therefor you can't use this function."
+                  >
+                    <input
+                      onChange={this.props.updateDelegateeAddress}
+                      placeholder="0x... Address to Delegate to"
+                    />
+                    <PopupHint
+                      classToBeUsed="width-basis"
+                      message={
+                        this.props.balance === "0.00"
+                          ? "You don't have governance tokens"
+                          : ""
+                      }
+                    >
+                      <button
+                        onClick={() =>
+                          this.toggleModal(
+                            this.state.modal,
+                            this.props.delegate,
+                            "delegating",
+                            `You are delegating voting power to address ${this.props.convertedAddress}`
+                          )
+                        }
+                      >
+                        Delegate
+                      </button>
+                    </PopupHint>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* No Fry or gFry */}
+            {this.props.fryBalance === "0" && this.props.balance === "0" && (
+              <div>
+                <h3 className="sectionHeader text-center">
+                  Display no FRY getting started help message and link.
+                </h3>
               </div>
             )}
           </div>
