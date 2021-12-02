@@ -240,7 +240,11 @@ class TokenActions extends Component {
                 <img src="/Converting.svg" />
                 <div className="action-message">{this.state.processtype}</div>
                 <h2>Proceed?</h2>
-                <p>{this.state.processMessage}</p>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: this.state.processMessage,
+                  }}
+                ></p>
                 <div>
                   <button onClick={this.renderFunction}>Confirm</button>
                   <button className="second" onClick={this.toggleModal}>
@@ -286,7 +290,7 @@ class TokenActions extends Component {
                           this.state.modal,
                           this.fryToGfry,
                           "converting",
-                          `You are about to convert ${this.state.fryConvertAmount} FRY to ${this.state.fryConvertAmount} gFRY`
+                          `You are about to convert <span>${this.state.fryConvertAmount} FRY</span> to <span>${this.state.fryConvertAmount} gFRY</span>`
                         )
                       }
                     >
@@ -328,7 +332,7 @@ class TokenActions extends Component {
                           this.state.modal,
                           this.gFryToFry,
                           "converting",
-                          `You are about to convert ${this.state.gFryConvertAmount} gFRY to ${this.state.gFryConvertAmount} FRY`
+                          `You are about to convert <span>${this.state.gFryConvertAmount} gFRY</span> to <span>${this.state.gFryConvertAmount} FRY</span>`
                         )
                       }
                     >
@@ -376,7 +380,7 @@ class TokenActions extends Component {
                             this.state.modal,
                             this.props.delegate,
                             "delegating",
-                            `You are delegating voting power to address ${this.props.convertedAddress}`
+                            `You are delegating voting power to address <span>${this.props.convertedAddress}</span>`
                           )
                         }
                       >
