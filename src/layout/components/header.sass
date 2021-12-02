@@ -7,7 +7,7 @@
   src: url("/LEMONMILK-Regular.otf") format("opentype")
   
 .header
-  display: flex
+  display: block
   flex-direction: column
   align-items: center
   justify-content: flex-end
@@ -18,7 +18,7 @@
   &.no-bottom-padding
     padding-bottom: 0
   input
-    width: 90%
+    // width: 90%
     max-width: 400px
     background: #222
     border: solid 2px #2b3c54
@@ -33,12 +33,14 @@
       transition: all 0.25s ease
 
 .header__title
-  font-size: 32px
+  font-size: 1.75rem
   color: $color-white
   font-weight: 500
   margin-bottom: 48px
   max-width: 95vw
   text-align: center
+  text-transform: uppercase
+  font-family: lemonmilk
 
   +media($breakpoint-sm)
     font-size: 28px
@@ -99,6 +101,8 @@
 .header__balance__white
   color: $color-grey
   font-size: 16px
+  max-width: 75rem
+  margin: auto
 
 .header__balance__orange
   color: #f60
@@ -168,14 +172,12 @@
     text-align: center
   > div
     flex: 1 1 auto
-    background: rgba(255,255,255,0.1)
-    padding: 2rem 2rem
+    background: none
+    padding: 0
     transition: all 0.15s
-    margin: 8px
-    border-radius: 2px
-    font-size: 12px
+    margin: auto
+    border-radius: 0
     span
-      font-size: 1.39rem
       display: block
 
 .connect-wallet
@@ -185,6 +187,7 @@
   h1
     text-transform: uppercase
     font-family: lemonmilk
+    font-size: 1.75rem
 
 .connect-wallet-p
       margin: 2rem 0

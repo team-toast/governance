@@ -219,71 +219,103 @@ class TokenActions extends Component {
       this.props.delegatedAddress !== "Unknown" && (
         <div className="actionsSection">
           <div className="action">
-            <div>
-              <h1>Token Actions</h1>
-              {/* Always display balances */}
-              <div>
-                <h3>Balances</h3>
-                <h5>FRY: {this.props.fryBalance}</h5>
-                <h5>gFRY: {this.props.balance}</h5>
-                <h5>
-                  Voting Power:{" "}
-                  {(parseInt(this.props.votingPower) / 10 ** 18).toFixed(2)}
-                </h5>
+            <div className="flex xs-xs-noflex">
+              <div className="margin-top-1">
+                <div className="inner-box">
+                  FRY Balance
+                  <div className="value-display">{this.props.fryBalance}</div>
+                </div>
+                {/* Has FRY */}
+                <div className="flex-actions">
+                  <div
+                    className={
+                      this.props.fryBalance !== "0"
+                        ? "flex-input"
+                        : "inactive flex-input"
+                    }
+                    data-title="Your FRY balance is 0 and therefor you can't use this function."
+                  >
+                    <input
+                      type="number"
+                      step="1"
+                      min="0"
+                      onChange={this.updateFryAmount}
+                      placeholder="Amount of FRY"
+                    />
+                    <button className="width-basis" onClick={this.fryToGfry}>
+                      FRY {">"} gFRY
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="margin-top-1">
+                <div className="inner-box">
+                  gFRY Balance{" "}
+                  <div className="value-display">{this.props.balance}</div>
+                </div>
+                <div className="flex-actions">
+                  <div
+                    className={
+                      this.props.balance !== "0"
+                        ? "flex-input justify-right"
+                        : "inactive flex-input justify-right"
+                    }
+                    data-title="Your gFRY balance is 0 and therefor you can't use this function."
+                  >
+                    <input
+                      type="number"
+                      step="1"
+                      min="0"
+                      onChange={this.updateGFryAmount}
+                      placeholder="Amount of gFRY"
+                    />
+                    <button className="width-basis" onClick={this.gFryToFry}>
+                      gFRY {">"} FRY
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="margin-top-1">
+                <div className="inner-box">
+                  Voting Power
+                  <div className="value-display">
+                    {(parseInt(this.props.votingPower) / 10 ** 18).toFixed(2)}
+                  </div>
+                </div>
+                <div className="flex-actions">
+                  {/* Has gFry */}
+                  <div
+                    className={
+                      this.props.balance !== "0"
+                        ? "flex-input"
+                        : "inactive flex-input"
+                    }
+                    data-title="Your gFRY balance is 0 and therefor you can't use this function."
+                  >
+                    <input
+                      onChange={this.props.updateDelegateeAddress}
+                      placeholder="0x... Address to Delegate to"
+                    />
+                    <PopupHint
+                      classToBeUsed="width-basis"
+                      message={
+                        this.props.balance === "0.00"
+                          ? "You don't have governance tokens"
+                          : ""
+                      }
+                    >
+                      <button onClick={this.props.delegate}>Delegate</button>
+                    </PopupHint>
+                  </div>
+                </div>
               </div>
             </div>
             {/* No Fry or gFry */}
             {this.props.fryBalance === "0" && this.props.balance === "0" && (
               <div>
-                <h3 className="sectionHeader">
+                <h3 className="sectionHeader text-center">
                   Display no FRY getting started help message and link.
                 </h3>
-              </div>
-            )}
-            {/* Has gFry */}
-            {this.props.balance !== "0" && (
-              <div>
-                <div>
-                  <h3 className="sectionHeader">Delegate</h3>
-                  <input
-                    onChange={this.props.updateDelegateeAddress}
-                    placeholder="0x... Address to Delegate to"
-                  />
-                  <PopupHint
-                    message={
-                      this.props.balance === "0.00"
-                        ? "You don't have governance tokens"
-                        : ""
-                    }
-                  >
-                    <button onClick={this.props.delegate}>Delegate</button>
-                  </PopupHint>
-                </div>
-                <div>
-                  <h3 className="sectionHeader">Convert gFRY to FRY</h3>
-                  <input
-                    type="number"
-                    step="1"
-                    min="0"
-                    onChange={this.updateGFryAmount}
-                    placeholder="Amount of gFRY"
-                  />
-                  <button onClick={this.gFryToFry}>gFRY {">"} FRY</button>
-                </div>
-              </div>
-            )}
-            {/* Has FRY */}
-            {this.props.fryBalance !== "0" && (
-              <div>
-                <h3 className="sectionHeader">Convert FRY to gFRY.</h3>
-                <input
-                  type="number"
-                  step="1"
-                  min="0"
-                  onChange={this.updateFryAmount}
-                  placeholder="Amount of FRY"
-                />
-                <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
               </div>
             )}
           </div>

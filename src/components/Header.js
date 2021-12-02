@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Tooltip from "react-bootstrap/Tooltip";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import TokenActions from "./TokenActions";
 import "../layout/components/header.sass";
 import PopupHint from "./PopupHint";
 //0x7E1d0353063F01CfFa92f4a9C8A100cFE37d8264
@@ -26,9 +27,18 @@ class Header extends Component {
       >
         {this.props.delegatedAddress !== "Unknown" ? (
           <div>
-            <h1 className="header__title">Foundry Governance Proposals</h1>
+            <h1 className="header__title">Foundry Governance</h1>
             <div className="header__balance__white flex-power">
-              <div>
+              <TokenActions
+                {...this.props.stateprops}
+                // stateprops={this.props.stateprops}
+                delegate={this.props.delegate}
+                updateDelegateeAddress={this.props.updateDelegateeAddress}
+                setStatus={this.props.setStatus}
+                getGasPrice={this.props.getGasPrice}
+                fryGfryMod={this.props.fryGfryMod}
+              />
+              {/* <div>
                 {"Voting Power"}
                 <span
                   className={
@@ -70,7 +80,7 @@ class Header extends Component {
                       )}`
                     : `${this.props.delegatedAddress}`}
                 </span>
-              </div>
+              </div> */}
             </div>
           </div>
         ) : (
@@ -87,39 +97,6 @@ class Header extends Component {
                 CONNECT WALLET
               </button>
             </div>
-          </div>
-        )}
-        {!this.state.showDelegate && this.props.delegatedAddress !== "Unknown" && (
-          <div onClick={this.toggleDelegate} className="delegate-block__button">
-            <h5>Delegate</h5>
-          </div>
-        )}
-        {this.state.showDelegate && this.props.delegatedAddress !== "Unknown" && (
-          <div className="delegate-block">
-            <input
-              onChange={this.props.updateDelegateeAddress}
-              placeholder="0x... Address to Delegate to"
-            />
-            <PopupHint
-              message={
-                this.props.balance === "0.00"
-                  ? "You don't have governance tokens"
-                  : ""
-              }
-            >
-              <button
-                className="header__button"
-                onClick={this.props.delegate}
-                disabled={
-                  !this.props.connected ||
-                  (this.props.disableButtons &&
-                    this.props.balance === "0.00") ||
-                  this.props.network !== "Matic"
-                }
-              >
-                Delegate
-              </button>
-            </PopupHint>
           </div>
         )}
       </section>
