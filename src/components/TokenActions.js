@@ -290,7 +290,11 @@ class TokenActions extends Component {
                           this.state.modal,
                           this.fryToGfry,
                           "converting",
-                          `You are about to convert <span>${this.state.fryConvertAmount} FRY</span> to <span>${this.state.fryConvertAmount} gFRY</span>`
+                          `You are about to convert <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.fryConvertAmount).toFixed(2)
+                          )} FRY</span> to <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.fryConvertAmount).toFixed(2)
+                          )} gFRY</span>`
                         )
                       }
                     >
@@ -332,7 +336,11 @@ class TokenActions extends Component {
                           this.state.modal,
                           this.gFryToFry,
                           "converting",
-                          `You are about to convert <span>${this.state.gFryConvertAmount} gFRY</span> to <span>${this.state.gFryConvertAmount} FRY</span>`
+                          `You are about to convert <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.gFryConvertAmount).toFixed(2)
+                          )} gFRY</span> to <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.gFryConvertAmount).toFixed(2)
+                          )} FRY</span>`
                         )
                       }
                     >

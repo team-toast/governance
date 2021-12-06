@@ -835,6 +835,7 @@ class App extends Component {
                   fryGfryMod={this.fryGfryMod}
                   onConnect={this.onConnect}
                   stateprops={this.state}
+                  numberWithCommas={this.numberWithCommas}
                 />
                 <div>
                   <Proposals
