@@ -41,8 +41,8 @@ class TokenActions extends Component {
 
       if (fryAllowance.length !== this.state.uintMaxInt.length) {
         // Approve
-
-        this.props.setStatus("Approving ...", true);
+        this.props.setProgress([1]);
+        this.props.setStatus("Converting FRY to gFRY", true);
 
         await fryToken.methods
           .approve(
@@ -52,26 +52,30 @@ class TokenActions extends Component {
           .send(
             { from: this.props.account, gasPrice: gasPrice },
             (err, transactionHash) => {
-              this.props.setStatus("Transaction Pending ...", true);
+              // this.props.setStatus("Transaction Pending ...", true);
+              this.props.setProgress([1, 2]);
               console.log("Transaction Pending...", transactionHash);
             }
           )
           .on("confirmation", (number, receipt) => {
             if (number === 0) {
               console.log("Transaction Confirmed!", receipt.transactionHash);
+              this.props.setProgress([1, 2, 3]);
               //this.readDelegateEvents(receipt);
-              this.props.setStatus("Transaction Confirmed!", true);
+              // this.props.setStatus("Transaction Confirmed!", true);
             }
           })
           .on("error", (err, receipt) => {
-            this.props.setStatus("Could not approve. Please try again.", true);
+            // this.props.setStatus("Could not approve. Please try again.", true);
+            this.props.setProgress([1, 2, 3]);
             console.log("Transaction Failed!");
           });
       }
 
       // Convert
       gasPrice = await this.props.getGasPrice();
-      this.props.setStatus("Governating ...", true);
+      // this.props.setStatus("Governating ...", true);
+      this.props.setStatus("Converting FRY to gFRY", true);
       const governator = new this.props.web3.eth.Contract(
         governatorContract,
         contract.contractAddresses["governator"]["address"]
@@ -85,19 +89,23 @@ class TokenActions extends Component {
         .send(
           { from: this.props.account, gasPrice: gasPrice },
           (err, transactionHash) => {
-            this.props.setStatus("Transaction Pending ...", true);
+            // this.props.setStatus("Transaction Pending ...", true);
+            this.props.setProgress([1]);
+            this.props.setProgress([1, 2]);
             console.log("Transaction Pending...", transactionHash);
           }
         )
         .on("confirmation", (number, receipt) => {
           if (number === 0) {
             console.log("Transaction Confirmed!", receipt);
+            this.props.setProgress([1, 2, 3]);
             this.interpretEventAndUpdateFryToGFry(receipt);
-            this.props.setStatus("Transaction Confirmed!", true);
+            // this.props.setStatus("Transaction Confirmed!", true);
           }
         })
         .on("error", (err, receipt) => {
-          this.props.setStatus("Could not governate. Please try again.", true);
+          // this.props.setStatus("Could not governate. Please try again.", true);
+          this.props.setProgress([1, 2, 3]);
           console.log("Transaction Failed!");
         });
 
@@ -137,7 +145,8 @@ class TokenActions extends Component {
       let gasPrice = await this.props.getGasPrice();
 
       // Convert
-      this.props.setStatus("Degovernating ...", true);
+      // this.props.setStatus("Degovernating ...", true);
+      this.props.setStatus("Converting gFRY to FRY", true);
       const governator = new this.props.web3.eth.Contract(
         governatorContract,
         contract.contractAddresses["governator"]["address"]
@@ -151,7 +160,7 @@ class TokenActions extends Component {
         .send(
           { from: this.props.account, gasPrice: gasPrice },
           (err, transactionHash) => {
-            this.props.setStatus("Transaction Pending ...", true);
+            // this.props.setStatus("Transaction Pending ...", true);
             console.log("Transaction Pending...", transactionHash);
           }
         )
@@ -159,14 +168,14 @@ class TokenActions extends Component {
           if (number === 0) {
             console.log("Transaction Confirmed!", receipt);
             this.interpretEventAndUpdateGFryToFry(receipt);
-            this.props.setStatus("Transaction Confirmed!", true);
+            // this.props.setStatus("Transaction Confirmed!", true);
           }
         })
         .on("error", (err, receipt) => {
-          this.props.setStatus(
-            "Could not degovernate. Please try again.",
-            true
-          );
+          // this.props.setStatus(
+          //   "Could not degovernate. Please try again.",
+          //   true
+          // );
           console.log("Transaction Failed!");
         });
 

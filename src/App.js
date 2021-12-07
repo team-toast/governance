@@ -14,6 +14,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
 import "./layout/config/_base.sass";
 import CustomHeader from "./components/CustomHeader";
+import ProgressBar from "./components/ProgressBar";
 
 import Status from "./components/Status";
 
@@ -73,6 +74,7 @@ class App extends Component {
       firetext: "Delegating ...",
       firetextShow: false,
       page: "page__proposals",
+      processStage: [],
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -625,6 +627,12 @@ class App extends Component {
     });
   };
 
+  setProgress = (data) => {
+    this.setState({
+      processStage: data,
+    });
+  };
+
   delegate = async () => {
     this.setState({
       firetext: "Delegating ...",
@@ -795,12 +803,12 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        {this.state.firetextShow && (
+        {/* {this.state.firetextShow && (
           <Status
             hidestatus={this.hideLoader}
             firetext={this.state.firetext}
           ></Status>
-        )}
+        )} */}
         <Nav
           {...this.state}
           onConnect={this.onConnect}
@@ -812,17 +820,26 @@ class App extends Component {
           <div className="tabs">
             {this.state.page === "page__proposals" && (
               <div id="page__proposals">
+                {this.state.firetextShow && (
+                  <ProgressBar
+                    processStage={this.state.processStage}
+                    firetext={this.state.firetext}
+                    setStatus={this.setStatusOf}
+                  />
+                )}
                 <Header
                   {...this.state}
                   delegate={this.delegate}
                   updateDelegateeAddress={this.updateDelegateeAddress}
                   setStatus={this.setStatusOf}
+                  setProgress={this.setProgress}
                   disableButtons={this.state.disableButtons}
                   disableMessage={this.state.disableMessage}
                   getGasPrice={this.getGasPrice}
                   fryGfryMod={this.fryGfryMod}
                   onConnect={this.onConnect}
                   stateprops={this.state}
+                  processStage={this.processStage}
                 />
                 <div>
                   <Proposals

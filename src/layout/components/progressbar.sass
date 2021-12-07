@@ -1,0 +1,84 @@
+#progressBar
+    background: #fff
+    padding: 4rem 1rem
+    margin-top: 60px
+    align-items: center
+    position: relative
+    & > *
+        flex: 1 1 auto
+    button
+        position: absolute
+        top: 0.5rem
+        right: 0.5rem
+        margin: 0
+        border: none
+        background: #343A56
+        border-radius: 100%
+        color: #fff
+        height: 26px
+        width: 26px
+        line-height: 26px
+
+.flex
+    display: flex
+
+.process-name
+    text-transform: uppercase
+    font-family: lemonmilk
+    color: #343A56
+    font-weight: 500
+    width: 0
+    flex: 0 0 150px
+
+.progress-circle
+    height: 38px
+    width: 38px
+    background: #343A56
+    border-radius: 27px
+    border: solid 6px #fff
+    box-shadow: 0 0 0 3px #343A56
+    margin: 0 auto 1rem
+    position: relative
+    animation: pusleShadow 1s infinite
+
+@keyframes pusleShadow
+    0%
+        box-shadow: 0 0 0 2px rgba(52,58,86, 0.7)
+    100%
+        box-shadow: 0 0 0 3px #343A56
+
+.steps > *
+    color: #343A56
+    opacity: 0.5
+    transition: all 0.5s ease
+    position: relative
+    &::after
+        content: " "
+        height: 3px
+        width: calc(100% - 43px)
+        background: #343A56
+        position: absolute
+        top: 1rem
+        left: 50%
+        margin-left: 38px
+
+    &:nth-child(2)
+        text-align: center
+    &:last-child
+        text-align: right
+        &::after
+            display: none
+
+    &.none
+        opacity: 0.5
+    &.done
+        font-weight: 500
+        color: #343A56
+        transition: all 0.5s ease
+        opacity: 1
+        .progress-circle
+            background-image: url(/feather-check.svg)
+            background-repeat: no-repeat
+            background-size: 12px
+            background-position: center
+            animation: none
