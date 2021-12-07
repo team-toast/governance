@@ -56,7 +56,7 @@ class ProgressBar extends Component {
             <div className="done error">
               <div className="text-center">
                 <div className="progress-circle"></div>
-                Could not governate. Please try again.
+                Could not complete. Please try again.
               </div>
             </div>
           </div>
