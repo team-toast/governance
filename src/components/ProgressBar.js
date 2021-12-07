@@ -61,9 +61,10 @@ class ProgressBar extends Component {
             </div>
           </div>
         )}
-        {this.props.processStage.length === 3 && (
-          <button onClick={() => this.props.setStatus("", false)}>X</button>
-        )}
+        {this.props.processStage.length === 3 ||
+          (this.props.processStage.length === 4 && (
+            <button onClick={() => this.props.setStatus("", false)}>X</button>
+          ))}
       </div>
     );
   }
