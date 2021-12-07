@@ -21,6 +21,7 @@ class TokenActions extends Component {
   }
 
   fryToGfry = async () => {
+    this.props.setProgress([]);
     try {
       let gasPrice = await this.props.getGasPrice();
 
@@ -67,7 +68,7 @@ class TokenActions extends Component {
           })
           .on("error", (err, receipt) => {
             // this.props.setStatus("Could not approve. Please try again.", true);
-            this.props.setProgress([1, 2, 3]);
+            this.props.setProgress([1, 2, 3, 4]);
             console.log("Transaction Failed!");
           });
       }
@@ -105,7 +106,7 @@ class TokenActions extends Component {
         })
         .on("error", (err, receipt) => {
           // this.props.setStatus("Could not governate. Please try again.", true);
-          this.props.setProgress([1, 2, 3]);
+          this.props.setProgress([1, 2, 3, 4]);
           console.log("Transaction Failed!");
         });
 
@@ -141,6 +142,7 @@ class TokenActions extends Component {
   };
 
   gFryToFry = async () => {
+    this.props.setProgress([]);
     try {
       let gasPrice = await this.props.getGasPrice();
 
@@ -160,6 +162,7 @@ class TokenActions extends Component {
         .send(
           { from: this.props.account, gasPrice: gasPrice },
           (err, transactionHash) => {
+            this.props.setProgress([1, 2]);
             // this.props.setStatus("Transaction Pending ...", true);
             console.log("Transaction Pending...", transactionHash);
           }
@@ -168,6 +171,7 @@ class TokenActions extends Component {
           if (number === 0) {
             console.log("Transaction Confirmed!", receipt);
             this.interpretEventAndUpdateGFryToFry(receipt);
+            this.props.setProgress([1, 2, 3]);
             // this.props.setStatus("Transaction Confirmed!", true);
           }
         })
@@ -176,6 +180,7 @@ class TokenActions extends Component {
           //   "Could not degovernate. Please try again.",
           //   true
           // );
+          this.props.setProgress([1, 2, 3, 4]);
           console.log("Transaction Failed!");
         });
 

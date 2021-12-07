@@ -1,6 +1,6 @@
 #progressBar
     background: #fff
-    padding: 4rem 1rem
+    padding: 3rem 1rem
     margin-top: 60px
     align-items: center
     position: relative
@@ -39,7 +39,6 @@
     box-shadow: 0 0 0 3px #343A56
     margin: 0 auto 1rem
     position: relative
-    animation: pusleShadow 1s infinite
 
 @keyframes pusleShadow
     0%
@@ -71,6 +70,9 @@
 
     &.none
         opacity: 0.5
+        &:first-child
+            .progress-circle
+                animation: pusleShadow 1s infinite
     &.done
         font-weight: 500
         color: #343A56
@@ -80,5 +82,27 @@
             background-image: url(/feather-check.svg)
             background-repeat: no-repeat
             background-size: 12px
-            background-position: center
+            background-position: 7px 8px
             animation: none
+    &.error
+        color: #FF794C
+        .progress-circle
+            background-color: #FF794C
+            box-shadow: 0 0 0 3px #FF794C
+            background-image: none
+            &::before
+                content: "X"
+                line-height: 28px
+                color: #fff
+
+@media screen and (max-width: 650px)
+    #progressBar
+        display: block
+        position: sticky
+        top: 60px
+        padding: 1rem 0
+        margin-top: 0
+        .process-name
+            display: none
+        .flex.steps
+            margin: 0

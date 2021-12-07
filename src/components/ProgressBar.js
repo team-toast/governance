@@ -12,32 +12,55 @@ class ProgressBar extends Component {
           <br />
           Converting
         </div>
-        <div className="flex steps">
-          <div
-            className={this.props.processStage.length >= 1 ? "done" : "none"}
-          >
-            <div className="text-center">
-              <div className="progress-circle"></div>
-              Approved
+        {this.props.processStage.length < 4 ? (
+          <div className="flex steps">
+            <div
+              className={this.props.processStage.length >= 1 ? "done" : "none"}
+            >
+              <div className="text-center">
+                <div className="progress-circle"></div>
+                Approved
+              </div>
+            </div>
+            <div
+              className={this.props.processStage.length >= 2 ? "done" : "none"}
+            >
+              <div className="text-center">
+                <div className="progress-circle"></div>
+                {this.props.firetext}
+              </div>
+            </div>
+            <div
+              className={this.props.processStage.length >= 3 ? "done" : "none"}
+            >
+              <div className="text-center">
+                <div className="progress-circle"></div>
+                Complete
+              </div>
             </div>
           </div>
-          <div
-            className={this.props.processStage.length >= 2 ? "done" : "none"}
-          >
-            <div className="text-center">
-              <div className="progress-circle"></div>
-              {this.props.firetext}
+        ) : (
+          <div className="flex steps">
+            <div className="busy">
+              <div className="text-center">
+                <div className="progress-circle"></div>
+                Approved
+              </div>
+            </div>
+            <div className="busy">
+              <div className="text-center">
+                <div className="progress-circle"></div>
+                {this.props.firetext}
+              </div>
+            </div>
+            <div className="done error">
+              <div className="text-center">
+                <div className="progress-circle"></div>
+                Could not governate. Please try again.
+              </div>
             </div>
           </div>
-          <div
-            className={this.props.processStage.length >= 3 ? "done" : "none"}
-          >
-            <div className="text-center">
-              <div className="progress-circle"></div>
-              Complete
-            </div>
-          </div>
-        </div>
+        )}
         {this.props.processStage.length === 3 && (
           <button onClick={() => this.props.setStatus("", false)}>X</button>
         )}

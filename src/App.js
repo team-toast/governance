@@ -635,9 +635,10 @@ class App extends Component {
 
   delegate = async () => {
     this.setState({
-      firetext: "Delegating ...",
+      firetext: "Delegating",
       firetextShow: true,
     });
+    this.setProgress([]);
 
     const tokenAddress = contract.contractAddresses["token"]["address"];
 
@@ -688,16 +689,16 @@ class App extends Component {
           //   firetext: "Could not delegate. Please try again.",
           //   firetextShow: true,
           // });
-          this.setProgress([1, 2, 3]);
+          this.setProgress([1, 2, 3, 4]);
           console.log("Transaction Failed!");
         });
 
       console.log("Delegated to: ", this.state.delegateeAddress);
     } catch (error) {
-      this.setState({
-        firetext: "Could not delegate.",
-        firetextShow: true,
-      });
+      // this.setState({
+      //   firetext: "Could not delegate.",
+      //   firetextShow: true,
+      // });
       console.error("Error in delegate method: ", error);
     }
   };
