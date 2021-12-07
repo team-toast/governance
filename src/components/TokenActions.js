@@ -5,6 +5,7 @@ import PopupHint from "./PopupHint";
 import governatorContract from "../contracts/Governator.json";
 import compTokenContract from "../contracts/Comp.json";
 import contract from "../contracts/GovernorAlpha.json";
+import incrementerABI from "../contracts/Incrementer.json";
 
 class TokenActions extends Component {
   constructor(props) {
@@ -214,6 +215,55 @@ class TokenActions extends Component {
     });
   };
 
+  testEventProblem = async () => {
+    const incrementer = new this.props.web3.eth.Contract(
+      incrementerABI,
+      "0xa78F1941751347763a6125CA64958B562c974819"
+    );
+    //console.log(await incrementer.methods);
+    //9772782
+
+    // incrementer.getPastEvents(
+    //   0xd09de08a, // method id
+    //   {
+    //     fromBlock: "earliest",
+    //     toBlock: "latest",
+    //   },
+    //   this.processEvent
+    // );
+
+    incrementer.getPastEvents(
+      "Incremented",
+      {
+        //   filter: {
+        //     myIndexedParam: [20, 23],
+        //     myOtherIndexedParam: "0x123456789...",
+        //   }, // Using an array means OR: e.g. 20 or 23
+        fromBlock: 7310994,
+        toBlock: "latest",
+      },
+      function (error, events) {
+        console.log(events);
+      }
+    );
+    // .then(function (events) {
+    //   console.log(events); // same results as the optional callback above
+    // });
+  };
+
+  processEvent = async (err, data) => {
+    console.log("Processing Event", data);
+
+    if (data.length !== 0) {
+      let rawData = data[0]["raw"]["data"];
+      let decoded = this.props.web3.eth.abi.decodeParameters(
+        ["uint256", "uint256"],
+        rawData
+      );
+      console.log("Decoded: ", decoded);
+    }
+  };
+
   render() {
     return (
       this.props.delegatedAddress !== "Unknown" && (
@@ -287,6 +337,7 @@ class TokenActions extends Component {
               </div>
             )}
           </div>
+          <button onClick={this.testEventProblem}>DoobieDooba</button>
         </div>
       )
     );

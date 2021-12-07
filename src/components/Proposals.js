@@ -99,7 +99,7 @@ class Proposals extends Component {
           Ids.push(proposalObjs[i]["id"]);
         }
 
-        // console.log("blocknumbers: ", blockNumbers);
+        console.log("blocknumbers: ", blockNumbers);
         // console.log("Ids: ", Ids);
 
         this.getProposalEventParametersBatch(web3, blockNumbers, Ids);
@@ -209,24 +209,36 @@ class Proposals extends Component {
   getProposalEventParametersBatch = async (web3, blockNumbers, Ids) => {
     const govAlpha = new web3.eth.Contract(
       contract.abi,
-      contract["networks"]["137"]["address"]
+      contract["networks"]["421611"]["address"]
     );
 
     const batch = new web3.eth.BatchRequest();
 
+    console.log("BLOCNUMBERS: ", blockNumbers);
+    console.log("Ids: ", Ids);
+
+    blockNumbers = [7155710];
+    //for (let k = 0; k < 1000; k++) {
     for (let i = 0; i < blockNumbers.length; i++) {
       batch.add(
         govAlpha.getPastEvents(
           0xda95691a, // method id
           {
             filter: { id: Ids[i] },
-            fromBlock: blockNumbers[i] - 20,
-            toBlock: blockNumbers[i] + 20,
+            // fromBlock: blockNumbers[i] - 500,
+            // toBlock: blockNumbers[i] + 500,
+            fromBlock: 7155710,
+            toBlock: "latest",
           },
           this.processEvent
         )
+
         // .call.request({}, this.processEvent)
       );
+      //blockNumbers[0] = blockNumbers[0] + 1000;
+      console.log("Block Position: ", blockNumbers[0]);
+      //await this.sleep(1000);
+      //}
 
       // .methods.balance(address).call.request()
       // console.log(blockNumbers[i]);
@@ -236,27 +248,30 @@ class Proposals extends Component {
   };
 
   processEvent = async (err, data) => {
-    // console.log("Processing Event");
-    let rawData = data[0]["raw"]["data"];
-    let decoded = this.props.web3.eth.abi.decodeParameters(
-      [
-        "uint256",
-        "address",
-        "address[]",
-        "uint256[]",
-        "string[]",
-        "bytes[]",
-        "uint256",
-        "uint256",
-        "string",
-      ],
-      rawData
-    );
-    //console.log("Decoded: ", decoded);
+    console.log("Processing Event", data);
 
-    this.setState({
-      proposalEvents: this.state.proposalEvents.concat(decoded),
-    });
+    if (data.length !== 0) {
+      let rawData = data[0]["raw"]["data"];
+      let decoded = this.props.web3.eth.abi.decodeParameters(
+        [
+          "uint256",
+          "address",
+          "address[]",
+          "uint256[]",
+          "string[]",
+          "bytes[]",
+          "uint256",
+          "uint256",
+          "string",
+        ],
+        rawData
+      );
+      console.log("Decoded: ", decoded);
+
+      this.setState({
+        proposalEvents: this.state.proposalEvents.concat(decoded),
+      });
+    }
   };
 
   getAverageBlockTime = async (web3) => {
@@ -400,7 +415,7 @@ class Proposals extends Component {
   getAllProposalObjects = async (web3) => {
     const govAlpha = new web3.eth.Contract(
       contract.abi,
-      contract["networks"]["137"]["address"]
+      contract["networks"]["421611"]["address"]
     );
     let numOfProposals = await govAlpha.methods.proposalCount().call();
     if (numOfProposals === "0") {
@@ -476,7 +491,7 @@ class Proposals extends Component {
   getQuorumVotes = async (web3) => {
     const govAlpha = new web3.eth.Contract(
       contract.abi,
-      contract["networks"]["137"]["address"]
+      contract["networks"]["421611"]["address"]
     );
     let quorumVotes;
     try {

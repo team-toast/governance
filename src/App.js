@@ -37,7 +37,7 @@ const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider,
     rpc: {
-      137: "https://rpc-mainnet.matic.quiknode.pro",
+      421611: "https://rpc-mainnet.matic.quiknode.pro",
     },
   },
 };
@@ -157,7 +157,7 @@ class App extends Component {
   defaultConnect = async () => {
     console.log("Default Connect");
     const web3 = new Web3(
-      new Web3.providers.HttpProvider("https://polygon-rpc.com/")
+      new Web3.providers.HttpProvider("https://rinkeby.arbitrum.io/rpc")
     );
     const netId = await web3.eth.net.getId();
 
@@ -199,7 +199,7 @@ class App extends Component {
     console.log("PROVIDER: ", web3.eth.currentProvider);
 
     // Get the contract instance.
-    const deployedNetwork = contract.networks[137];
+    const deployedNetwork = contract.networks[421611];
     const instance = new web3.eth.Contract(
       contract.abi,
       deployedNetwork && deployedNetwork.address
@@ -292,7 +292,7 @@ class App extends Component {
       const { web3 } = this.state;
       const networkId = await web3.eth.net.getId();
       if (this.state.connected) {
-        if (networkId === 137) {
+        if (networkId === 421611) {
           this.setState({ chainId, networkId });
           this.getNetworkName(networkId);
           this.determineButtonsDisabled(this.state.web3);
@@ -360,6 +360,7 @@ class App extends Component {
     while (gotLatestBlock === false) {
       try {
         const block = await this.state.web3.eth.getBlock("latest");
+        console.log("Block Response: ", block);
         this.setState({ latestBlock: block.number });
         gotLatestBlock = true;
         return block;
@@ -407,7 +408,7 @@ class App extends Component {
       this.setState({ network: "Goerli" });
     } else if (networkId === 42) {
       this.setState({ network: "Kovan" });
-    } else if (networkId === 137) {
+    } else if (networkId === 421611) {
       this.setState({ network: "Matic" });
       return "Matic";
     } else {
@@ -457,8 +458,8 @@ class App extends Component {
           //}
           balanceUpdated = true;
         } catch (error) {
-          console.error("Error setting token balance: ", error);
           this.sleep(1000);
+          console.error("Error Setting token balance: ", error);
         }
       }
     }
@@ -470,7 +471,8 @@ class App extends Component {
 
       const daiContract = new this.state.web3.eth.Contract(Dai, daiAddress);
 
-      let overrideAccount = contract.contractAddresses["forwarder"]["address"];
+      let overrideAccount =
+        contract.contractAddresses["forwarder"]["address"].toLowerCase();
 
       let balanceUpdated = false;
       while (balanceUpdated === false) {
@@ -579,6 +581,8 @@ class App extends Component {
           const delegatedAddress = await tokenContract.methods
             .delegates(overrideAccount)
             .call();
+
+          console.log("DELEGATED ADDRESS: ", delegatedAddress);
 
           if (delegatedAddress === this.state.account) {
             this.setState({ delegatedAddress: "Self" });
