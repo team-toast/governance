@@ -114,7 +114,7 @@ class Header extends Component {
                   !this.props.connected ||
                   (this.props.disableButtons &&
                     this.props.balance === "0.00") ||
-                  this.props.network !== "Matic"
+                  this.props.network !== "Arbitrum"
                 }
               >
                 Delegate

@@ -31,6 +31,7 @@ class Proposals extends Component {
       historicBlockTimes: [],
       avgBlockTime: null,
       zeroProposals: false,
+      proposalSearchStart: 7155710,
     };
   }
 
@@ -214,63 +215,57 @@ class Proposals extends Component {
 
     const batch = new web3.eth.BatchRequest();
 
-    console.log("BLOCNUMBERS: ", blockNumbers);
-    console.log("Ids: ", Ids);
-
-    blockNumbers = [7155710];
-    //for (let k = 0; k < 1000; k++) {
-    for (let i = 0; i < blockNumbers.length; i++) {
+    for (
+      let i = this.props.latestBlock;
+      i > this.state.proposalSearchStart;
+      i -= 10000
+    ) {
       batch.add(
         govAlpha.getPastEvents(
           0xda95691a, // method id
           {
-            filter: { id: Ids[i] },
-            // fromBlock: blockNumbers[i] - 500,
-            // toBlock: blockNumbers[i] + 500,
-            fromBlock: 7155710,
-            toBlock: "latest",
+            fromBlock: i - 10000,
+            toBlock: i,
           },
           this.processEvent
         )
-
-        // .call.request({}, this.processEvent)
       );
-      //blockNumbers[0] = blockNumbers[0] + 1000;
-      console.log("Block Position: ", blockNumbers[0]);
-      //await this.sleep(1000);
-      //}
-
-      // .methods.balance(address).call.request()
-      // console.log(blockNumbers[i]);
-      // console.log(Ids[i]);
     }
-    //batch.execute();
   };
 
   processEvent = async (err, data) => {
-    console.log("Processing Event", data);
-
+    console.log("Processing Event");
+    if (!data) {
+      return;
+    }
     if (data.length !== 0) {
-      let rawData = data[0]["raw"]["data"];
-      let decoded = this.props.web3.eth.abi.decodeParameters(
-        [
-          "uint256",
-          "address",
-          "address[]",
-          "uint256[]",
-          "string[]",
-          "bytes[]",
-          "uint256",
-          "uint256",
-          "string",
-        ],
-        rawData
-      );
-      console.log("Decoded: ", decoded);
-
-      this.setState({
-        proposalEvents: this.state.proposalEvents.concat(decoded),
-      });
+      for (let i = 0; i < data.length; i++) {
+        let rawData = data[i]["raw"]["data"];
+        console.log("Data length: ", data.length);
+        try {
+          let decoded = this.props.web3.eth.abi.decodeParameters(
+            [
+              "uint256",
+              "address",
+              "address[]",
+              "uint256[]",
+              "string[]",
+              "bytes[]",
+              "uint256",
+              "uint256",
+              "string",
+            ],
+            rawData
+          );
+          console.log("DATA: ", data);
+          console.log("DECODED: ", decoded);
+          this.setState({
+            proposalEvents: this.state.proposalEvents.concat(decoded),
+          });
+        } catch (error) {
+          //console.log("Error in processEvent: ", error);
+        }
+      }
     }
   };
 
@@ -542,16 +537,16 @@ class Proposals extends Component {
 
   getProposals = async () => {
     try {
-      let matic = false;
-      while (matic === false) {
+      let arbitrum = false;
+      while (arbitrum === false) {
         console.log("Getting Proposals");
-        if (this.props.network === "Matic") {
-          console.log("Populating Matic proposal data.");
-          matic = true;
+        if (this.props.network === "Arbitrum") {
+          console.log("Populating Arbitrum proposal data.");
+          arbitrum = true;
           this.getProposalsFromEvents(this.props.web3);
         } else {
-          console.log("Please select the Matic network.");
-          matic = false;
+          console.log("Please select the Arbitrum network.");
+          arbitrum = false;
           await this.sleep(2000);
         }
       }

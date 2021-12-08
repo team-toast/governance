@@ -49,14 +49,14 @@ class Nav extends Component {
     }
 
     if (
-      (this.props.network && this.props.network !== "Matic") ||
+      (this.props.network && this.props.network !== "Arbitrum") ||
       this.props.metaMaskMissing
     ) {
       return (
         <div className="nav__wrapper">
-          {this.props.network && this.props.network !== "Matic" && (
+          {this.props.network && this.props.network !== "Arbitrum" && (
             <p className="nav__network">
-              {`Note: Please connect to the Matic network`}
+              {`Note: Please connect to the Arbitrum network`}
             </p>
           )}
           {this.props.metaMaskMissing && (

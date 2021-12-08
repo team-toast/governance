@@ -37,7 +37,7 @@ const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider,
     rpc: {
-      421611: "https://rpc-mainnet.matic.quiknode.pro",
+      421611: "https://rinkeby.arbitrum.io/rpc",
     },
   },
 };
@@ -164,7 +164,7 @@ class App extends Component {
     console.log("Net ID test: ", netId);
     await this.setState({
       web3,
-      network: "Matic",
+      network: "Arbitrum",
     });
     this.getLatestBlock();
   };
@@ -234,7 +234,7 @@ class App extends Component {
       this.setState({ disableMessage: "" });
     }
 
-    if (netName === "Matic") {
+    if (netName === "Arbitrum") {
       this.getLatestBlock();
       this.getTotalSupply();
       this.setState({
@@ -258,7 +258,7 @@ class App extends Component {
       }
     } else {
       this.setState({ disableButtons: true });
-      this.setState({ disableMessage: "You are not on the Matic network" });
+      this.setState({ disableMessage: "You are not on the Arbitrum network" });
     }
   };
 
@@ -409,8 +409,8 @@ class App extends Component {
     } else if (networkId === 42) {
       this.setState({ network: "Kovan" });
     } else if (networkId === 421611) {
-      this.setState({ network: "Matic" });
-      return "Matic";
+      this.setState({ network: "Arbitrum" });
+      return "Arbitrum";
     } else {
       this.setState({ network: "Unknown Network" });
     }
@@ -430,7 +430,7 @@ class App extends Component {
   };
 
   getTokenBalance = async (tokenAddress, account = "none") => {
-    if (this.state.network === "Matic") {
+    if (this.state.network === "Arbitrum") {
       const tokenContract = new this.state.web3.eth.Contract(
         compTokenContract,
         tokenAddress
@@ -466,7 +466,7 @@ class App extends Component {
   };
 
   getTreasuryBalance = async () => {
-    if (this.state.network === "Matic") {
+    if (this.state.network === "Arbitrum") {
       const daiAddress = contract.contractAddresses["dai"]["address"];
 
       const daiContract = new this.state.web3.eth.Contract(Dai, daiAddress);
@@ -499,7 +499,7 @@ class App extends Component {
   };
 
   getVotingPower = async (account = "none") => {
-    if (this.state.network === "Matic") {
+    if (this.state.network === "Arbitrum") {
       const tokenAddress = contract.contractAddresses["token"]["address"];
 
       const tokenContract = new this.state.web3.eth.Contract(
@@ -534,7 +534,7 @@ class App extends Component {
   };
 
   getTotalSupply = async (account = "none") => {
-    if (this.state.network === "Matic") {
+    if (this.state.network === "Arbitrum") {
       const tokenAddress = contract.contractAddresses["token"]["address"];
 
       const tokenContract = new this.state.web3.eth.Contract(
@@ -560,7 +560,7 @@ class App extends Component {
   };
 
   getDelegateToAddress = async (account = "none") => {
-    if (this.state.network === "Matic") {
+    if (this.state.network === "Arbitrum") {
       const tokenAddress = contract.contractAddresses["token"]["address"];
 
       const tokenContract = new this.state.web3.eth.Contract(
