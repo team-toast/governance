@@ -73,6 +73,7 @@ class App extends Component {
       firetext: "Delegating ...",
       firetextShow: false,
       page: "page__proposals",
+      convertedAddress: "",
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -785,6 +786,16 @@ class App extends Component {
     this.setState({
       delegateeAddress: evt.target.value,
     });
+    let convertedAddress = `${evt.target.value.slice(
+      0,
+      3
+    )}...${evt.target.value.slice(
+      evt.target.value.length - 4,
+      evt.target.value.length
+    )}`;
+    this.setState({
+      convertedAddress,
+    });
     console.log(this.state.delegateeAddress);
   };
 
@@ -816,6 +827,7 @@ class App extends Component {
                   {...this.state}
                   delegate={this.delegate}
                   updateDelegateeAddress={this.updateDelegateeAddress}
+                  convertedAddress={this.state.convertedAddress}
                   setStatus={this.setStatusOf}
                   disableButtons={this.state.disableButtons}
                   disableMessage={this.state.disableMessage}
@@ -823,6 +835,7 @@ class App extends Component {
                   fryGfryMod={this.fryGfryMod}
                   onConnect={this.onConnect}
                   stateprops={this.state}
+                  numberWithCommas={this.numberWithCommas}
                 />
                 <div>
                   <Proposals
