@@ -58,18 +58,29 @@
         content: " "
         height: 3px
         width: calc(100% - 43px)
-        background: #343A56
+        background: #aaa
         position: absolute
         top: 1rem
-        left: 50%
-        margin-left: 38px
+        right: 50%
+        margin-right: 38px
+        background-image: linear-gradient(90deg, #343A56 100%, transparent 0%)
+        background-repeat: no-repeat
+        background-size: 15px 5px
+        background-position: left
+        animation: border-dance 1s infinite linear
+        @keyframes border-dance
+            0%
+                background-size: 15px 5px
+            100%
+                background-size: 100% 5px
 
     &:nth-child(2)
         text-align: center
-    &:last-child
-        text-align: right
+    &:first-child
         &::after
             display: none
+    &:last-child
+        text-align: right
 
     &.none
         opacity: 0.5
@@ -86,6 +97,10 @@
             background-size: 12px
             background-position: 7px 8px
             animation: none
+        &::after
+            background-image: none
+            animation: none
+            background: #343A56
     &.error
         color: #FF794C
         .progress-circle
