@@ -37,6 +37,7 @@ class Header extends Component {
                 setStatus={this.props.setStatus}
                 getGasPrice={this.props.getGasPrice}
                 fryGfryMod={this.props.fryGfryMod}
+                setProgress={this.props.setProgress}
                 convertedAddress={this.props.convertedAddress}
                 numberWithCommas={this.props.numberWithCommas}
               />

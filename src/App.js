@@ -14,6 +14,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import CreateCustomProposalForm from "./components/CreateCustomProposalForm";
 import "./layout/config/_base.sass";
 import CustomHeader from "./components/CustomHeader";
+import ProgressBar from "./components/ProgressBar";
 
 import Status from "./components/Status";
 
@@ -70,9 +71,10 @@ class App extends Component {
       disableButtons: true,
       metaMaskMissing: false,
       disableMessage: "Your wallet is not connected",
-      firetext: "Delegating ...",
+      firetext: "",
       firetextShow: false,
       page: "page__proposals",
+      processStage: [],
       convertedAddress: "",
     };
 
@@ -626,11 +628,18 @@ class App extends Component {
     });
   };
 
+  setProgress = (data) => {
+    this.setState({
+      processStage: data,
+    });
+  };
+
   delegate = async () => {
     this.setState({
-      firetext: "Delegating ...",
+      firetext: "Delegating",
       firetextShow: true,
     });
+    this.setProgress([]);
 
     const tokenAddress = contract.contractAddresses["token"]["address"];
 
@@ -648,10 +657,11 @@ class App extends Component {
         .send(
           { from: this.state.account, gasPrice: gasPrice },
           (err, transactionHash) => {
-            this.setState({
-              firetext: "Transaction Pending ...",
-              firetextShow: true,
-            });
+            // this.setState({
+            //   firetext: "Transaction Pending ...",
+            //   firetextShow: true,
+            // });
+            this.setProgress([1, 2]);
             this.setMessage("Transaction Pending...", transactionHash);
             console.log("Transaction Pending...", transactionHash);
           }
@@ -661,10 +671,11 @@ class App extends Component {
             this.setMessage("Transaction Confirmed!", receipt.transactionHash);
             console.log("Transaction Confirmed!", receipt.transactionHash);
             this.readDelegateEvents(receipt);
-            this.setState({
-              firetext: "Transaction Confirmed!",
-              firetextShow: true,
-            });
+            // this.setState({
+            //   firetext: "Transaction Confirmed!",
+            //   firetextShow: true,
+            // });
+            this.setProgress([1, 2, 3]);
           }
           setTimeout(() => {
             this.clearMessage();
@@ -675,19 +686,20 @@ class App extends Component {
             "Transaction Failed.",
             receipt ? receipt.transactionHash : null
           );
-          this.setState({
-            firetext: "Could not delegate. Please try again.",
-            firetextShow: true,
-          });
+          // this.setState({
+          //   firetext: "Could not delegate. Please try again.",
+          //   firetextShow: true,
+          // });
+          this.setProgress([1, 2, 3, 4]);
           console.log("Transaction Failed!");
         });
 
       console.log("Delegated to: ", this.state.delegateeAddress);
     } catch (error) {
-      this.setState({
-        firetext: "Could not delegate.",
-        firetextShow: true,
-      });
+      // this.setState({
+      //   firetext: "Could not delegate.",
+      //   firetextShow: true,
+      // });
       console.error("Error in delegate method: ", error);
     }
   };
@@ -806,12 +818,12 @@ class App extends Component {
   render() {
     return (
       <div className="app">
-        {this.state.firetextShow && (
+        {/* {this.state.firetextShow && (
           <Status
             hidestatus={this.hideLoader}
             firetext={this.state.firetext}
           ></Status>
-        )}
+        )} */}
         <Nav
           {...this.state}
           onConnect={this.onConnect}
@@ -823,18 +835,27 @@ class App extends Component {
           <div className="tabs">
             {this.state.page === "page__proposals" && (
               <div id="page__proposals">
+                {this.state.firetextShow && (
+                  <ProgressBar
+                    processStage={this.state.processStage}
+                    firetext={this.state.firetext}
+                    setStatus={this.setStatusOf}
+                  />
+                )}
                 <Header
                   {...this.state}
                   delegate={this.delegate}
                   updateDelegateeAddress={this.updateDelegateeAddress}
                   convertedAddress={this.state.convertedAddress}
                   setStatus={this.setStatusOf}
+                  setProgress={this.setProgress}
                   disableButtons={this.state.disableButtons}
                   disableMessage={this.state.disableMessage}
                   getGasPrice={this.getGasPrice}
                   fryGfryMod={this.fryGfryMod}
                   onConnect={this.onConnect}
                   stateprops={this.state}
+                  processStage={this.processStage}
                   numberWithCommas={this.numberWithCommas}
                 />
                 <div>
