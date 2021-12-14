@@ -75,6 +75,7 @@ class App extends Component {
       firetextShow: false,
       page: "page__proposals",
       processStage: [],
+      convertedAddress: "",
     };
 
     this.web3Connect = new Web3Connect.Core({
@@ -797,6 +798,16 @@ class App extends Component {
     this.setState({
       delegateeAddress: evt.target.value,
     });
+    let convertedAddress = `${evt.target.value.slice(
+      0,
+      3
+    )}...${evt.target.value.slice(
+      evt.target.value.length - 4,
+      evt.target.value.length
+    )}`;
+    this.setState({
+      convertedAddress,
+    });
     console.log(this.state.delegateeAddress);
   };
 
@@ -835,6 +846,7 @@ class App extends Component {
                   {...this.state}
                   delegate={this.delegate}
                   updateDelegateeAddress={this.updateDelegateeAddress}
+                  convertedAddress={this.state.convertedAddress}
                   setStatus={this.setStatusOf}
                   setProgress={this.setProgress}
                   disableButtons={this.state.disableButtons}
@@ -844,6 +856,7 @@ class App extends Component {
                   onConnect={this.onConnect}
                   stateprops={this.state}
                   processStage={this.processStage}
+                  numberWithCommas={this.numberWithCommas}
                 />
                 <div>
                   <Proposals

@@ -38,6 +38,8 @@ class Header extends Component {
                 getGasPrice={this.props.getGasPrice}
                 fryGfryMod={this.props.fryGfryMod}
                 setProgress={this.props.setProgress}
+                convertedAddress={this.props.convertedAddress}
+                numberWithCommas={this.props.numberWithCommas}
               />
               {/* <div>
                 {"Voting Power"}

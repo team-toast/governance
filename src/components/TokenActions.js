@@ -17,8 +17,19 @@ class TokenActions extends Component {
         "115792089237316195423570985008687907853269984665640564039457584007913129639935",
       fryConvertAmount: 0,
       gFryConvertAmount: 0,
+      modal: false,
+      callFunction: null,
+      processtype: "",
+      processMessage: "",
     };
   }
+
+  toggleModal = (data, callFunction, processtype, processMessage) => {
+    this.setState({ modal: !data });
+    this.setState({ callFunction });
+    this.setState({ processtype });
+    this.setState({ processMessage });
+  };
 
   fryToGfry = async () => {
     this.props.setProgress([]);
@@ -228,10 +239,35 @@ class TokenActions extends Component {
     });
   };
 
+  renderFunction = () => {
+    this.setState({ modal: false });
+    this.state.callFunction();
+  };
+
   render() {
     return (
       this.props.delegatedAddress !== "Unknown" && (
         <div className="actionsSection">
+          {this.state.modal && (
+            <div className="modal-question">
+              <div className="content">
+                <img src="/Converting.svg" />
+                <div className="action-message">{this.state.processtype}</div>
+                <h2>Proceed?</h2>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: this.state.processMessage,
+                  }}
+                ></p>
+                <div>
+                  <button onClick={this.renderFunction}>Confirm</button>
+                  <button className="second" onClick={this.toggleModal}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="action">
             <div className="flex xs-xs-noflex">
               <div className="margin-top-1">
@@ -256,7 +292,26 @@ class TokenActions extends Component {
                       onChange={this.updateFryAmount}
                       placeholder="Amount of FRY"
                     />
-                    <button className="width-basis" onClick={this.fryToGfry}>
+                    <button
+                      className={
+                        this.state.fryConvertAmount === 0 ||
+                        this.state.fryConvertAmount === ""
+                          ? "disabled width-basis"
+                          : "width-basis"
+                      }
+                      onClick={() =>
+                        this.toggleModal(
+                          this.state.modal,
+                          this.fryToGfry,
+                          "converting",
+                          `You are about to convert <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.fryConvertAmount).toFixed(2)
+                          )} FRY</span> to <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.fryConvertAmount).toFixed(2)
+                          )} gFRY</span>`
+                        )
+                      }
+                    >
                       FRY {">"} gFRY
                     </button>
                   </div>
@@ -283,7 +338,26 @@ class TokenActions extends Component {
                       onChange={this.updateGFryAmount}
                       placeholder="Amount of gFRY"
                     />
-                    <button className="width-basis" onClick={this.gFryToFry}>
+                    <button
+                      className={
+                        this.state.gFryConvertAmount === 0 ||
+                        this.state.gFryConvertAmount === ""
+                          ? "disabled width-basis"
+                          : "width-basis"
+                      }
+                      onClick={() =>
+                        this.toggleModal(
+                          this.state.modal,
+                          this.gFryToFry,
+                          "converting",
+                          `You are about to convert <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.gFryConvertAmount).toFixed(2)
+                          )} gFRY</span> to <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.gFryConvertAmount).toFixed(2)
+                          )} FRY</span>`
+                        )
+                      }
+                    >
                       gFRY {">"} FRY
                     </button>
                   </div>
@@ -311,14 +385,29 @@ class TokenActions extends Component {
                       placeholder="0x... Address to Delegate to"
                     />
                     <PopupHint
-                      classToBeUsed="width-basis"
+                      classToBeUsed={
+                        this.props.convertedAddress === ""
+                          ? "disabled width-basis"
+                          : "width-basis"
+                      }
                       message={
                         this.props.balance === "0.00"
                           ? "You don't have governance tokens"
                           : ""
                       }
                     >
-                      <button onClick={this.props.delegate}>Delegate</button>
+                      <button
+                        onClick={() =>
+                          this.toggleModal(
+                            this.state.modal,
+                            this.props.delegate,
+                            "delegating",
+                            `You are delegating voting power to address <span>${this.props.convertedAddress}</span>`
+                          )
+                        }
+                      >
+                        Delegate
+                      </button>
                     </PopupHint>
                   </div>
                 </div>
