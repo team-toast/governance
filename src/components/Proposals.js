@@ -208,6 +208,9 @@ class Proposals extends Component {
   };
 
   getProposalEventParametersBatch = async (web3, blockNumbers, Ids) => {
+    /*
+    Potential better solution: Get timestamp of L1 block and check what L2 block is the closest to that timestamp and search around there.
+    */
     const govAlpha = new web3.eth.Contract(
       contract.abi,
       contract["networks"]["421611"]["address"]
