@@ -489,12 +489,12 @@
       "address": "0xd9FDa03E4dD889484f8556dDb00Ca114e6A1f575"
     },
     "421611": {
-      "address": "0xF51c82fdBeab215F8A235631Cf41697Cf2370886"
+      "address": "0x07332427b4593816df2df7be3afde8b1a3363d88"
     }
   },
   "contractAddresses": {
     "token": {
-      "address": "0x425Ea9911771EE6d06F02e1c0b0E7B60b2cF4352"
+      "address": "0xb41306997bb04d53909feef721ae7f49f00e37d1"
     },
     "fry": {
       "address": "0x0c03Cbda17a4FbdA5F95aB0787c2A242DC14313e"
@@ -504,14 +504,14 @@
       "transferSig": "0xa9059cbb"
     },
     "forwarder": {
-      "address": "0x5155a1d4E1Eb5f09794923481089Dbf0B0B4913D",
+      "address": "0x18d8b95c5b09806a319daa705c2b61d80c471bff",
       "forwardSig": "0xdc5fe025"
     },
     "timelock": {
-      "address": "0xbe7a84FaedbeaE7c6c2A108a1670F8B4dA023B31"
+      "address": "0x1ca8a329657d2aad7b7e77ba48cae69758249095"
     },
     "governator": {
-      "address": "0x10AF59637e63e69e60a9A9B01E752a7C23451206"
+      "address": "0xe963c8c682dd79c5bd5ea2341b42de97e2530d55"
     }
   }
 }

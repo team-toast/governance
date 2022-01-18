@@ -18,10 +18,22 @@ class TokenActions extends Component {
         "115792089237316195423570985008687907853269984665640564039457584007913129639935",
       fryConvertAmount: 0,
       gFryConvertAmount: 0,
+      modal: false,
+      callFunction: null,
+      processtype: "",
+      processMessage: "",
     };
   }
 
+  toggleModal = (data, callFunction, processtype, processMessage) => {
+    this.setState({ modal: !data });
+    this.setState({ callFunction });
+    this.setState({ processtype });
+    this.setState({ processMessage });
+  };
+
   fryToGfry = async () => {
+    this.props.setProgress([]);
     try {
       let gasPrice = await this.props.getGasPrice();
 
@@ -42,8 +54,8 @@ class TokenActions extends Component {
 
       if (fryAllowance.length !== this.state.uintMaxInt.length) {
         // Approve
-
-        this.props.setStatus("Approving ...", true);
+        this.props.setProgress([1]);
+        this.props.setStatus("Converting FRY to gFRY", true);
 
         await fryToken.methods
           .approve(
@@ -53,26 +65,30 @@ class TokenActions extends Component {
           .send(
             { from: this.props.account, gasPrice: gasPrice },
             (err, transactionHash) => {
-              this.props.setStatus("Transaction Pending ...", true);
+              // this.props.setStatus("Transaction Pending ...", true);
+              this.props.setProgress([1, 2]);
               console.log("Transaction Pending...", transactionHash);
             }
           )
           .on("confirmation", (number, receipt) => {
             if (number === 0) {
               console.log("Transaction Confirmed!", receipt.transactionHash);
+              this.props.setProgress([1, 2, 3]);
               //this.readDelegateEvents(receipt);
-              this.props.setStatus("Transaction Confirmed!", true);
+              // this.props.setStatus("Transaction Confirmed!", true);
             }
           })
           .on("error", (err, receipt) => {
-            this.props.setStatus("Could not approve. Please try again.", true);
+            // this.props.setStatus("Could not approve. Please try again.", true);
+            this.props.setProgress([1, 2, 3, 4]);
             console.log("Transaction Failed!");
           });
       }
 
       // Convert
       gasPrice = await this.props.getGasPrice();
-      this.props.setStatus("Governating ...", true);
+      // this.props.setStatus("Governating ...", true);
+      this.props.setStatus("Converting FRY to gFRY", true);
       const governator = new this.props.web3.eth.Contract(
         governatorContract,
         contract.contractAddresses["governator"]["address"]
@@ -86,19 +102,23 @@ class TokenActions extends Component {
         .send(
           { from: this.props.account, gasPrice: gasPrice },
           (err, transactionHash) => {
-            this.props.setStatus("Transaction Pending ...", true);
+            // this.props.setStatus("Transaction Pending ...", true);
+            this.props.setProgress([1]);
+            this.props.setProgress([1, 2]);
             console.log("Transaction Pending...", transactionHash);
           }
         )
         .on("confirmation", (number, receipt) => {
           if (number === 0) {
             console.log("Transaction Confirmed!", receipt);
+            this.props.setProgress([1, 2, 3]);
             this.interpretEventAndUpdateFryToGFry(receipt);
-            this.props.setStatus("Transaction Confirmed!", true);
+            // this.props.setStatus("Transaction Confirmed!", true);
           }
         })
         .on("error", (err, receipt) => {
-          this.props.setStatus("Could not governate. Please try again.", true);
+          // this.props.setStatus("Could not governate. Please try again.", true);
+          this.props.setProgress([1, 2, 3, 4]);
           console.log("Transaction Failed!");
         });
 
@@ -134,11 +154,13 @@ class TokenActions extends Component {
   };
 
   gFryToFry = async () => {
+    this.props.setProgress([]);
     try {
       let gasPrice = await this.props.getGasPrice();
 
       // Convert
-      this.props.setStatus("Degovernating ...", true);
+      // this.props.setStatus("Degovernating ...", true);
+      this.props.setStatus("Converting gFRY to FRY", true);
       const governator = new this.props.web3.eth.Contract(
         governatorContract,
         contract.contractAddresses["governator"]["address"]
@@ -152,7 +174,8 @@ class TokenActions extends Component {
         .send(
           { from: this.props.account, gasPrice: gasPrice },
           (err, transactionHash) => {
-            this.props.setStatus("Transaction Pending ...", true);
+            this.props.setProgress([1, 2]);
+            // this.props.setStatus("Transaction Pending ...", true);
             console.log("Transaction Pending...", transactionHash);
           }
         )
@@ -160,14 +183,16 @@ class TokenActions extends Component {
           if (number === 0) {
             console.log("Transaction Confirmed!", receipt);
             this.interpretEventAndUpdateGFryToFry(receipt);
-            this.props.setStatus("Transaction Confirmed!", true);
+            this.props.setProgress([1, 2, 3]);
+            // this.props.setStatus("Transaction Confirmed!", true);
           }
         })
         .on("error", (err, receipt) => {
-          this.props.setStatus(
-            "Could not degovernate. Please try again.",
-            true
-          );
+          // this.props.setStatus(
+          //   "Could not degovernate. Please try again.",
+          //   true
+          // );
+          this.props.setProgress([1, 2, 3, 4]);
           console.log("Transaction Failed!");
         });
 
@@ -215,42 +240,6 @@ class TokenActions extends Component {
     });
   };
 
-  testEventProblem = async () => {
-    const incrementer = new this.props.web3.eth.Contract(
-      incrementerABI,
-      "0xa78F1941751347763a6125CA64958B562c974819"
-    );
-    //console.log(await incrementer.methods);
-    //9772782
-
-    // incrementer.getPastEvents(
-    //   0xd09de08a, // method id
-    //   {
-    //     fromBlock: "earliest",
-    //     toBlock: "latest",
-    //   },
-    //   this.processEvent
-    // );
-
-    incrementer.getPastEvents(
-      "Incremented",
-      {
-        //   filter: {
-        //     myIndexedParam: [20, 23],
-        //     myOtherIndexedParam: "0x123456789...",
-        //   }, // Using an array means OR: e.g. 20 or 23
-        fromBlock: 7310994,
-        toBlock: "latest",
-      },
-      function (error, events) {
-        console.log(events);
-      }
-    );
-    // .then(function (events) {
-    //   console.log(events); // same results as the optional callback above
-    // });
-  };
-
   processEvent = async (err, data) => {
     console.log("Processing Event", data);
 
@@ -264,80 +253,189 @@ class TokenActions extends Component {
     }
   };
 
+  renderFunction = () => {
+    this.setState({ modal: false });
+    this.state.callFunction();
+  };
+
   render() {
     return (
       this.props.delegatedAddress !== "Unknown" && (
         <div className="actionsSection">
+          {this.state.modal && (
+            <div className="modal-question">
+              <div className="content">
+                <img src="/Converting.svg" />
+                <div className="action-message">{this.state.processtype}</div>
+                <h2>Proceed?</h2>
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: this.state.processMessage,
+                  }}
+                ></p>
+                <div>
+                  <button onClick={this.renderFunction}>Confirm</button>
+                  <button className="second" onClick={this.toggleModal}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="action">
-            <div>
-              <h1>Token Actions</h1>
-              {/* Always display balances */}
-              <div>
-                <h3>Balances</h3>
-                <h5>FRY: {this.props.fryBalance}</h5>
-                <h5>gFRY: {this.props.balance}</h5>
-                <h5>
-                  Voting Power:{" "}
-                  {(parseInt(this.props.votingPower) / 10 ** 18).toFixed(2)}
-                </h5>
+            <div className="flex xs-xs-noflex">
+              <div className="margin-top-1">
+                <div className="inner-box">
+                  FRY Balance
+                  <div className="value-display">{this.props.fryBalance}</div>
+                </div>
+                {/* Has FRY */}
+                <div className="flex-actions">
+                  <div
+                    className={
+                      this.props.fryBalance !== "0"
+                        ? "flex-input"
+                        : "inactive flex-input"
+                    }
+                    data-title="Your FRY balance is 0 and therefor you can't use this function."
+                  >
+                    <input
+                      type="number"
+                      step="1"
+                      min="0"
+                      onChange={this.updateFryAmount}
+                      placeholder="Amount of FRY"
+                    />
+                    <button
+                      className={
+                        this.state.fryConvertAmount === 0 ||
+                        this.state.fryConvertAmount === ""
+                          ? "disabled width-basis"
+                          : "width-basis"
+                      }
+                      onClick={() =>
+                        this.toggleModal(
+                          this.state.modal,
+                          this.fryToGfry,
+                          "converting",
+                          `You are about to convert <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.fryConvertAmount).toFixed(2)
+                          )} FRY</span> to <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.fryConvertAmount).toFixed(2)
+                          )} gFRY</span>`
+                        )
+                      }
+                    >
+                      FRY {">"} gFRY
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="margin-top-1">
+                <div className="inner-box">
+                  gFRY Balance{" "}
+                  <div className="value-display">{this.props.balance}</div>
+                </div>
+                <div className="flex-actions">
+                  <div
+                    className={
+                      this.props.balance !== "0"
+                        ? "flex-input justify-right"
+                        : "inactive flex-input justify-right"
+                    }
+                    data-title="Your gFRY balance is 0 and therefor you can't use this function."
+                  >
+                    <input
+                      type="number"
+                      step="1"
+                      min="0"
+                      onChange={this.updateGFryAmount}
+                      placeholder="Amount of gFRY"
+                    />
+                    <button
+                      className={
+                        this.state.gFryConvertAmount === 0 ||
+                        this.state.gFryConvertAmount === ""
+                          ? "disabled width-basis"
+                          : "width-basis"
+                      }
+                      onClick={() =>
+                        this.toggleModal(
+                          this.state.modal,
+                          this.gFryToFry,
+                          "converting",
+                          `You are about to convert <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.gFryConvertAmount).toFixed(2)
+                          )} gFRY</span> to <span>${this.props.numberWithCommas(
+                            parseFloat(this.state.gFryConvertAmount).toFixed(2)
+                          )} FRY</span>`
+                        )
+                      }
+                    >
+                      gFRY {">"} FRY
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div className="margin-top-1">
+                <div className="inner-box">
+                  Voting Power
+                  <div className="value-display">
+                    {(parseInt(this.props.votingPower) / 10 ** 18).toFixed(2)}
+                  </div>
+                </div>
+                <div className="flex-actions">
+                  {/* Has gFry */}
+                  <div
+                    className={
+                      this.props.balance !== "0"
+                        ? "flex-input"
+                        : "inactive flex-input"
+                    }
+                    data-title="Your gFRY balance is 0 and therefor you can't use this function."
+                  >
+                    <input
+                      onChange={this.props.updateDelegateeAddress}
+                      placeholder="0x... Address to Delegate to"
+                    />
+                    <PopupHint
+                      classToBeUsed={
+                        this.props.convertedAddress === ""
+                          ? "disabled width-basis"
+                          : "width-basis"
+                      }
+                      message={
+                        this.props.balance === "0.00"
+                          ? "You don't have governance tokens"
+                          : ""
+                      }
+                    >
+                      <button
+                        onClick={() =>
+                          this.toggleModal(
+                            this.state.modal,
+                            this.props.delegate,
+                            "delegating",
+                            `You are delegating voting power to address <span>${this.props.convertedAddress}</span>`
+                          )
+                        }
+                      >
+                        Delegate
+                      </button>
+                    </PopupHint>
+                  </div>
+                </div>
               </div>
             </div>
             {/* No Fry or gFry */}
             {this.props.fryBalance === "0" && this.props.balance === "0" && (
               <div>
-                <h3 className="sectionHeader">
+                <h3 className="sectionHeader text-center">
                   Display no FRY getting started help message and link.
                 </h3>
               </div>
             )}
-            {/* Has gFry */}
-            {this.props.balance !== "0" && (
-              <div>
-                <div>
-                  <h3 className="sectionHeader">Delegate</h3>
-                  <input
-                    onChange={this.props.updateDelegateeAddress}
-                    placeholder="0x... Address to Delegate to"
-                  />
-                  <PopupHint
-                    message={
-                      this.props.balance === "0.00"
-                        ? "You don't have governance tokens"
-                        : ""
-                    }
-                  >
-                    <button onClick={this.props.delegate}>Delegate</button>
-                  </PopupHint>
-                </div>
-                <div>
-                  <h3 className="sectionHeader">Convert gFRY to FRY</h3>
-                  <input
-                    type="number"
-                    step="1"
-                    min="0"
-                    onChange={this.updateGFryAmount}
-                    placeholder="Amount of gFRY"
-                  />
-                  <button onClick={this.gFryToFry}>gFRY {">"} FRY</button>
-                </div>
-              </div>
-            )}
-            {/* Has FRY */}
-            {this.props.fryBalance !== "0" && (
-              <div>
-                <h3 className="sectionHeader">Convert FRY to gFRY.</h3>
-                <input
-                  type="number"
-                  step="1"
-                  min="0"
-                  onChange={this.updateFryAmount}
-                  placeholder="Amount of FRY"
-                />
-                <button onClick={this.fryToGfry}>FRY {">"} gFRY</button>
-              </div>
-            )}
           </div>
-          <button onClick={this.testEventProblem}>DoobieDooba</button>
         </div>
       )
     );

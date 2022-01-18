@@ -1,0 +1,125 @@
+#progressBar
+    background: #fff
+    padding: 3rem 1rem
+    margin-top: 60px
+    position: relative
+    .max-width
+        align-items: center
+        max-width: 75rem
+        margin: auto
+    & > *
+        flex: 1 1 auto
+    button
+        position: absolute
+        top: 0.5rem
+        right: 0.5rem
+        margin: 0
+        border: none
+        background: #343A56
+        border-radius: 100%
+        color: #fff
+        height: 26px
+        width: 26px
+        line-height: 26px
+
+.flex
+    display: flex
+
+.process-name
+    text-transform: uppercase
+    font-family: lemonmilk
+    color: #343A56
+    font-weight: 500
+    width: 0
+    flex: 0 0 150px
+
+.progress-circle
+    height: 38px
+    width: 38px
+    background: #343A56
+    border-radius: 27px
+    border: solid 6px #fff
+    box-shadow: 0 0 0 3px #343A56
+    margin: 0 auto 1rem
+    position: relative
+
+@keyframes pusleShadow
+    0%
+        box-shadow: 0 0 0 2px rgba(52,58,86, 0.7)
+    100%
+        box-shadow: 0 0 0 3px #343A56
+
+.steps > *
+    color: #343A56
+    opacity: 0.5
+    transition: all 0.5s ease
+    position: relative
+    &::after
+        content: " "
+        height: 3px
+        width: calc(100% - 43px)
+        background: #aaa
+        position: absolute
+        top: 1rem
+        right: 50%
+        margin-right: 38px
+        background-image: linear-gradient(90deg, #343A56 100%, transparent 0%)
+        background-repeat: no-repeat
+        background-size: 15px 5px
+        background-position: left
+        animation: border-dance 1s infinite linear
+        @keyframes border-dance
+            0%
+                background-size: 15px 5px
+            100%
+                background-size: 100% 5px
+
+    &:nth-child(2)
+        text-align: center
+    &:first-child
+        &::after
+            display: none
+    &:last-child
+        text-align: right
+
+    &.none
+        opacity: 0.5
+        .progress-circle
+            animation: pusleShadow 1s infinite
+    &.done
+        font-weight: 500
+        color: #343A56
+        transition: all 0.5s ease
+        opacity: 1
+        .progress-circle
+            background-image: url(/feather-check.svg)
+            background-repeat: no-repeat
+            background-size: 12px
+            background-position: 7px 8px
+            animation: none
+        &::after
+            background-image: none
+            animation: none
+            background: #343A56
+    &.error
+        color: #FF794C
+        .progress-circle
+            background-color: #FF794C
+            box-shadow: 0 0 0 3px #FF794C
+            background-image: none
+            &::before
+                content: "X"
+                line-height: 28px
+                color: #fff
+
+@media screen and (max-width: 650px)
+    #progressBar
+        display: block
+        position: sticky
+        top: 60px
+        padding: 1rem 0
+        margin-top: 0
+        .process-name
+            display: none
+        .flex.steps
+            margin: 0

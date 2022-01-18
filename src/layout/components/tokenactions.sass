@@ -3,7 +3,7 @@
   
 .actionsSection
   background-color: $color-light-grey
-  border: 1px solid $color-darkish-grey
+  // border: 1px solid $color-darkish-grey
   align-items: center
   padding-left: 20px
   //margin-bottom: 20px
@@ -11,6 +11,8 @@
   margin-top: 30px
   margin-bottom: 60px
   width: 30%
+  @media screen and ( max-width: 75rem )
+    width: 100%
   align-self: center
 
 .action
@@ -20,4 +22,198 @@
   margin-top: 30px
 
 
+.flex
+  display: flex
+  > *
+    flex: 1 0 0
+    margin: 0 1rem
+    .inner-box
+      padding: 1rem 1.5rem
+      background: #4e5882
+      color: #fff
+      border-radius: 5px
+    .value-display
+      font-size: 1.6rem
+      font-weight: 500
+    &:last-child
+      .flex-actions
+        margin-bottom: 0
+
+.width-basis
+  flex-basis: 150px
+  button
+    width: 100%
+  @media screen and ( max-width: 75rem )
+    flex-basis: 113px
+
+.flex-actions
+  display: flex
+  max-width: 100%
+  > *
+    flex: 1 0 0
+    margin: 0
+    padding: 0
+    color: #fff
+    border-radius: 5px
+    display: flex
+    margin-top: 2rem
+    .value-display
+      font-size: 1.6rem
+      font-weight: 500
+.header
+  .flex-actions
+    display: flex
+    @media screen and ( max-width: 75rem )
+      margin: auto
+      margin-bottom: 4rem
+    > *
+      flex: 1
+      display: flex
+      > *
+        flex: 1
+    input
+      background: #4e5882
+      border: none
+      color: #fff
+      border-radius: 5px 0 0 5px
+      margin: 0
+      @media screen and ( min-width: 768px ) and (max-width: 1024px)
+        display: inline-block
+        width: 130px
+      &::placeholder
+        color: #fff
+      &[type='number']
+        -moz-appearance: textfield
+
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button
+          -webkit-appearance: none
+    button
+      height: 53px
+      border: none
+      border-radius: 0 5px 5px 0
+      background: #fff
+      color: #1A1D2B
+      &:hover
+        background: transparent linear-gradient(90deg, #ff2959, #ffc440) 0 0 no-repeat padding-box
+        color: #fff
+
+.inactive
+  position: relative
+  &::before
+    content: " "
+    position: absolute
+    left: 0
+    top: 0
+    height: 100%
+    width: 100%
+    cursor: not-allowed
+    z-index: 1
+    background: rgba(0,0,0,0.5)
+  &::after
+    content: attr(data-title)
+    position: absolute
+    left: 50%
+    top: 3rem
+    padding: 1rem
+    width: 90%
+    cursor: not-allowed
+    z-index: 2
+    text-align: center
+    background: red
+    color: white
+    border-radius: 5px
+    transform: translateX(-50%)
+    opacity: 0
+    visibility: hidden
+  &:hover
+    &::after
+      opacity: 1
+      visibility: visible
+      transition: opacity 0.25s ease, visibility 0.25s ease
+
+.margin-top-1
+  margin-top: 1rem
+
+.disabled
+  button
+    pointer-events: none
+  pointer-events: none
+
+.modal-question
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100vh
+  background: rgba(255,255,255,0.5)
+  z-index: 4
+  backdrop-filter: blur(3px)
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  animation: fadein 0.15s forwards
+  .content
+    background: #343A56
+    padding: 2rem
+    border-radius: 10px
+    box-shadow: 0px 3px 25px #1A1D2B29
+    width: 90%
+    max-width: 800px
+    color: #fff
+    text-align: center
+    .action-message
+      text-transform: uppercase
+      font-family: lemonmilk
+      margin: 1rem 0 2rem
+    img
+      width: 93px
+    p
+      margin: 2rem 0
+    span
+      display: inline-block
+      color: #FFC440
+    button
+      border: none
+      box-shadow: inset 0 0 0 1px #FFFFFF
+      border-radius: 25px
+      background: none
+      height: 50px
+      width: 250px
+      display: block
+      margin: 0 auto 1rem
+      color: #fff
+      text-transform: uppercase
+      &:hover
+        box-shadow: none
+        background: transparent linear-gradient(90deg, #ff2959, #ffc440) 0 0 no-repeat padding-box
+      &.second
+        box-shadow: none
+        border: none
+        &:hover
+          background: none
+          color: #FF794C
+
+.color-yellow
+  color: #FFC440
+  display: inline-block !important
   
+.justify-right
+  justify-content: right
+
+@media screen and ( max-width: 75rem )
+  .xs-noflex
+    display: block !important
+
+@media screen and ( max-width: 40rem )
+  .xs-xs-noflex
+    display: block !important
+
+@keyframes fadein
+  0%
+    opacity: 0
+    visibility: hidden
+  100%
+    opacity: 1
+    visibility: visible

@@ -31,7 +31,7 @@ class Proposals extends Component {
       historicBlockTimes: [],
       avgBlockTime: null,
       zeroProposals: false,
-      proposalSearchStart: 7155710,
+      proposalSearchStart: 10012571,
     };
   }
 
