@@ -630,7 +630,7 @@ class Proposals extends Component {
       //   );
       // }
 
-      let avg = 2.1; // from https://polygonscan.com/chart/blocktime
+      let avg = 13.1; // from https://polygonscan.com/chart/blocktime
 
       let secondsTillExpiry = avg * blockDifference;
       expiryDate.setSeconds(

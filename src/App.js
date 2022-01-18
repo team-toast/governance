@@ -50,6 +50,7 @@ class App extends Component {
 
     this.state = {
       web3: null,
+      web3Mainnet: null,
       contract: null,
       accounts: null,
       account: null,
@@ -143,6 +144,7 @@ class App extends Component {
   };
 
   componentDidMount = async () => {
+    this.mainnetConnect();
     if (
       this.web3Connect.cachedProvider &&
       typeof window.ethereum !== "undefined"
@@ -167,6 +169,16 @@ class App extends Component {
       network: "Arbitrum",
     });
     this.getLatestBlock();
+  };
+
+  mainnetConnect = async () => {
+    console.log("Mainnet Connect");
+    const web3Mainnet = new Web3(
+      new Web3.providers.HttpProvider("https://rinkeby-light.eth.linkpool.io/")
+    );
+    await this.setState({
+      web3Mainnet,
+    });
   };
 
   onConnect = async () => {
@@ -361,7 +373,8 @@ class App extends Component {
       try {
         const block = await this.state.web3.eth.getBlock("latest");
         console.log("Block Response: ", block);
-        this.setState({ latestBlock: block.number });
+        console.log("Block Number: ", Number(block.l1BlockNumber));
+        this.setState({ latestBlock: Number(block.l1BlockNumber) });
         gotLatestBlock = true;
         return block;
       } catch (error) {
@@ -373,13 +386,18 @@ class App extends Component {
 
   getBlockTimeStamp = async (blockNumber) => {
     try {
-      while (this.state.web3 === null) {
-        this.sleep(50);
+      while (this.state.web3Mainnet === null) {
+        this.sleep(500);
         console.log("sleeping");
       }
-
+      console.log("Latest Block: ", this.state.latestBlock);
+      console.log("Block to find: ", blockNumber);
+      console.log("web3Mainnet: ", this.state.web3Mainnet);
       if (blockNumber < this.state.latestBlock) {
-        const blockInfo = await this.state.web3.eth.getBlock(blockNumber);
+        const blockInfo = await this.state.web3Mainnet.eth.getBlock(
+          blockNumber
+        );
+        console.log("Block Info: ", blockInfo);
         return blockInfo["timestamp"];
       } else {
         return 0;
