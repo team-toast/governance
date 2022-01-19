@@ -55,7 +55,7 @@ class TokenActions extends Component {
       if (fryAllowance.length !== this.state.uintMaxInt.length) {
         // Approve
         this.props.setProgress([1]);
-        this.props.setStatus("Converting LEVR to gLEVR", true);
+        this.props.setStatus("Converting FRY to gFRY", true);
 
         await fryToken.methods
           .approve(
@@ -88,7 +88,7 @@ class TokenActions extends Component {
       // Convert
       gasPrice = await this.props.getGasPrice();
       // this.props.setStatus("Governating ...", true);
-      this.props.setStatus("Converting LEVR to gLEVR", true);
+      this.props.setStatus("Converting FRY to gFRY", true);
       const governator = new this.props.web3.eth.Contract(
         governatorContract,
         contract.contractAddresses["governator"]["address"]
@@ -160,7 +160,7 @@ class TokenActions extends Component {
 
       // Convert
       // this.props.setStatus("Degovernating ...", true);
-      this.props.setStatus("Converting gLEVR to LEVR", true);
+      this.props.setStatus("Converting gFRY to FRY", true);
       const governator = new this.props.web3.eth.Contract(
         governatorContract,
         contract.contractAddresses["governator"]["address"]
@@ -286,7 +286,7 @@ class TokenActions extends Component {
             <div className="flex xs-xs-noflex">
               <div className="margin-top-1">
                 <div className="inner-box">
-                  LEVR Balance
+                  FRY Balance
                   <div className="value-display">{this.props.fryBalance}</div>
                 </div>
                 {/* Has FRY */}
@@ -297,14 +297,14 @@ class TokenActions extends Component {
                         ? "flex-input"
                         : "inactive flex-input"
                     }
-                    data-title="Your LEVR balance is 0 and therefor you can't use this function."
+                    data-title="Your FRY balance is 0 and therefor you can't use this function."
                   >
                     <input
                       type="number"
                       step="1"
                       min="0"
                       onChange={this.updateFryAmount}
-                      placeholder="Amount of LEVR"
+                      placeholder="Amount of FRY"
                     />
                     <button
                       className={
@@ -320,20 +320,20 @@ class TokenActions extends Component {
                           "converting",
                           `You are about to convert <span>${this.props.numberWithCommas(
                             parseFloat(this.state.fryConvertAmount).toFixed(2)
-                          )} LEVR</span> to <span>${this.props.numberWithCommas(
+                          )} FRY</span> to <span>${this.props.numberWithCommas(
                             parseFloat(this.state.fryConvertAmount).toFixed(2)
-                          )} gLEVR</span>`
+                          )} gFRY</span>`
                         )
                       }
                     >
-                      LEVR {">"} gLEVR
+                      FRY {">"} gFRY
                     </button>
                   </div>
                 </div>
               </div>
               <div className="margin-top-1">
                 <div className="inner-box">
-                  gLEVR Balance{" "}
+                  gFRY Balance{" "}
                   <div className="value-display">{this.props.balance}</div>
                 </div>
                 <div className="flex-actions">
@@ -343,14 +343,14 @@ class TokenActions extends Component {
                         ? "flex-input justify-right"
                         : "inactive flex-input justify-right"
                     }
-                    data-title="Your gLEVR balance is 0 and therefor you can't use this function."
+                    data-title="Your gFRY balance is 0 and therefor you can't use this function."
                   >
                     <input
                       type="number"
                       step="1"
                       min="0"
                       onChange={this.updateGFryAmount}
-                      placeholder="Amount of gLEVR"
+                      placeholder="Amount of gFRY"
                     />
                     <button
                       className={
@@ -366,13 +366,13 @@ class TokenActions extends Component {
                           "converting",
                           `You are about to convert <span>${this.props.numberWithCommas(
                             parseFloat(this.state.gFryConvertAmount).toFixed(2)
-                          )} gLEVR</span> to <span>${this.props.numberWithCommas(
+                          )} gFRY</span> to <span>${this.props.numberWithCommas(
                             parseFloat(this.state.gFryConvertAmount).toFixed(2)
-                          )} LEVR</span>`
+                          )} FRY</span>`
                         )
                       }
                     >
-                      gLEVR {">"} LEVR
+                      gFRY {">"} FRY
                     </button>
                   </div>
                 </div>
@@ -392,7 +392,7 @@ class TokenActions extends Component {
                         ? "flex-input"
                         : "inactive flex-input"
                     }
-                    data-title="Your gLEVR balance is 0 and therefor you can't use this function."
+                    data-title="Your gFRY balance is 0 and therefor you can't use this function."
                   >
                     <input
                       onChange={this.props.updateDelegateeAddress}
@@ -431,7 +431,7 @@ class TokenActions extends Component {
             {this.props.fryBalance === "0" && this.props.balance === "0" && (
               <div>
                 <h3 className="sectionHeader text-center">
-                  You need LEVR tokens to use this app.
+                  You need FRY tokens to use this app.
                 </h3>
               </div>
             )}
