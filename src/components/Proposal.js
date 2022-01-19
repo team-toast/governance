@@ -255,7 +255,8 @@ class Proposal extends Component {
             <span className="proposal__block">{this.props.startBlock}</span>
             <br></br>
             <span className="proposal__pill">
-              End time: {this.props.endDate ? this.props.endDate : "Loading..."}
+              End time: &nbsp;{" "}
+              {this.props.endDate ? this.props.endDate : "Loading..."}
             </span>
             <span className="proposal__block">{this.props.endBlock}</span>
           </div>
