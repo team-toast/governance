@@ -43,6 +43,25 @@ class CreateCustomProposalForm extends React.Component {
       );
 
       try {
+        this.props.contract.methods
+          .propose(
+            methodCallsArray,
+            values,
+            signatures,
+            callDataArray,
+            this.state.description
+          )
+          .estimateGas(
+            {
+              from: this.props.account,
+            },
+            function (error, result) {
+              if (error) {
+                alert(error);
+              }
+            }
+          );
+
         const gasPrice = await this.props.getGasPrice();
         governContract.methods
           .propose(

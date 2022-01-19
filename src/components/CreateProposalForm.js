@@ -50,9 +50,22 @@ class CreateProposalForm extends Component {
       let values = [0];
       let signatures = [""];
 
-      console.log("CALLDATAAA", callDatasDynamic[0]);
+      console.log("CALLDATA", callDatasDynamic[0]);
 
       try {
+        this.props.contract.methods
+          .propose(targets, values, signatures, callDatasDynamic, description)
+          .estimateGas(
+            {
+              from: this.props.account,
+            },
+            function (error, result) {
+              if (error) {
+                alert(error);
+              }
+            }
+          );
+
         const gasPrice = await this.props.getGasPrice();
         governContract.methods
           .propose(targets, values, signatures, callDatasDynamic, description)
