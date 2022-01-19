@@ -689,7 +689,7 @@ class App extends Component {
           }
         )
         .on("confirmation", (number, receipt) => {
-          if (number === 0) {
+          if (number === 1) {
             this.setMessage("Transaction Confirmed!", receipt.transactionHash);
             console.log("Transaction Confirmed!", receipt.transactionHash);
             this.readDelegateEvents(receipt);
