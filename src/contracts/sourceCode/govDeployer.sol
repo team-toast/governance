@@ -17,7 +17,7 @@ contract GovernanceDeployer {
     constructor() 
         public 
     {
-        IERC20 _FRY = IERC20(0x633a3d2091dc7982597a0f635d23ba5eb1223f48);
+        IERC20 _FRY = IERC20(0x0c03Cbda17a4FbdA5F95aB0787c2A242DC14313e);
 
         timelock = new Timelock(address(this), 0);
         forwarder = new Forwarder(address(timelock));
@@ -35,7 +35,7 @@ contract GovernanceDeployer {
         uint256 eta = block.timestamp + timelock.delay(); 
         timelock.queueTransaction(address(timelock), 0, "", adminPayload, eta);
         
-        bytes memory delayPayload = abi.encodeWithSignature("setDelay(uint256)", 2);
+        bytes memory delayPayload = abi.encodeWithSignature("setDelay(uint256)", 2 days);
         
         timelock.queueTransaction(address(timelock), 0, "", delayPayload, eta);
         
