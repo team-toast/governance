@@ -17,7 +17,7 @@ contract GovernanceDeployer {
     constructor() 
         public 
     {
-        IERC20 _FRY = IERC20(0x0c03Cbda17a4FbdA5F95aB0787c2A242DC14313e);
+        IERC20 _FRY = IERC20(0x633A3d2091dc7982597A0f635d23Ba5EB1223f48);
 
         timelock = new Timelock(address(this), 0);
         forwarder = new Forwarder(address(timelock));
