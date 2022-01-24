@@ -11,12 +11,14 @@ contract GovernanceDeployer {
     Forwarder public forwarder;
     Governator public governator;
     gFRY public gFry;
+    address owner;
 
 	event Deployed(address _timelockAddress, address _forwarderAddress, address _governatorAddress, address _gFryAddress);
     
     constructor() 
         public 
     {
+        owner = msg.sender;
         IERC20 _FRY = IERC20(0x633A3d2091dc7982597A0f635d23Ba5EB1223f48);
 
         timelock = new Timelock(address(this), 0);
@@ -30,6 +32,8 @@ contract GovernanceDeployer {
     function initializeGovernace(address _govAlpha) 
         public
     {
+        require(msg.sender == owner, "Only owner can initialize governance");
+        
         bytes memory adminPayload = abi.encodeWithSignature("setPendingAdmin(address)", _govAlpha);
         
         uint256 eta = block.timestamp + timelock.delay(); 
