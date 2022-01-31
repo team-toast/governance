@@ -1,43 +1,43 @@
 pragma solidity ^0.5.17;
 
-import "contracts/gFry.sol";
+import "contracts/gLevr.sol";
 import "contracts/safeMath.sol";
 
 contract Governator
 {
     using SafeMath for uint;
 
-    IERC20 public FRY;
-    gFRY public gFry;
+    IERC20 public LEVR;
+    gLEVR public gLevr;
 
-    constructor(IERC20 _FRY) 
+    constructor(IERC20 _LEVR) 
         public 
     {
-        gFry = new gFRY();
-        FRY = _FRY;
+        gLevr = new gLEVR();
+        LEVR = _LEVR;
     }
 
     function governate(uint _amount) 
         public 
     {
-        FRY.transferFrom(msg.sender, address(this), _amount);
-        gFry.mint(msg.sender, safe96(_amount, "Governator: uint96 overflows"));
+        LEVR.transferFrom(msg.sender, address(this), _amount);
+        gLevr.mint(msg.sender, safe96(_amount, "Governator: uint96 overflows"));
     }
 
     function degovernate(uint _amount)
         public
     {
-        uint share = _amount.mul(10**18).div(gFry.totalSupply());
+        uint share = _amount.mul(10**18).div(gLevr.totalSupply());
 
-        uint fryToReturn = FRY.balanceOf(address(this))
+        uint levrToReturn = LEVR.balanceOf(address(this))
             .mul(share)
             .div(10**18);
 
-        gFry.transferFrom(msg.sender, address(this), _amount);
+        gLevr.transferFrom(msg.sender, address(this), _amount);
 
-        gFry.burn(safe96(_amount, "Governator: uint96 overflows"));
+        gLevr.burn(safe96(_amount, "Governator: uint96 overflows"));
 
-        FRY.transfer(msg.sender, fryToReturn);
+        LEVR.transfer(msg.sender, levrToReturn);
     }
 
     function safe96(uint n, string memory errorMessage) internal pure returns (uint96) {

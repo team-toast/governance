@@ -7,41 +7,43 @@ import PopupHint from "./PopupHint";
 //0x7E1d0353063F01CfFa92f4a9C8A100cFE37d8264
 //0x0000000000000000000000000000000000000000
 class Header extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showDelegate: false,
+    constructor(props) {
+        super(props);
+        this.state = {
+            showDelegate: false,
+        };
+    }
+    toggleDelegate = () => {
+        this.setState({ showDelegate: true });
     };
-  }
-  toggleDelegate = () => {
-    this.setState({ showDelegate: true });
-  };
-  render() {
-    return (
-      <section
-        className={
-          this.props.delegatedAddress !== "Unknown"
-            ? "header"
-            : "header no-bottom-padding"
-        }
-      >
-        {this.props.delegatedAddress !== "Unknown" ? (
-          <div>
-            <h1 className="header__title">Foundry Governance</h1>
-            <div className="header__balance__white flex-power">
-              <TokenActions
-                {...this.props.stateprops}
-                // stateprops={this.props.stateprops}
-                delegate={this.props.delegate}
-                updateDelegateeAddress={this.props.updateDelegateeAddress}
-                setStatus={this.props.setStatus}
-                getGasPrice={this.props.getGasPrice}
-                fryGfryMod={this.props.fryGfryMod}
-                setProgress={this.props.setProgress}
-                convertedAddress={this.props.convertedAddress}
-                numberWithCommas={this.props.numberWithCommas}
-              />
-              {/* <div>
+    render() {
+        return (
+            <section
+                className={
+                    this.props.delegatedAddress !== "Unknown"
+                        ? "header"
+                        : "header no-bottom-padding"
+                }
+            >
+                {this.props.delegatedAddress !== "Unknown" ? (
+                    <div>
+                        <h1 className="header__title">Levr Governance</h1>
+                        <div className="header__balance__white flex-power">
+                            <TokenActions
+                                {...this.props.stateprops}
+                                // stateprops={this.props.stateprops}
+                                delegate={this.props.delegate}
+                                updateDelegateeAddress={
+                                    this.props.updateDelegateeAddress
+                                }
+                                setStatus={this.props.setStatus}
+                                getGasPrice={this.props.getGasPrice}
+                                levrGlevrMod={this.props.levrGlevrMod}
+                                setProgress={this.props.setProgress}
+                                convertedAddress={this.props.convertedAddress}
+                                numberWithCommas={this.props.numberWithCommas}
+                            />
+                            {/* <div>
                 {"Voting Power"}
                 <span
                   className={
@@ -84,25 +86,25 @@ class Header extends Component {
                     : `${this.props.delegatedAddress}`}
                 </span>
               </div> */}
-            </div>
-          </div>
-        ) : (
-          <div className="connect-wallet">
-            <h1>Foundry Governance</h1>
-            <div>
-              <p className="connect-wallet-p">
-                Connect a wallet to view actions & balances
-              </p>
-              <button
-                onClick={this.props.onConnect}
-                className="connect-wallet-btn"
-              >
-                CONNECT WALLET
-              </button>
-            </div>
-          </div>
-        )}
-        {/* {!this.state.showDelegate && this.props.delegatedAddress !== "Unknown" && (
+                        </div>
+                    </div>
+                ) : (
+                    <div className="connect-wallet">
+                        <h1>Levr Governance</h1>
+                        <div>
+                            <p className="connect-wallet-p">
+                                Connect a wallet to view actions & balances
+                            </p>
+                            <button
+                                onClick={this.props.onConnect}
+                                className="connect-wallet-btn"
+                            >
+                                CONNECT WALLET
+                            </button>
+                        </div>
+                    </div>
+                )}
+                {/* {!this.state.showDelegate && this.props.delegatedAddress !== "Unknown" && (
           <div onClick={this.toggleDelegate} className="delegate-block__button">
             <h5>Delegate</h5>
           </div>
@@ -135,9 +137,9 @@ class Header extends Component {
             </PopupHint>
           </div>
         )} */}
-      </section>
-    );
-  }
+            </section>
+        );
+    }
 }
 
 export default Header;

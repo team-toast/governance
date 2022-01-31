@@ -1,41 +1,41 @@
 {
-  "name": "foundry-governance-ui",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@portis/web3": "^2.0.0-beta.54",
-    "@toruslabs/torus-embed": "^1.1.1",
-    "@walletconnect/web3-provider": "^1.0.0-beta.47",
-    "authereum": "^0.0.4-beta.105",
-    "bootstrap": "^5.1.1",
-    "fortmatic": "^2.0.5",
-    "gh-pages": "^2.2.0",
-    "gulp-dart-sass": "^1.0.2",
-    "react": "^16.11.0",
-    "react-bootstrap": "^2.0.0-beta.5",
-    "react-dom": "^16.11.0",
-    "react-scripts": "3.2.0",
-    "web3": "^1.2.6",
-    "web3connect": "^1.0.0-beta.32"
-  },
-  "scripts": {
-    "start": "BROWSER=none react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
+    "name": "levr-governance-ui",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@portis/web3": "^2.0.0-beta.54",
+        "@toruslabs/torus-embed": "^1.1.1",
+        "@walletconnect/web3-provider": "^1.0.0-beta.47",
+        "authereum": "^0.0.4-beta.105",
+        "bootstrap": "^5.1.1",
+        "fortmatic": "^2.0.5",
+        "gh-pages": "^2.2.0",
+        "gulp-dart-sass": "^1.0.2",
+        "react": "^16.11.0",
+        "react-bootstrap": "^2.0.0-beta.5",
+        "react-dom": "^16.11.0",
+        "react-scripts": "3.2.0",
+        "web3": "^1.2.6",
+        "web3connect": "^1.0.0-beta.32"
+    },
+    "scripts": {
+        "start": "BROWSER=none react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
 }
