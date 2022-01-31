@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="135.864"
+   height="107.669"
+   viewBox="0 0 135.864 107.669"
+   version="1.1"
+   id="svg30"
+   sodipodi:docname="levrLogoOnly.svg"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview32"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:zoom="7.7273868"
+     inkscape:cx="67.940173"
+     inkscape:cy="43.287596"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg30" />
+  <defs
+     id="defs14">
+    <linearGradient
+       id="linear-gradient"
+       y1="97.538838"
+       x2="169.40367"
+       y2="97.538838"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(1.1255351,0.88846632)"
+       x1="82.805061">
+      <stop
+         offset="0"
+         stop-color="#15ff70"
+         id="stop2" />
+      <stop
+         offset="0.36"
+         stop-color="#20e296"
+         id="stop4" />
+      <stop
+         offset="1"
+         stop-color="#36a9e1"
+         id="stop6" />
+    </linearGradient>
+    <linearGradient
+       id="linear-gradient-2"
+       y1="74.452466"
+       x2="215.39255"
+       y2="74.452466"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="scale(1.1248068,0.8890416)"
+       x1="150.82323">
+      <stop
+         offset="0"
+         stop-color="#ffb300"
+         id="stop9" />
+      <stop
+         offset="0.54"
+         stop-color="#e02235"
+         id="stop11" />
+    </linearGradient>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath239">
+      <rect
+         style="fill:#0000ff;fill-rule:evenodd;stroke-width:1.01998"
+         id="rect241"
+         width="99.033379"
+         height="87.211876"
+         x="18.099854"
+         y="-6.3592886e-08" />
+    </clipPath>
+  </defs>
+  <g
+     id="logo_2"
+     data-name="logo 2"
+     transform="matrix(0.99964826,0,0,0.96153846,0.02389342,0.12941003)"
+     clip-path="url(#clipPath239)">
+    <g
+       id="Layer_1"
+       data-name="Layer 1">
+      <path
+         id="Path_9"
+         data-name="Path 9"
+         d="m 434.812,504.376 v 0 a 1.176,1.176 0 0 0 -1.176,-1.176 v 0 a 1.176,1.176 0 0 0 -1.176,1.176 v 0 a 1.176,1.176 0 0 0 1.176,1.176 v 0 a 1.176,1.176 0 0 0 1.176,-1.176 z"
+         transform="translate(-341.952,-397.89)"
+         fill="#1ae287" />
+      <path
+         id="Path_10"
+         data-name="Path 10"
+         d="M 11.2,470.026 H 0.557 A 0.557,0.557 0 0 1 0,469.467 v -10.638 a 0.557,0.557 0 0 1 0.557,-0.559 h 1.237 a 0.557,0.557 0 0 1 0.557,0.559 v 8.288 a 0.559,0.559 0 0 0 0.559,0.557 h 8.29 a 0.559,0.559 0 0 1 0.557,0.559 v 1.235 a 0.557,0.557 0 0 1 -0.557,0.559 z"
+         transform="translate(0,-362.363)"
+         fill="#06033d" />
+      <path
+         id="Path_11"
+         data-name="Path 11"
+         d="m 237.1,459.036 -4.261,10.638 a 0.557,0.557 0 0 1 -0.517,0.352 h -1.595 a 0.561,0.561 0 0 1 -0.519,-0.352 l -4.255,-10.638 a 0.559,0.559 0 0 1 0.517,-0.766 h 1.478 a 0.559,0.559 0 0 1 0.519,0.356 l 2.533,6.519 a 0.557,0.557 0 0 0 1.046,0 l 2.467,-6.513 a 0.563,0.563 0 0 1 0.523,-0.36 h 1.547 a 0.559,0.559 0 0 1 0.517,0.764 z"
+         transform="translate(-178.63,-362.363)"
+         fill="#06033d" />
+      <path
+         id="Path_12"
+         data-name="Path 12"
+         d="M 341.439,465.329 H 339.9 a 0.557,0.557 0 0 0 -0.557,0.557 v 3.587 a 0.557,0.557 0 0 1 -0.559,0.559 h -1.235 a 0.557,0.557 0 0 1 -0.557,-0.559 v -10.644 a 0.557,0.557 0 0 1 0.557,-0.559 h 10.64 a 0.557,0.557 0 0 1 0.557,0.559 v 4.144 a 2.061,2.061 0 0 1 -2.315,2.35 h -0.6 a 0.559,0.559 0 0 0 -0.419,0.927 l 2.511,2.848 a 0.559,0.559 0 0 1 -0.419,0.927 h -1.415 a 0.557,0.557 0 0 1 -0.419,-0.188 l -3.817,-4.326 a 0.563,0.563 0 0 0 -0.414,-0.182 z m -2.093,-4.144 v 1.237 a 0.557,0.557 0 0 0 0.557,0.557 h 5.937 a 0.559,0.559 0 0 0 0.559,-0.557 v -1.237 a 0.559,0.559 0 0 0 -0.559,-0.557 h -5.94 a 0.557,0.557 0 0 0 -0.557,0.55 z"
+         transform="translate(-266.463,-362.363)"
+         fill="#06033d" />
+      <path
+         id="Path_13"
+         data-name="Path 13"
+         d="m 494.207,470.026 h -10.64 a 0.557,0.557 0 0 1 -0.557,-0.559 v -10.638 a 0.557,0.557 0 0 1 0.557,-0.559 h 1.233 a 0.557,0.557 0 0 1 0.557,0.559 v 8.288 a 0.559,0.559 0 0 0 0.559,0.557 h 8.288 a 0.559,0.559 0 0 1 0.557,0.559 v 1.235 a 0.557,0.557 0 0 1 -0.557,0.559 z"
+         transform="translate(-381.923,-362.363)"
+         fill="#06033d" />
+      <path
+         id="Path_14"
+         data-name="Path 14"
+         d="m 601.867,469.459 v -3.976 a 0.559,0.559 0 0 0 -0.092,-0.31 l -4.031,-6.044 a 0.557,0.557 0 0 1 0.465,-0.866 h 1.607 a 0.559,0.559 0 0 1 0.454,0.234 l 2.321,3.25 a 0.557,0.557 0 0 0 0.9,0 l 2.354,-3.256 a 0.557,0.557 0 0 1 0.452,-0.23 h 1.576 a 0.557,0.557 0 0 1 0.463,0.866 l -4.029,6.048 a 0.56,0.56 0 0 0 -0.092,0.31 v 3.976 a 0.559,0.559 0 0 1 -0.559,0.559 h -1.235 a 0.559,0.559 0 0 1 -0.559,-0.561 z"
+         transform="translate(-472.571,-362.355)"
+         fill="#06033d" />
+      <rect
+         id="Rectangle_11"
+         data-name="Rectangle 11"
+         width="11.753"
+         height="2.3499999"
+         rx="1.13"
+         transform="translate(23.509,95.907)"
+         fill="#06033d"
+         x="0"
+         y="0" />
+      <rect
+         id="Rectangle_12"
+         data-name="Rectangle 12"
+         width="7.585"
+         height="2.3499999"
+         rx="1.13"
+         transform="translate(25.594,100.61)"
+         fill="#06033d"
+         x="0"
+         y="0" />
+      <rect
+         id="Rectangle_13"
+         data-name="Rectangle 13"
+         width="11.753"
+         height="2.3499999"
+         rx="1.13"
+         transform="translate(23.509,105.311)"
+         fill="#06033d"
+         x="0"
+         y="0" />
+      <path
+         id="Path_15"
+         data-name="Path 15"
+         d="m 135.453,125.044 a 2.469,2.469 0 0 0 1.884,-0.247 l 51.968,-30 a 2.5,2.5 0 1 0 -2.5,-4.322 L 137.116,119.191 100.483,55.712 103.361,54.05 93.2,48.19 v 11.733 l 2.865,-1.655 37.881,65.626 a 2.469,2.469 0 0 0 1.507,1.151 z"
+         transform="translate(-73.695,-38.107)"
+         fill="url(#linear-gradient)"
+         style="fill:url(#linear-gradient)" />
+      <path
+         id="Path_16"
+         data-name="Path 16"
+         d="M 203.315,89.021 174.306,38.776 a 2.483,2.483 0 1 0 -4.3,2.482 l 30.25,52.4 a 2.482,2.482 0 0 0 3.393,0.9 l 31.079,-17.936 1.687,2.93 5.86,-10.161 h -11.728 l 1.7,2.93 z"
+         transform="translate(-134.165,-29.68)"
+         fill="url(#linear-gradient-2)"
+         style="fill:url(#linear-gradient-2)" />
+      <circle
+         id="Ellipse_2"
+         data-name="Ellipse 2"
+         cx="3.0350001"
+         cy="3.0350001"
+         transform="translate(30.809)"
+         fill="#ffb300"
+         r="3.0350001" />
+    </g>
+  </g>
+</svg>
