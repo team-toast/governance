@@ -5,6 +5,7 @@ import PopupHint from "./PopupHint";
 import governatorContract from "../contracts/Governator.json";
 import compTokenContract from "../contracts/Comp.json";
 import contract from "../contracts/GovernorAlpha.json";
+import incrementerABI from "../contracts/Incrementer.json";
 
 class TokenActions extends Component {
   constructor(props) {
@@ -70,7 +71,7 @@ class TokenActions extends Component {
             }
           )
           .on("confirmation", (number, receipt) => {
-            if (number === 0) {
+            if (number === 1) {
               console.log("Transaction Confirmed!", receipt.transactionHash);
               this.props.setProgress([1, 2, 3]);
               //this.readDelegateEvents(receipt);
@@ -108,7 +109,7 @@ class TokenActions extends Component {
           }
         )
         .on("confirmation", (number, receipt) => {
-          if (number === 0) {
+          if (number === 1) {
             console.log("Transaction Confirmed!", receipt);
             this.props.setProgress([1, 2, 3]);
             this.interpretEventAndUpdateFryToGFry(receipt);
@@ -179,7 +180,7 @@ class TokenActions extends Component {
           }
         )
         .on("confirmation", (number, receipt) => {
-          if (number === 0) {
+          if (number === 1) {
             console.log("Transaction Confirmed!", receipt);
             this.interpretEventAndUpdateGFryToFry(receipt);
             this.props.setProgress([1, 2, 3]);
@@ -203,7 +204,7 @@ class TokenActions extends Component {
 
   interpretEventAndUpdateGFryToFry = async (receipt) => {
     for (var key of Object.keys(receipt.events)) {
-      console.log("In for loop");
+      //console.log("In for loop");
       if (
         receipt.events[key].address &&
         receipt.events[key].raw.data &&
@@ -237,6 +238,19 @@ class TokenActions extends Component {
     this.setState({
       gFryConvertAmount: evt.target.value,
     });
+  };
+
+  processEvent = async (err, data) => {
+    console.log("Processing Event", data);
+
+    if (data.length !== 0) {
+      let rawData = data[0]["raw"]["data"];
+      let decoded = this.props.web3.eth.abi.decodeParameters(
+        ["uint256", "uint256"],
+        rawData
+      );
+      console.log("Decoded: ", decoded);
+    }
   };
 
   renderFunction = () => {
@@ -417,7 +431,7 @@ class TokenActions extends Component {
             {this.props.fryBalance === "0" && this.props.balance === "0" && (
               <div>
                 <h3 className="sectionHeader text-center">
-                  Display no FRY getting started help message and link.
+                  You need FRY tokens to use this app.
                 </h3>
               </div>
             )}

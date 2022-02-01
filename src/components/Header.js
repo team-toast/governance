@@ -102,6 +102,39 @@ class Header extends Component {
             </div>
           </div>
         )}
+        {/* {!this.state.showDelegate && this.props.delegatedAddress !== "Unknown" && (
+          <div onClick={this.toggleDelegate} className="delegate-block__button">
+            <h5>Delegate</h5>
+          </div>
+        )}
+        {this.state.showDelegate && this.props.delegatedAddress !== "Unknown" && (
+          <div className="delegate-block">
+            <input
+              onChange={this.props.updateDelegateeAddress}
+              placeholder="0x... Address to Delegate to"
+            />
+            <PopupHint
+              message={
+                this.props.balance === "0.00"
+                  ? "You don't have governance tokens"
+                  : ""
+              }
+            >
+              <button
+                className="header__button"
+                onClick={this.props.delegate}
+                disabled={
+                  !this.props.connected ||
+                  (this.props.disableButtons &&
+                    this.props.balance === "0.00") ||
+                  this.props.network !== "Arbitrum"
+                }
+              >
+                Delegate
+              </button>
+            </PopupHint>
+          </div>
+        )} */}
       </section>
     );
   }

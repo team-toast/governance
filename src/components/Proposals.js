@@ -31,6 +31,7 @@ class Proposals extends Component {
       historicBlockTimes: [],
       avgBlockTime: null,
       zeroProposals: false,
+      proposalSearchStart: 8000000,
     };
   }
 
@@ -99,7 +100,7 @@ class Proposals extends Component {
           Ids.push(proposalObjs[i]["id"]);
         }
 
-        // console.log("blocknumbers: ", blockNumbers);
+        console.log("blocknumbers: ", blockNumbers);
         // console.log("Ids: ", Ids);
 
         this.getProposalEventParametersBatch(web3, blockNumbers, Ids);
@@ -207,56 +208,68 @@ class Proposals extends Component {
   };
 
   getProposalEventParametersBatch = async (web3, blockNumbers, Ids) => {
+    /*
+    Potential better solution: Get timestamp of L1 block and check what L2 block is the closest to that timestamp and search around there.
+    */
     const govAlpha = new web3.eth.Contract(
       contract.abi,
-      contract["networks"]["137"]["address"]
+      contract["networks"]["421611"]["address"]
     );
 
     const batch = new web3.eth.BatchRequest();
 
-    for (let i = 0; i < blockNumbers.length; i++) {
+    for (
+      let i = this.props.latestBlock;
+      i > this.state.proposalSearchStart;
+      i -= 10000
+    ) {
       batch.add(
         govAlpha.getPastEvents(
           0xda95691a, // method id
           {
-            filter: { id: Ids[i] },
-            fromBlock: blockNumbers[i] - 20,
-            toBlock: blockNumbers[i] + 20,
+            fromBlock: i - 10000,
+            toBlock: i,
           },
           this.processEvent
         )
-        // .call.request({}, this.processEvent)
       );
-
-      // .methods.balance(address).call.request()
-      // console.log(blockNumbers[i]);
-      // console.log(Ids[i]);
     }
-    //batch.execute();
   };
 
   processEvent = async (err, data) => {
-    // console.log("Processing Event");
-    let rawData = data[0]["raw"]["data"];
-    let decoded = this.props.web3.eth.abi.decodeParameters(
-      [
-        "uint256",
-        "address",
-        "address[]",
-        "uint256[]",
-        "string[]",
-        "bytes[]",
-        "uint256",
-        "uint256",
-        "string",
-      ],
-      rawData
-    );
-    //console.log("Decoded: ", decoded);
-
-    this.setState({
-      proposalEvents: this.state.proposalEvents.concat(decoded),
-    });
+    console.log("Processing Event");
+    if (!data) {
+      return;
+    }
+    if (data.length !== 0) {
+      for (let i = 0; i < data.length; i++) {
+        let rawData = data[i]["raw"]["data"];
+        console.log("Data length: ", data.length);
+        try {
+          let decoded = this.props.web3.eth.abi.decodeParameters(
+            [
+              "uint256",
+              "address",
+              "address[]",
+              "uint256[]",
+              "string[]",
+              "bytes[]",
+              "uint256",
+              "uint256",
+              "string",
+            ],
+            rawData
+          );
+          console.log("DATA: ", data);
+          console.log("DECODED: ", decoded);
+          this.setState({
+            proposalEvents: this.state.proposalEvents.concat(decoded),
+          });
+        } catch (error) {
+          //console.log("Error in processEvent: ", error);
+        }
+      }
+    }
   };
 
   getAverageBlockTime = async (web3) => {
@@ -400,7 +413,7 @@ class Proposals extends Component {
   getAllProposalObjects = async (web3) => {
     const govAlpha = new web3.eth.Contract(
       contract.abi,
-      contract["networks"]["137"]["address"]
+      contract["networks"]["421611"]["address"]
     );
     let numOfProposals = await govAlpha.methods.proposalCount().call();
     if (numOfProposals === "0") {
@@ -476,7 +489,7 @@ class Proposals extends Component {
   getQuorumVotes = async (web3) => {
     const govAlpha = new web3.eth.Contract(
       contract.abi,
-      contract["networks"]["137"]["address"]
+      contract["networks"]["421611"]["address"]
     );
     let quorumVotes;
     try {
@@ -527,16 +540,16 @@ class Proposals extends Component {
 
   getProposals = async () => {
     try {
-      let matic = false;
-      while (matic === false) {
+      let arbitrum = false;
+      while (arbitrum === false) {
         console.log("Getting Proposals");
-        if (this.props.network === "Matic") {
-          console.log("Populating Matic proposal data.");
-          matic = true;
+        if (this.props.network === "Arbitrum") {
+          console.log("Populating Arbitrum proposal data.");
+          arbitrum = true;
           this.getProposalsFromEvents(this.props.web3);
         } else {
-          console.log("Please select the Matic network.");
-          matic = false;
+          console.log("Please select the Arbitrum network.");
+          arbitrum = false;
           await this.sleep(2000);
         }
       }
@@ -617,7 +630,7 @@ class Proposals extends Component {
       //   );
       // }
 
-      let avg = 2.1; // from https://polygonscan.com/chart/blocktime
+      let avg = 13.1; // from https://polygonscan.com/chart/blocktime
 
       let secondsTillExpiry = avg * blockDifference;
       expiryDate.setSeconds(

@@ -37,7 +37,7 @@ const providerOptions = {
   walletconnect: {
     package: WalletConnectProvider,
     rpc: {
-      137: "https://rpc-mainnet.matic.quiknode.pro",
+      421611: "https://rinkeby.arbitrum.io/rpc",
     },
   },
 };
@@ -50,6 +50,7 @@ class App extends Component {
 
     this.state = {
       web3: null,
+      web3Mainnet: null,
       contract: null,
       accounts: null,
       account: null,
@@ -145,6 +146,7 @@ class App extends Component {
   };
 
   componentDidMount = async () => {
+    this.mainnetConnect();
     if (
       this.web3Connect.cachedProvider &&
       typeof window.ethereum !== "undefined"
@@ -159,16 +161,26 @@ class App extends Component {
   defaultConnect = async () => {
     console.log("Default Connect");
     const web3 = new Web3(
-      new Web3.providers.HttpProvider("https://polygon-rpc.com/")
+      new Web3.providers.HttpProvider("https://rinkeby.arbitrum.io/rpc")
     );
     const netId = await web3.eth.net.getId();
 
     console.log("Net ID test: ", netId);
     await this.setState({
       web3,
-      network: "Matic",
+      network: "Arbitrum",
     });
     this.getLatestBlock();
+  };
+
+  mainnetConnect = async () => {
+    console.log("Mainnet Connect");
+    const web3Mainnet = new Web3(
+      new Web3.providers.HttpProvider("https://rinkeby-light.eth.linkpool.io/")
+    );
+    await this.setState({
+      web3Mainnet,
+    });
   };
 
   onConnect = async () => {
@@ -201,7 +213,7 @@ class App extends Component {
     console.log("PROVIDER: ", web3.eth.currentProvider);
 
     // Get the contract instance.
-    const deployedNetwork = contract.networks[137];
+    const deployedNetwork = contract.networks[421611];
     const instance = new web3.eth.Contract(
       contract.abi,
       deployedNetwork && deployedNetwork.address
@@ -236,7 +248,7 @@ class App extends Component {
       this.setState({ disableMessage: "" });
     }
 
-    if (netName === "Matic") {
+    if (netName === "Arbitrum") {
       this.getLatestBlock();
       this.getTotalSupply();
       this.setState({
@@ -260,7 +272,7 @@ class App extends Component {
       }
     } else {
       this.setState({ disableButtons: true });
-      this.setState({ disableMessage: "You are not on the Matic network" });
+      this.setState({ disableMessage: "You are not on the Arbitrum network" });
     }
   };
 
@@ -294,7 +306,7 @@ class App extends Component {
       const { web3 } = this.state;
       const networkId = await web3.eth.net.getId();
       if (this.state.connected) {
-        if (networkId === 137) {
+        if (networkId === 421611) {
           this.setState({ chainId, networkId });
           this.getNetworkName(networkId);
           this.determineButtonsDisabled(this.state.web3);
@@ -362,7 +374,9 @@ class App extends Component {
     while (gotLatestBlock === false) {
       try {
         const block = await this.state.web3.eth.getBlock("latest");
-        this.setState({ latestBlock: block.number });
+        console.log("Block Response: ", block);
+        console.log("Block Number: ", Number(block.l1BlockNumber));
+        this.setState({ latestBlock: Number(block.l1BlockNumber) });
         gotLatestBlock = true;
         return block;
       } catch (error) {
@@ -374,13 +388,18 @@ class App extends Component {
 
   getBlockTimeStamp = async (blockNumber) => {
     try {
-      while (this.state.web3 === null) {
-        this.sleep(50);
+      while (this.state.web3Mainnet === null) {
+        this.sleep(500);
         console.log("sleeping");
       }
-
+      console.log("Latest Block: ", this.state.latestBlock);
+      console.log("Block to find: ", blockNumber);
+      console.log("web3Mainnet: ", this.state.web3Mainnet);
       if (blockNumber < this.state.latestBlock) {
-        const blockInfo = await this.state.web3.eth.getBlock(blockNumber);
+        const blockInfo = await this.state.web3Mainnet.eth.getBlock(
+          blockNumber
+        );
+        console.log("Block Info: ", blockInfo);
         return blockInfo["timestamp"];
       } else {
         return 0;
@@ -409,9 +428,9 @@ class App extends Component {
       this.setState({ network: "Goerli" });
     } else if (networkId === 42) {
       this.setState({ network: "Kovan" });
-    } else if (networkId === 137) {
-      this.setState({ network: "Matic" });
-      return "Matic";
+    } else if (networkId === 421611) {
+      this.setState({ network: "Arbitrum" });
+      return "Arbitrum";
     } else {
       this.setState({ network: "Unknown Network" });
     }
@@ -431,7 +450,7 @@ class App extends Component {
   };
 
   getTokenBalance = async (tokenAddress, account = "none") => {
-    if (this.state.network === "Matic") {
+    if (this.state.network === "Arbitrum") {
       const tokenContract = new this.state.web3.eth.Contract(
         compTokenContract,
         tokenAddress
@@ -459,20 +478,21 @@ class App extends Component {
           //}
           balanceUpdated = true;
         } catch (error) {
-          console.error("Error setting token balance: ", error);
           this.sleep(1000);
+          console.error("Error Setting token balance: ", error);
         }
       }
     }
   };
 
   getTreasuryBalance = async () => {
-    if (this.state.network === "Matic") {
+    if (this.state.network === "Arbitrum") {
       const daiAddress = contract.contractAddresses["dai"]["address"];
 
       const daiContract = new this.state.web3.eth.Contract(Dai, daiAddress);
 
-      let overrideAccount = contract.contractAddresses["forwarder"]["address"];
+      let overrideAccount =
+        contract.contractAddresses["forwarder"]["address"].toLowerCase();
 
       let balanceUpdated = false;
       while (balanceUpdated === false) {
@@ -499,7 +519,7 @@ class App extends Component {
   };
 
   getVotingPower = async (account = "none") => {
-    if (this.state.network === "Matic") {
+    if (this.state.network === "Arbitrum") {
       const tokenAddress = contract.contractAddresses["token"]["address"];
 
       const tokenContract = new this.state.web3.eth.Contract(
@@ -534,7 +554,7 @@ class App extends Component {
   };
 
   getTotalSupply = async (account = "none") => {
-    if (this.state.network === "Matic") {
+    if (this.state.network === "Arbitrum") {
       const tokenAddress = contract.contractAddresses["token"]["address"];
 
       const tokenContract = new this.state.web3.eth.Contract(
@@ -560,7 +580,7 @@ class App extends Component {
   };
 
   getDelegateToAddress = async (account = "none") => {
-    if (this.state.network === "Matic") {
+    if (this.state.network === "Arbitrum") {
       const tokenAddress = contract.contractAddresses["token"]["address"];
 
       const tokenContract = new this.state.web3.eth.Contract(
@@ -581,6 +601,8 @@ class App extends Component {
           const delegatedAddress = await tokenContract.methods
             .delegates(overrideAccount)
             .call();
+
+          console.log("DELEGATED ADDRESS: ", delegatedAddress);
 
           if (delegatedAddress === this.state.account) {
             this.setState({ delegatedAddress: "Self" });
@@ -667,7 +689,7 @@ class App extends Component {
           }
         )
         .on("confirmation", (number, receipt) => {
-          if (number === 0) {
+          if (number === 1) {
             this.setMessage("Transaction Confirmed!", receipt.transactionHash);
             console.log("Transaction Confirmed!", receipt.transactionHash);
             this.readDelegateEvents(receipt);

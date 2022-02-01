@@ -35,14 +35,33 @@ class CreateCustomProposalForm extends React.Component {
 
     this.props.setStatusOf("Creating custom proposal ...", true);
 
-    if (this.props.network === "Matic") {
-      const governAddress = governorABI.networks[137]["address"];
+    if (this.props.network === "Arbitrum") {
+      const governAddress = governorABI.networks[421611]["address"];
       const governContract = new this.props.web3.eth.Contract(
         governorABI.abi,
         governAddress
       );
 
       try {
+        this.props.contract.methods
+          .propose(
+            methodCallsArray,
+            values,
+            signatures,
+            callDataArray,
+            this.state.description
+          )
+          .estimateGas(
+            {
+              from: this.props.account,
+            },
+            function (error, result) {
+              if (error) {
+                alert(error);
+              }
+            }
+          );
+
         const gasPrice = await this.props.getGasPrice();
         governContract.methods
           .propose(
