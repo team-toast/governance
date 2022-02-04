@@ -73,7 +73,6 @@ class Proposals extends Component {
                 let quorumVotes = await this.getQuorumVotes(web3);
                 let gracePeriod = await this.getGracePeriod(web3);
 
-                let eventDetail;
                 let tmpProposals = [];
 
                 // console.log(
@@ -98,19 +97,19 @@ class Proposals extends Component {
                 let Ids = [];
                 let ethBlockTimestamps = [];
                 for (let i = start; i < proposalObjs.length; i++) {
-                    blockNumbers.push(
+                    blockNumbers.unshift(
                         parseInt(proposalObjs[i]["startBlock"]) - 1
                     );
-                    Ids.push(proposalObjs[i]["id"]);
-                    ethBlockTimestamps.push(
-                        (await this.props.getBlockTimeStamp(
-                            proposalObjs[i]["startBlock"]
-                        )) - 1
+                    Ids.unshift(proposalObjs[i]["id"]);
+                    ethBlockTimestamps.unshift(
+                        await this.props.getBlockTimeStamp(
+                            proposalObjs[i]["startBlock"] - 1
+                        )
                     );
                 }
 
-                console.log("blocknumbers: ", blockNumbers);
-                console.log("proposalObjs: ", proposalObjs);
+                //console.log("blocknumbers: ", blockNumbers);
+                //console.log("proposalObjs: ", proposalObjs);
                 // console.log("Ids: ", Ids);
 
                 this.getProposalEventParametersBatch(
@@ -232,45 +231,24 @@ class Proposals extends Component {
         Ids,
         ethTimeStamps
     ) => {
-        /*
-    Potential better solution: Get timestamp of L1 block and check what L2 block is the closest to that timestamp and search around there.
-    */
-        const govAlpha = new web3.eth.Contract(
-            contract.abi,
-            contract["networks"]["421611"]["address"]
-        );
         const batch = new web3.eth.BatchRequest();
-        console.log("BLOCK NUMBERS: ", blockNumbers);
-        console.log("TIME STAMPUHHH: ", ethTimeStamps);
+        //console.log("BLOCK NUMBERS: ", blockNumbers);
+        //console.log("TIME STAMP: ", ethTimeStamps);
 
         for (let i = 0; i < blockNumbers.length; i++) {
-            // console.log("BLOCK INFO: ", blockInfo);
-            let blockToSearchAt = await this.getClosestBlockToTimestamp(
-                web3,
-                ethTimeStamps[i]
-            );
-            batch.add(
-                govAlpha.getPastEvents(
-                    0xda95691a, // method id
-                    {
-                        fromBlock: blockToSearchAt - 5000,
-                        toBlock: blockToSearchAt + 5000,
-                    },
-                    this.processEvent
-                )
-            );
+            batch.add(this.searchForPastEvents(web3, ethTimeStamps[i]));
         }
     };
 
     processEvent = async (err, data) => {
-        console.log("Processing Event");
+        // console.log("Processing Event");
         if (!data) {
             return;
         }
         if (data.length !== 0) {
             for (let i = 0; i < data.length; i++) {
                 let rawData = data[i]["raw"]["data"];
-                console.log("Data length: ", data.length);
+                // console.log("Data length: ", data.length);
                 try {
                     let decoded = this.props.web3.eth.abi.decodeParameters(
                         [
@@ -286,31 +264,32 @@ class Proposals extends Component {
                         ],
                         rawData
                     );
-                    console.log("DATA: ", data);
-                    console.log("DECODED: ", decoded);
+                    //console.log("DATA: ", data);
+                    //console.log("DECODED: ", decoded);
                     this.setState({
                         proposalEvents:
                             this.state.proposalEvents.concat(decoded),
                     });
+                    //console.log("Events found: ", this.state.proposalEvents);
                 } catch (error) {
-                    console.log("Error in processEvent: ", error);
+                    //console.log("Error in processEvent: ", error);
                 }
             }
         }
     };
 
-    getClosestBlockToTimestamp = async (web3, targetTimestamp) => {
-        let higherLimitStamp = targetTimestamp + 1000;
-        let lowerLimitStamp = targetTimestamp - 1000;
+    searchForPastEvents = async (web3, targetTimestamp) => {
+        let higherLimitStamp = targetTimestamp + 10000; // About 3300 blocks overshoot
+        let lowerLimitStamp = targetTimestamp - 10000;
 
         // decreasing average block size will decrease precision and also
         // decrease the amount of requests made in order to find the closest
         // block
-        let averageBlockTime = 3.0 * 1.5;
+        let averageBlockTime = 4.1 * 1.0;
 
         // get current block number
         const currentBlockNumber = await web3.eth.getBlockNumber();
-        console.log("Using current block number: ", currentBlockNumber);
+        //console.log("Using current block number: ", currentBlockNumber);
         let block = await web3.eth.getBlock(currentBlockNumber);
 
         let requestsMade = 0;
@@ -322,7 +301,9 @@ class Proposals extends Component {
                 (block.timestamp - targetTimestamp) / averageBlockTime;
             decreaseBlocks = parseInt(decreaseBlocks);
 
-            if (decreaseBlocks < 1) {
+            //console.log("Decreasing blocks by: ", decreaseBlocks);
+
+            if (decreaseBlocks < 1000) {
                 break;
             }
 
@@ -333,60 +314,44 @@ class Proposals extends Component {
         }
 
         // if we undershoot the day
-        if (lowerLimitStamp && block.timestamp < lowerLimitStamp) {
+        if (block.timestamp < lowerLimitStamp) {
             while (block.timestamp < lowerLimitStamp) {
-                blockNumber += 1;
+                blockNumber += 2000;
+                //console.log("UnderShot target, adding to block number");
+                block = await web3.eth.getBlock(blockNumber);
+                requestsMade += 2000;
+            }
+        }
+
+        if (block.timestamp >= higherLimitStamp) {
+            while (block.timestamp >= higherLimitStamp) {
+                blockNumber -= 2000;
 
                 block = await web3.eth.getBlock(blockNumber);
                 requestsMade += 1;
             }
         }
 
-        if (higherLimitStamp) {
-            // if we ended with a block higher than we can
-            // walk block by block to find the correct one
-            if (block.timestamp >= higherLimitStamp) {
-                while (block.timestamp >= higherLimitStamp) {
-                    blockNumber -= 1;
+        // console.log("tgt timestamp   ->", targetTimestamp);
+        // console.log("block timestamp ->", block.timestamp);
+        // console.log("block number    ->", block);
+        // console.log("");
 
-                    block = await web3.eth.getBlock(blockNumber);
-                    requestsMade += 1;
-                }
-            }
+        // console.log("requests made   ->", requestsMade);
 
-            // if we ended up with a block lower than the upper limit
-            // walk block by block to make sure it's the correct one
-            if (block.timestamp < higherLimitStamp) {
-                while (block.timestamp < higherLimitStamp) {
-                    blockNumber += 1;
+        const govAlpha = new web3.eth.Contract(
+            contract.abi,
+            contract["networks"]["421611"]["address"]
+        );
 
-                    if (blockNumber > currentBlockNumber) break;
-
-                    const tempBlock = await web3.eth.getBlock(blockNumber);
-
-                    // can't be equal or higher than upper limit as we want
-                    // to find the last block before that limit
-                    if (tempBlock.timestamp >= higherLimitStamp) {
-                        break;
-                    }
-
-                    block = tempBlock;
-
-                    requestsMade += 1;
-                }
-            }
-        }
-
-        console.log("tgt timestamp   ->", targetTimestamp);
-        //console.log("tgt date        ->", toDate(targetTimestamp));
-        console.log("");
-
-        console.log("block timestamp ->", block.timestamp);
-        console.log("block date      ->", block.timestamp);
-        console.log("block number    ->", block);
-        console.log("");
-
-        console.log("requests made   ->", requestsMade);
+        govAlpha.getPastEvents(
+            0xda95691a, // method id
+            {
+                fromBlock: block.number - 5000,
+                toBlock: block.number + 5000,
+            },
+            this.processEvent
+        );
 
         return block.number;
     };
@@ -673,9 +638,9 @@ class Proposals extends Component {
         try {
             let arbitrum = false;
             while (arbitrum === false) {
-                console.log("Getting Proposals");
+                //console.log("Getting Proposals");
                 if (this.props.network === "Arbitrum") {
-                    console.log("Populating Arbitrum proposal data.");
+                    //console.log("Populating Arbitrum proposal data.");
                     arbitrum = true;
                     this.getProposalsFromEvents(this.props.web3);
                 } else {
