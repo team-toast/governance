@@ -285,7 +285,7 @@ class Proposals extends Component {
         // decreasing average block size will decrease precision and also
         // decrease the amount of requests made in order to find the closest
         // block
-        let averageBlockTime = 4.1 * 1.0;
+        let averageBlockTime = 3.5 * 1.0;
 
         // get current block number
         const currentBlockNumber = await web3.eth.getBlockNumber();
@@ -301,7 +301,7 @@ class Proposals extends Component {
                 (block.timestamp - targetTimestamp) / averageBlockTime;
             decreaseBlocks = parseInt(decreaseBlocks);
 
-            //console.log("Decreasing blocks by: ", decreaseBlocks);
+            console.log("Decreasing blocks by: ", decreaseBlocks);
 
             if (decreaseBlocks < 1000) {
                 break;
@@ -337,7 +337,7 @@ class Proposals extends Component {
         // console.log("block number    ->", block);
         // console.log("");
 
-        // console.log("requests made   ->", requestsMade);
+        console.log("requests made   ->", requestsMade);
 
         const govAlpha = new web3.eth.Contract(
             contract.abi,
@@ -851,6 +851,7 @@ class Proposals extends Component {
                             buttonsDisabled={this.props.buttonsDisabled}
                             getGasPrice={this.props.getGasPrice}
                             setStatusOf={this.props.setStatusOf}
+                            setStatusOf={this.props.setProgress}
                             {...this.props}
                         />
                     );

@@ -947,6 +947,7 @@ class App extends Component {
                                         }
                                         getGasPrice={this.getGasPrice}
                                         setStatusOf={this.setStatusOf}
+                                        setProgress={this.setProgress}
                                     />
                                 </div>
                             </div>

@@ -37,12 +37,13 @@ class Proposal extends Component {
                 }
             )
             .on("confirmation", (number, receipt) => {
-                if (number === 0) {
+                if (number === 1) {
                     this.props.setMessage(
                         "Transaction Confirmed!",
                         receipt.transactionHash
                     );
                     this.props.setStatusOf("Voted Successfully!", true);
+                    this.props.setProgress([1, 2, 3]);
                 }
                 setTimeout(() => {
                     this.props.clearMessage();
@@ -57,6 +58,7 @@ class Proposal extends Component {
                     "Voting failed. Please try again.",
                     true
                 );
+                this.props.setProgress([1, 2, 3, 4]);
             });
     };
 
@@ -76,12 +78,13 @@ class Proposal extends Component {
                 }
             )
             .on("confirmation", (number, receipt) => {
-                if (number === 0) {
+                if (number === 1) {
                     this.props.setMessage(
                         "Transaction Confirmed!",
                         receipt.transactionHash
                     );
-                    this.props.setStatusOf("Voted Successfully.", true);
+                    this.props.setStatusOf("Voted Successfully!", true);
+                    this.props.setProgress([1, 2, 3]);
                 }
                 setTimeout(() => {
                     this.props.clearMessage();
@@ -97,6 +100,7 @@ class Proposal extends Component {
                     "Voting failed. Please try again.",
                     true
                 );
+                this.props.setProgress([1, 2, 3, 4]);
             });
     };
 
@@ -121,7 +125,7 @@ class Proposal extends Component {
                     }
                 )
                 .on("confirmation", (number, receipt) => {
-                    if (number === 0) {
+                    if (number === 1) {
                         this.props.setMessage(
                             "Transaction Confirmed!",
                             receipt.transactionHash
@@ -183,7 +187,7 @@ class Proposal extends Component {
                     }
                 )
                 .on("confirmation", (number, receipt) => {
-                    if (number === 0) {
+                    if (number === 1) {
                         this.props.setMessage(
                             "Transaction Confirmed!",
                             receipt.transactionHash
