@@ -22,7 +22,7 @@ class Proposal extends Component {
         this.setState({ showData: true });
     };
     handleVoteFor = async () => {
-        this.props.setStatusOf("Voting In Favour ...", true);
+        // this.props.setStatusOf("Voting In Favour ...", true);
         const gasPrice = await this.props.getGasPrice();
         this.props.contract.methods
             .castVote(this.props.id, true)
@@ -33,7 +33,8 @@ class Proposal extends Component {
                         "Transaction Pending...",
                         transactionHash
                     );
-                    this.props.setStatusOf("Voting Pending ...", true);
+                    // this.props.setStatusOf("Voting Pending ...", true);
+                    // this.props.setProgress([1, 2]);
                 }
             )
             .on("confirmation", (number, receipt) => {
@@ -42,8 +43,8 @@ class Proposal extends Component {
                         "Transaction Confirmed!",
                         receipt.transactionHash
                     );
-                    this.props.setStatusOf("Voted Successfully!", true);
-                    this.props.setProgress([1, 2, 3]);
+                    // this.props.setStatusOf("Voted Successfully!", true);
+                    // this.props.setProgress([1, 2, 3]);
                 }
                 setTimeout(() => {
                     this.props.clearMessage();
@@ -54,27 +55,28 @@ class Proposal extends Component {
                     "Transaction Failed.",
                     receipt ? receipt.transactionHash : null
                 );
-                this.props.setStatusOf(
-                    "Voting failed. Please try again.",
-                    true
-                );
-                this.props.setProgress([1, 2, 3, 4]);
+                // this.props.setStatusOf(
+                //     "Voting failed. Please try again.",
+                //     true
+                // );
+                // this.props.setProgress([1, 2, 3, 4]);
             });
     };
 
     handleVoteAgainst = async () => {
-        this.props.setStatusOf("Voting Against ...", true);
+        //this.props.setStatusOf("Voting Against ...", true);
         const gasPrice = await this.props.getGasPrice();
         this.props.contract.methods
             .castVote(this.props.id, false)
             .send(
                 { from: this.props.account, gasPrice: gasPrice },
                 (err, transactionHash) => {
-                    this.props.setMessage(
-                        "Transaction Pending...",
-                        transactionHash
-                    );
-                    this.props.setStatusOf("Voting Pending ...", true);
+                    // this.props.setMessage(
+                    //     "Transaction Pending...",
+                    //     transactionHash
+                    // );
+                    // this.props.setStatusOf("Voting Pending ...", true);
+                    // this.props.setProgress([1, 2]);
                 }
             )
             .on("confirmation", (number, receipt) => {
@@ -83,8 +85,8 @@ class Proposal extends Component {
                         "Transaction Confirmed!",
                         receipt.transactionHash
                     );
-                    this.props.setStatusOf("Voted Successfully!", true);
-                    this.props.setProgress([1, 2, 3]);
+                    // this.props.setStatusOf("Voted Successfully!", true);
+                    // this.props.setProgress([1, 2, 3]);
                 }
                 setTimeout(() => {
                     this.props.clearMessage();
@@ -96,11 +98,11 @@ class Proposal extends Component {
                     "Transaction Failed.",
                     receipt ? receipt.transactionHash : null
                 );
-                this.props.setStatusOf(
-                    "Voting failed. Please try again.",
-                    true
-                );
-                this.props.setProgress([1, 2, 3, 4]);
+                // this.props.setStatusOf(
+                //     "Voting failed. Please try again.",
+                //     true
+                // );
+                // this.props.setProgress([1, 2, 3, 4]);
             });
     };
 
@@ -108,7 +110,7 @@ class Proposal extends Component {
         //succeeded can be queued state: 4, queued can be executed state: 5
         let gasPrice = await this.props.getGasPrice();
         if (this.props.status === "Succeeded") {
-            this.props.setStatusOf("Adding proposal to Queue ...", true);
+            // this.props.setStatusOf("Adding proposal to Queue ...", true);
             this.props.contract.methods
                 .queue(this.props.id)
                 .send(
@@ -121,7 +123,8 @@ class Proposal extends Component {
                             "Transaction Pending...",
                             transactionHash
                         );
-                        this.props.setStatusOf("Transaction Pending ...", true);
+                        // this.props.setStatusOf("Transaction Pending ...", true);
+                        // this.props.setProgress([1, 2]);
                     }
                 )
                 .on("confirmation", (number, receipt) => {
@@ -130,7 +133,8 @@ class Proposal extends Component {
                             "Transaction Confirmed!",
                             receipt.transactionHash
                         );
-                        this.props.setStatusOf("Transaction Confirmed!", true);
+                        // this.props.setStatusOf("Transaction Confirmed!", true);
+                        // this.props.setProgress([1, 2, 3]);
                     }
                     setTimeout(() => {
                         this.props.clearMessage();
@@ -142,10 +146,11 @@ class Proposal extends Component {
                         "Transaction Failed.",
                         receipt ? receipt.transactionHash : null
                     );
-                    this.props.setStatusOf(
-                        "Transaction failed! Please try again.",
-                        true
-                    );
+                    // this.props.setStatusOf(
+                    //     "Transaction failed! Please try again.",
+                    //     true
+                    // );
+                    // this.props.setProgress([1, 2, 3, 4]);
                 });
         } else if (this.props.status === "Queued") {
             this.props.contract.methods.execute(this.props.id).estimateGas(
@@ -170,7 +175,7 @@ class Proposal extends Component {
                 }
             );
 
-            this.props.setStatusOf("Executing proposal ...", true);
+            // this.props.setStatusOf("Executing proposal ...", true);
             this.props.contract.methods
                 .execute(this.props.id)
                 .send(
@@ -183,7 +188,8 @@ class Proposal extends Component {
                             "Transaction Pending...",
                             transactionHash
                         );
-                        this.props.setStatusOf("Transaction Pending ...", true);
+                        // this.props.setStatusOf("Transaction Pending ...", true);
+                        // this.props.setProgress([1, 2]);
                     }
                 )
                 .on("confirmation", (number, receipt) => {
@@ -192,7 +198,8 @@ class Proposal extends Component {
                             "Transaction Confirmed!",
                             receipt.transactionHash
                         );
-                        this.props.setStatusOf("Transaction Confirmed!", true);
+                        // this.props.setStatusOf("Transaction Confirmed!", true);
+                        // this.props.setProgress([1, 2, 3]);
                     }
                     setTimeout(() => {
                         this.props.clearMessage();
@@ -204,10 +211,11 @@ class Proposal extends Component {
                         "Transaction Failed.",
                         receipt ? receipt.transactionHash : null
                     );
-                    this.props.setStatusOf(
-                        "Transaction Failed! Please try again.",
-                        true
-                    );
+                    // this.props.setStatusOf(
+                    //     "Transaction Failed! Please try again.",
+                    //     true
+                    // );
+                    // this.props.setProgress([1, 2, 3, 4]);
                 });
         } else {
             console.log(
