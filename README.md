@@ -17,12 +17,16 @@ Governance Remix deployment steps:
 
 1. Double check parameters in https://docs.google.com/spreadsheets/d/1pDTcSFJLU0nd_v4ggWH-UAm8mazq4jAaNE2XZMHXtpw/edit#gid=0
 
-2. Deploy govDeployer in remix (Double check Arbitrum FRY address).
+2. Deploy the govDeployer contract in remix (Double check Arbitrum FRY address).
 
-3. Deploy governorAlpha. The parameters are the contract addresses provided by the already launched govDeployer in remix. The guardian (address 0x7040E1373d281Ec5d6972B3546EAbf2E3Db81E56), votingPeriod (uint 19786) and votingDelay (0) paramaters are in the sheet.
+3. Deploy governorAlpha.
+   The parameters are the contract addresses created by the newly deployed govDeployer in remix. The
+   address parameters are public variables but can also be found in the event emitted during deployment of govDeployer.
+   The guardian (address 0x7040E1373d281Ec5d6972B3546EAbf2E3Db81E56), votingPeriod (uint 19786) and
+   votingDelay (0) paramaters are in the sheet.
 
-4. Run initializeGovernance on govDeployer with the newly deployed governorAlpha address as parameter.
+4. Run initializeGovernance on govDeployer with the newly deployed governorAlpha address as its parameter.
 
 5. Verify the contract code of governorAlpha on Arbiscan.
 
-6. Execute \_\_acceptAdmin of governorAlpha using the guardian multisig.
+6. Execute \_\_acceptAdmin function of governorAlpha using the guardian multisig.
