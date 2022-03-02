@@ -178,7 +178,7 @@ class App extends Component {
         console.log("Mainnet Connect");
         const web3Mainnet = new Web3(
             new Web3.providers.HttpProvider(
-                "https://main-light.eth.linkpool.io"
+                "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
             )
         );
         await this.setState({
