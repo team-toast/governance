@@ -341,7 +341,7 @@ class Proposals extends Component {
 
         const govAlpha = new web3.eth.Contract(
             contract.abi,
-            contract["networks"]["421611"]["address"]
+            contract["networks"]["42161"]["address"]
         );
 
         govAlpha.getPastEvents(
@@ -507,7 +507,7 @@ class Proposals extends Component {
     getAllProposalObjects = async (web3) => {
         const govAlpha = new web3.eth.Contract(
             contract.abi,
-            contract["networks"]["421611"]["address"]
+            contract["networks"]["42161"]["address"]
         );
         let numOfProposals = await govAlpha.methods.proposalCount().call();
         if (numOfProposals === "0") {
@@ -585,7 +585,7 @@ class Proposals extends Component {
     getQuorumVotes = async (web3) => {
         const govAlpha = new web3.eth.Contract(
             contract.abi,
-            contract["networks"]["421611"]["address"]
+            contract["networks"]["42161"]["address"]
         );
         let quorumVotes;
         try {

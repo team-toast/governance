@@ -35,7 +35,7 @@ const providerOptions = {
     walletconnect: {
         package: WalletConnectProvider,
         rpc: {
-            421611: "https://rinkeby.arbitrum.io/rpc",
+            42161: "https://arb1.arbitrum.io/rpc",
         },
     },
 };
@@ -163,7 +163,7 @@ class App extends Component {
     defaultConnect = async () => {
         console.log("Default Connect");
         const web3 = new Web3(
-            new Web3.providers.HttpProvider("https://rinkeby.arbitrum.io/rpc")
+            new Web3.providers.HttpProvider("https://arb1.arbitrum.io/rpc")
         );
 
         //console.log("Net ID test: ", netId);
@@ -178,7 +178,7 @@ class App extends Component {
         console.log("Mainnet Connect");
         const web3Mainnet = new Web3(
             new Web3.providers.HttpProvider(
-                "https://rinkeby-light.eth.linkpool.io/"
+                "https://main-light.eth.linkpool.io"
             )
         );
         await this.setState({
@@ -216,7 +216,7 @@ class App extends Component {
         //console.log("PROVIDER: ", web3.eth.currentProvider);
 
         // Get the contract instance.
-        const deployedNetwork = contract.networks[421611];
+        const deployedNetwork = contract.networks[42161];
         const instance = new web3.eth.Contract(
             contract.abi,
             deployedNetwork && deployedNetwork.address
@@ -313,7 +313,7 @@ class App extends Component {
             const { web3 } = this.state;
             const networkId = await web3.eth.net.getId();
             if (this.state.connected) {
-                if (networkId === 421611) {
+                if (networkId === 42161) {
                     this.setState({ chainId, networkId });
                     this.getNetworkName(networkId);
                     this.determineButtonsDisabled(this.state.web3);
@@ -425,6 +425,8 @@ class App extends Component {
             networkId = netID;
         }
 
+        console.log("NET ID: ", netID);
+
         if (networkId === 1) {
             this.setState({ network: "Mainnet" });
         } else if (networkId === 3) {
@@ -435,7 +437,7 @@ class App extends Component {
             this.setState({ network: "Goerli" });
         } else if (networkId === 42) {
             this.setState({ network: "Kovan" });
-        } else if (networkId === 421611) {
+        } else if (networkId === 42161) {
             this.setState({ network: "Arbitrum" });
             return "Arbitrum";
         } else {
@@ -470,6 +472,9 @@ class App extends Component {
                 overrideAccount = this.state.account;
             }
 
+            console.log("ACCOUNT: ", overrideAccount);
+            console.log("TOKEN ADDRESS: ", tokenAddress);
+
             let balanceUpdated = false;
             while (balanceUpdated === false) {
                 try {
@@ -479,9 +484,9 @@ class App extends Component {
 
                     balance = this.state.web3.utils.fromWei(balance);
                     console.log("BALANCE: ", balance);
-                    balance = this.numberWithCommas(
-                        parseFloat(balance).toFixed(2)
-                    );
+                    // balance = this.numberWithCommas(
+                    //     parseFloat(balance).toFixed(2)
+                    // );
 
                     return balance;
                 } catch (error) {
