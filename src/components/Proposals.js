@@ -431,7 +431,9 @@ class Proposals extends Component {
                 .toString()
                 .toLowerCase()
                 .includes(
-                    contract["contractAddresses"]["forwarder"]["address"]
+                    contract["contractAddresses"]["forwarder"][
+                        "address"
+                    ].toLowerCase()
                 ) &&
             calldata[0].length === expectedCalldataLength
         ) {
@@ -482,6 +484,7 @@ class Proposals extends Component {
                 //console.log("This is a PAYMENT");
                 return [true, amount, receiver, tokenName, "", ""];
             } else {
+                //console.log("This is NOT a PAYMENT");
                 return [false, 0, "", "", contractAddress, calldata];
             }
         }
