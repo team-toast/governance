@@ -851,7 +851,7 @@ class Proposals extends Component {
                             buttonsDisabled={this.props.buttonsDisabled}
                             getGasPrice={this.props.getGasPrice}
                             setStatusOf={this.props.setStatusOf}
-                            setStatusOf={this.props.setProgress}
+                            //setStatusOf={this.props.setProgress}
                             {...this.props}
                         />
                     );
