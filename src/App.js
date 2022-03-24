@@ -102,10 +102,12 @@ class App extends Component {
         if (this.state.delegatedAddress.toLowerCase() === "self") {
             this.setState({
                 votingPower: this.state.web3.utils.toWei(
-                    (
-                        parseFloat(this.state.web3.utils.fromWei(tmpVP)) +
-                        parseFloat(gFryMod)
-                    ).toString()
+                    this.numberWithCommas(
+                        (
+                            parseFloat(this.state.web3.utils.fromWei(tmpVP)) +
+                            parseFloat(gFryMod)
+                        ).toString()
+                    )
                 ),
                 totalSupply: this.state.web3.utils.toWei(
                     (
@@ -179,6 +181,7 @@ class App extends Component {
         const web3Mainnet = new Web3(
             new Web3.providers.HttpProvider(
                 "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+                //"https://cloudflare-eth.com"
             )
         );
         await this.setState({
@@ -483,10 +486,12 @@ class App extends Component {
                         .call();
 
                     balance = this.state.web3.utils.fromWei(balance);
-                    console.log("BALANCE: ", balance);
-                    // balance = this.numberWithCommas(
-                    //     parseFloat(balance).toFixed(2)
-                    // );
+
+                    console.log("BALANCE BEFORE: ", parseFloat(balance));
+
+                    balance = this.numberWithCommas(parseFloat(balance));
+
+                    console.log("BALANCE AFTER: ", parseFloat(balance));
 
                     return balance;
                 } catch (error) {
@@ -648,7 +653,13 @@ class App extends Component {
     };
 
     numberWithCommas = (x) => {
-        return parseFloat(x).toLocaleString("en-US", {
+        console.log(
+            "EXECUTING NUMBERWITHCOMMAS: ",
+            Math.floor((x * 100) / 100).toLocaleString("en-US", {
+                maximumFractionDigits: 2,
+            })
+        );
+        return (Math.floor(x * 100) / 100).toLocaleString("en-US", {
             maximumFractionDigits: 2,
         });
     };
