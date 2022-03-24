@@ -36,7 +36,7 @@ class CreateCustomProposalForm extends React.Component {
         this.props.setStatusOf("Creating custom proposal ...", true);
 
         if (this.props.network === "Arbitrum") {
-            const governAddress = governorABI.networks[421611]["address"];
+            const governAddress = governorABI.networks[42161]["address"];
             const governContract = new this.props.web3.eth.Contract(
                 governorABI.abi,
                 governAddress

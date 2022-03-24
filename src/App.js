@@ -35,7 +35,7 @@ const providerOptions = {
     walletconnect: {
         package: WalletConnectProvider,
         rpc: {
-            421611: "https://rinkeby.arbitrum.io/rpc",
+            42161: "https://arb1.arbitrum.io/rpc",
         },
     },
 };
@@ -102,10 +102,12 @@ class App extends Component {
         if (this.state.delegatedAddress.toLowerCase() === "self") {
             this.setState({
                 votingPower: this.state.web3.utils.toWei(
-                    (
-                        parseFloat(this.state.web3.utils.fromWei(tmpVP)) +
-                        parseFloat(gFryMod)
-                    ).toString()
+                    this.numberWithCommas(
+                        (
+                            parseFloat(this.state.web3.utils.fromWei(tmpVP)) +
+                            parseFloat(gFryMod)
+                        ).toString()
+                    )
                 ),
                 totalSupply: this.state.web3.utils.toWei(
                     (
@@ -163,7 +165,7 @@ class App extends Component {
     defaultConnect = async () => {
         console.log("Default Connect");
         const web3 = new Web3(
-            new Web3.providers.HttpProvider("https://rinkeby.arbitrum.io/rpc")
+            new Web3.providers.HttpProvider("https://arb1.arbitrum.io/rpc")
         );
 
         //console.log("Net ID test: ", netId);
@@ -178,7 +180,8 @@ class App extends Component {
         console.log("Mainnet Connect");
         const web3Mainnet = new Web3(
             new Web3.providers.HttpProvider(
-                "https://rinkeby-light.eth.linkpool.io/"
+                "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"
+                //"https://cloudflare-eth.com"
             )
         );
         await this.setState({
@@ -216,7 +219,7 @@ class App extends Component {
         //console.log("PROVIDER: ", web3.eth.currentProvider);
 
         // Get the contract instance.
-        const deployedNetwork = contract.networks[421611];
+        const deployedNetwork = contract.networks[42161];
         const instance = new web3.eth.Contract(
             contract.abi,
             deployedNetwork && deployedNetwork.address
@@ -313,7 +316,7 @@ class App extends Component {
             const { web3 } = this.state;
             const networkId = await web3.eth.net.getId();
             if (this.state.connected) {
-                if (networkId === 421611) {
+                if (networkId === 42161) {
                     this.setState({ chainId, networkId });
                     this.getNetworkName(networkId);
                     this.determineButtonsDisabled(this.state.web3);
@@ -425,6 +428,8 @@ class App extends Component {
             networkId = netID;
         }
 
+        console.log("NET ID: ", netID);
+
         if (networkId === 1) {
             this.setState({ network: "Mainnet" });
         } else if (networkId === 3) {
@@ -435,7 +440,7 @@ class App extends Component {
             this.setState({ network: "Goerli" });
         } else if (networkId === 42) {
             this.setState({ network: "Kovan" });
-        } else if (networkId === 421611) {
+        } else if (networkId === 42161) {
             this.setState({ network: "Arbitrum" });
             return "Arbitrum";
         } else {
@@ -470,6 +475,9 @@ class App extends Component {
                 overrideAccount = this.state.account;
             }
 
+            console.log("ACCOUNT: ", overrideAccount);
+            console.log("TOKEN ADDRESS: ", tokenAddress);
+
             let balanceUpdated = false;
             while (balanceUpdated === false) {
                 try {
@@ -478,10 +486,12 @@ class App extends Component {
                         .call();
 
                     balance = this.state.web3.utils.fromWei(balance);
-                    console.log("BALANCE: ", balance);
-                    balance = this.numberWithCommas(
-                        parseFloat(balance).toFixed(2)
-                    );
+
+                    console.log("BALANCE BEFORE: ", parseFloat(balance));
+
+                    balance = this.numberWithCommas(parseFloat(balance));
+
+                    console.log("BALANCE AFTER: ", parseFloat(balance));
 
                     return balance;
                 } catch (error) {
@@ -643,7 +653,13 @@ class App extends Component {
     };
 
     numberWithCommas = (x) => {
-        return parseFloat(x).toLocaleString("en-US", {
+        console.log(
+            "EXECUTING NUMBERWITHCOMMAS: ",
+            Math.floor((x * 100) / 100).toLocaleString("en-US", {
+                maximumFractionDigits: 2,
+            })
+        );
+        return (Math.floor(x * 100) / 100).toLocaleString("en-US", {
             maximumFractionDigits: 2,
         });
     };
