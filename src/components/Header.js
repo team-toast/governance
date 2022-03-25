@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import Tooltip from "react-bootstrap/Tooltip";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import TokenActions from "./TokenActions";
 import "../layout/components/header.sass";
-import PopupHint from "./PopupHint";
 //0x7E1d0353063F01CfFa92f4a9C8A100cFE37d8264
 //0x0000000000000000000000000000000000000000
 class Header extends Component {

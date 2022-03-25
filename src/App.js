@@ -16,8 +16,6 @@ import "./layout/config/_base.sass";
 import CustomHeader from "./components/CustomHeader";
 import ProgressBar from "./components/ProgressBar";
 
-import Status from "./components/Status";
-
 function initWeb3(provider) {
     const web3 = new Web3(provider);
 
@@ -197,7 +195,7 @@ class App extends Component {
             return;
         } else {
             const provider = window.ethereum;
-            console.log(provider.isMetaMask);
+            //console.log(provider.isMetaMask);
             if (provider.isMetaMask) {
                 this.setState({ metaMaskMissing: false });
             } else {
@@ -216,16 +214,16 @@ class App extends Component {
         const networkId = await web3.eth.net.getId();
         const chainId = await web3.eth.chainId();
 
-        console.log("PROVIDER: ", web3.eth.currentProvider);
+        //console.log("PROVIDER: ", web3.eth.currentProvider);
 
         // Get the contract instance.
-        const deployedNetwork = contract.networks[421611];
+        const deployedNetwork = contract.networks[42161];
         const instance = new web3.eth.Contract(
             contract.abi,
             deployedNetwork && deployedNetwork.address
         );
 
-        console.log("CONTRACT ADDRESS: ", deployedNetwork.address);
+        //console.log("CONTRACT ADDRESS: ", deployedNetwork.address);
 
         await this.setState({
             web3,
@@ -245,7 +243,7 @@ class App extends Component {
         const netId = await web3.eth.net.getId();
         const netName = this.getNetworkName(netId);
 
-        console.log("tmpAccount", tmpAccount);
+        //console.log("tmpAccount", tmpAccount);
         if (tmpAccount === "undefined") {
             this.setState({ disableButtons: true });
             this.setState({ disableMessage: "Your wallet is not connected" });
@@ -384,8 +382,8 @@ class App extends Component {
         while (gotLatestBlock === false) {
             try {
                 const block = await this.state.web3.eth.getBlock("latest");
-                console.log("Block Response: ", block);
-                console.log("Block Number: ", Number(block.l1BlockNumber));
+                //console.log("Block Response: ", block);
+                //console.log("Block Number: ", Number(block.l1BlockNumber));
                 this.setState({ latestBlock: Number(block.l1BlockNumber) });
                 gotLatestBlock = true;
                 return block;
@@ -402,14 +400,14 @@ class App extends Component {
                 this.sleep(500);
                 console.log("sleeping");
             }
-            console.log("Latest Block: ", this.state.latestBlock);
-            console.log("Block to find: ", blockNumber);
-            console.log("web3Mainnet: ", this.state.web3Mainnet);
+            //console.log("Latest Block: ", this.state.latestBlock);
+            //console.log("Block to find: ", blockNumber);
+            //console.log("web3Mainnet: ", this.state.web3Mainnet);
             if (blockNumber < this.state.latestBlock) {
                 const blockInfo = await this.state.web3Mainnet.eth.getBlock(
                     blockNumber
                 );
-                console.log("Block Info: ", blockInfo);
+                //console.log("Block Info: ", blockInfo);
                 return blockInfo["timestamp"];
             } else {
                 return 0;
@@ -648,7 +646,13 @@ class App extends Component {
     };
 
     numberWithCommas = (x) => {
-        return parseFloat(x).toLocaleString("en-US", {
+        console.log(
+            "EXECUTING NUMBERWITHCOMMAS: ",
+            Math.floor((x * 100) / 100).toLocaleString("en-US", {
+                maximumFractionDigits: 2,
+            })
+        );
+        return (Math.floor(x * 100) / 100).toLocaleString("en-US", {
             maximumFractionDigits: 2,
         });
     };
@@ -698,7 +702,6 @@ class App extends Component {
 
         try {
             const gasPrice = await this.getGasPrice();
-            let transactionReceipt;
 
             await tokenContract.methods
                 .delegate(this.state.delegateeAddress)

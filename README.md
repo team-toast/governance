@@ -11,16 +11,22 @@ npm install
 npm run start
 ```
 
-Yep, it's that simple.
+### Launching Contracts
 
-### Contributions
+Governance Remix deployment steps:
 
-Any and all contributions are welcome. Feel free to submit an issue or PR for anything you want covered.
+1. Double check parameters in https://docs.google.com/spreadsheets/d/1pDTcSFJLU0nd_v4ggWH-UAm8mazq4jAaNE2XZMHXtpw/edit#gid=0
 
-### License (MIT)
+2. Deploy the govDeployer contract in remix (Double check Arbitrum FRY address).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+3. Deploy governorAlpha.
+   The parameters are the contract addresses created by the newly deployed govDeployer in remix. The
+   address parameters are public variables but can also be found in the event emitted during deployment of govDeployer.
+   The guardian (address 0x7040E1373d281Ec5d6972B3546EAbf2E3Db81E56), votingPeriod (uint 19786) and
+   votingDelay (0) paramaters are in the sheet.
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+4. Run initializeGovernance on govDeployer with the newly deployed governorAlpha address as its parameter.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+5. Verify the contract code of governorAlpha on Arbiscan.
+
+6. Execute \_\_acceptAdmin function of governorAlpha using the guardian multisig.
