@@ -907,6 +907,17 @@ class Proposals extends Component {
                         </div>
                     </div>
                 );
+            } else if (this.props.web3 === null) {
+                return (
+                    <div className="proposals fetching-proposals">
+                        <div
+                            className="proposal"
+                            style={{ marginTop: "-44px" }}
+                        >
+                            <h4>Wallet Connection Requried</h4>
+                        </div>
+                    </div>
+                );
             } else
                 return (
                     <div className="proposals fetching-proposals">

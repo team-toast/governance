@@ -180,7 +180,7 @@ class App extends Component {
         console.log("Mainnet Connect");
         const web3Mainnet = new Web3(
             new Web3.providers.HttpProvider(
-                "https://rinkeby.infura.io/v3/80c9b77d70f64a5d94ea177acb67a008"
+                "https://rinkeby.infura.io/v3/"
                 //"https://rinkeby.infura.io/v3/"
                 //"https://rinkeby-light.eth.linkpool.io/"
             )
