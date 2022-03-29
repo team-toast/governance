@@ -421,9 +421,9 @@ class App extends Component {
                 // );
                 // console.log("Block Info: ", blockInfo["timestamp"]);
                 let resp = await axios.get(
-                    "http://" +
+                    "https://" +
                         window.location.hostname +
-                        ":8888" +
+                        //":8888" +
                         "/.netlify/functions/mainnet-timestamp?blocknumber=" +
                         blockNumber.toString()
                 );
