@@ -702,7 +702,7 @@ class Proposals extends Component {
 
     getProposalTimeFromBlock = async (block) => {
         let timestamp = await this.props.getBlockTimeStamp(block);
-
+        console.log("timestamp in proposals 1:", timestamp);
         let expiryDate;
         let latestBlock = "";
         if (this.props.latestBlock === "") {
