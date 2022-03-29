@@ -161,20 +161,20 @@ class App extends Component {
         }
     };
 
-    defaultConnect = async () => {
-        console.log("Default Connect");
-        const web3 = new Web3(
-            new Web3.providers.HttpProvider("https://rinkeby.arbitrum.io/rpc")
-        );
-        const netId = await web3.eth.net.getId();
+    // defaultConnect = async () => {
+    //     console.log("Default Connect");
+    //     const web3 = new Web3(
+    //         new Web3.providers.HttpProvider("https://rinkeby.arbitrum.io/rpc")
+    //     );
+    //     const netId = await web3.eth.net.getId();
 
-        console.log("Net ID test: ", netId);
-        await this.setState({
-            web3,
-            network: "Arbitrum",
-        });
-        this.getLatestBlock();
-    };
+    //     console.log("Net ID test: ", netId);
+    //     await this.setState({
+    //         web3,
+    //         network: "Arbitrum",
+    //     });
+    //     this.getLatestBlock();
+    // };
 
     mainnetConnect = async () => {
         console.log("Mainnet Connect");
@@ -408,10 +408,10 @@ class App extends Component {
 
     getBlockTimeStamp = async (blockNumber) => {
         try {
-            // while (this.state.web3Mainnet === null) {
-            //     this.sleep(500);
-            //     console.log("sleeping");
-            // }
+            while (this.state.latestBlock === "") {
+                console.log("Waiting for blocknumber");
+                await this.sleep(500);
+            }
             //console.log("Latest Block: ", this.state.latestBlock);
             //console.log("Block to find: ", blockNumber);
             //console.log("web3Mainnet: ", this.state.web3Mainnet);
