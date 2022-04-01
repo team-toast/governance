@@ -14,6 +14,13 @@ class CreateProposalForm extends Component {
 
         this.state = {
             toAddress: "",
+            tokenAddress: governorABI.contractAddresses["levr"]["address"],
+            tokenName: "",
+            tokenSymbol: "",
+            tokenBalance: "",
+            tokenDecimals: "",
+            tokenDetailsLoaded: false,
+            tokenDetailsMessage: "",
             daiAmount: 0,
             description: "",
         };
@@ -34,7 +41,7 @@ class CreateProposalForm extends Component {
                 governAddress
             );
 
-            const daiFuncCall = this.props.web3.eth.abi.encodeFunctionCall(
+            const tokenFuncCall = this.props.web3.eth.abi.encodeFunctionCall(
                 Dai.find((el) => el.name === "transfer"),
                 [
                     receiverAddress,
@@ -44,11 +51,7 @@ class CreateProposalForm extends Component {
 
             const forwardFuncCall = this.props.web3.eth.abi.encodeFunctionCall(
                 Forwarder.find((el) => el.name === "forward"),
-                [
-                    governorABI.contractAddresses["dai"]["address"],
-                    daiFuncCall,
-                    "0",
-                ]
+                [this.state.tokenAddress, tokenFuncCall, "0"]
             );
 
             let callDatasDynamic = [forwardFuncCall];
@@ -139,10 +142,69 @@ class CreateProposalForm extends Component {
         }
     };
 
+    getTokenDetails = async (address = this.state.tokenAddress) => {
+        try {
+            this.setState({
+                tokenDetailsMessage: "Loading Token Info...",
+            });
+            const tokenInst = new this.props.web3.eth.Contract(Dai, address);
+            let tokenName = await tokenInst.methods.name().call();
+            let tokenBalance = await tokenInst.methods
+                .balanceOf(
+                    governorABI.contractAddresses["forwarder"]["address"]
+                )
+                .call();
+            let tokenSymbol = await tokenInst.methods.symbol().call();
+            let tokenDecimals = await tokenInst.methods.decimals().call();
+            console.log("Token Name: ", tokenName);
+            this.setState({
+                tokenName: tokenName,
+            });
+            this.setState({
+                tokenBalance: this.props.web3.utils.fromWei(tokenBalance),
+            });
+            this.setState({
+                tokenSymbol: tokenSymbol,
+            });
+            this.setState({
+                tokenDecimals: tokenDecimals,
+            });
+            this.setState({
+                tokenDetailsLoaded: true,
+            });
+            this.setState({
+                tokenDetailsMessage: "",
+            });
+        } catch (error) {
+            console.error("Error getting token name: ", error);
+            this.setState({
+                tokenName: "",
+            });
+            this.setState({
+                tokenDetailsMessage: "Could not find token details",
+            });
+        }
+    };
+
     handleAddressChange = async (evt) => {
         this.setState({
             toAddress: evt.target.value,
         });
+    };
+
+    handleTokenAddressChange = async (evt) => {
+        if (this.props.web3.utils.isAddress(evt.target.value.toLowerCase())) {
+            console.log("Valid Address!:", evt.target.value);
+            this.getTokenDetails(evt.target.value);
+            this.setState({
+                tokenAddress: evt.target.value,
+            });
+        } else {
+            this.setState({
+                tokenDetailsMessage: "Not a valid address.",
+            });
+        }
+        console.log("Token Address: ", evt.target.value);
     };
 
     handleAmountChange = async (evt) => {
@@ -157,12 +219,13 @@ class CreateProposalForm extends Component {
         });
     };
 
+    componentDidMount() {
+        this.getTokenDetails();
+    }
+
     render() {
         return (
             <section className="form">
-                <h4 className="title">
-                    Treasury Balance: {this.props.treasuryBalance} Dai
-                </h4>
                 <br />
                 <form
                     onSubmit={(e) => {
@@ -187,7 +250,37 @@ class CreateProposalForm extends Component {
                     <br />
                     <br />
                     <label>
-                        Dai Amount: <br />
+                        Token to Send: <br />
+                        <input
+                            required
+                            type="text"
+                            step="0.01"
+                            placeholder="0x..."
+                            defaultValue={
+                                governorABI.contractAddresses["levr"]["address"]
+                            }
+                            value={this.state.value}
+                            onChange={this.handleTokenAddressChange}
+                        />
+                    </label>
+                    <br />
+                    {this.state.tokenName && !this.state.tokenDetailsMessage ? (
+                        <div className="token_details_div">
+                            <p>Name: {this.state.tokenName}</p>
+                            <p>Symbol: {this.state.tokenSymbol}</p>
+                            <p>Treasury Balance: {this.state.tokenBalance}</p>
+                            <p>Decimals: {this.state.tokenDecimals}</p>
+                        </div>
+                    ) : (
+                        this.state.tokenDetailsLoaded && (
+                            <p className="token_details_div">
+                                {this.state.tokenDetailsMessage}
+                            </p>
+                        )
+                    )}
+                    <br />
+                    <label>
+                        Amount: <br />
                         <input
                             required
                             type="number"

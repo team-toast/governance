@@ -386,9 +386,9 @@ class App extends Component {
             try {
                 await axios
                     .get(
-                        "https://" +
+                        "http://" +
                             window.location.hostname +
-                            //":8888" +
+                            ":8888" +
                             "/.netlify/functions/l1-latest-blocknumber"
                     )
                     .then((resp) => {
@@ -406,13 +406,13 @@ class App extends Component {
         }
     };
 
-    getBlockTimeStamp = async (blockNumber) => {
+    getBlockTimeStamp = async (blockNumber = 0) => {
         try {
             while (this.state.latestBlock === "") {
                 console.log("Waiting for blocknumber");
                 await this.sleep(500);
             }
-            //console.log("Latest Block: ", this.state.latestBlock);
+            console.log("Latest Block: ", this.state.latestBlock);
             //console.log("Block to find: ", blockNumber);
             //console.log("web3Mainnet: ", this.state.web3Mainnet);
             if (blockNumber < this.state.latestBlock) {
@@ -421,9 +421,9 @@ class App extends Component {
                 // );
                 // console.log("Block Info: ", blockInfo["timestamp"]);
                 let resp = await axios.get(
-                    "https://" +
+                    "http://" +
                         window.location.hostname +
-                        //":8888" +
+                        ":8888" +
                         "/.netlify/functions/mainnet-timestamp?blocknumber=" +
                         blockNumber.toString()
                 );

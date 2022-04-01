@@ -279,101 +279,108 @@ class Proposals extends Component {
     };
 
     searchForPastEvents = async (web3, targetTimestamp) => {
-        let higherLimitStamp = targetTimestamp + 10000; // About 3300 blocks overshoot
-        let lowerLimitStamp = targetTimestamp - 10000;
+        while (1) {
+            try {
+                let higherLimitStamp = targetTimestamp + 10000; // About 3300 blocks overshoot
+                let lowerLimitStamp = targetTimestamp - 10000;
 
-        // decreasing average block size will decrease precision and also
-        // decrease the amount of requests made in order to find the closest
-        // block
-        let averageBlockTime = 3.5 * 1.0;
+                // decreasing average block size will decrease precision and also
+                // decrease the amount of requests made in order to find the closest
+                // block
+                let averageBlockTime = 3.5 * 1.0;
 
-        // get current block number
-        const currentBlockNumber = await web3.eth.getBlockNumber();
-        //console.log("Using current block number: ", currentBlockNumber);
-        let block = await web3.eth.getBlock(currentBlockNumber);
+                // get current block number
+                const currentBlockNumber = await web3.eth.getBlockNumber();
+                //console.log("Using current block number: ", currentBlockNumber);
+                let block = await web3.eth.getBlock(currentBlockNumber);
 
-        let requestsMade = 0;
+                let requestsMade = 0;
 
-        let blockNumber = currentBlockNumber;
+                let blockNumber = currentBlockNumber;
 
-        while (block.timestamp > targetTimestamp) {
-            let decreaseBlocks =
-                (block.timestamp - targetTimestamp) / averageBlockTime;
-            decreaseBlocks = parseInt(decreaseBlocks);
+                while (block.timestamp > targetTimestamp) {
+                    let decreaseBlocks =
+                        (block.timestamp - targetTimestamp) / averageBlockTime;
+                    decreaseBlocks = parseInt(decreaseBlocks);
 
-            console.log("Decreasing blocks by: ", decreaseBlocks);
+                    console.log("Decreasing blocks by: ", decreaseBlocks);
 
-            if (decreaseBlocks < 1000) {
-                break;
+                    if (decreaseBlocks < 1000) {
+                        break;
+                    }
+
+                    blockNumber -= decreaseBlocks;
+
+                    block = await web3.eth.getBlock(blockNumber);
+                    requestsMade += 1;
+                }
+
+                // if we undershoot the day
+                if (block.timestamp < lowerLimitStamp) {
+                    while (block.timestamp < lowerLimitStamp) {
+                        blockNumber += 2000;
+                        //console.log("UnderShot target, adding to block number");
+                        block = await web3.eth.getBlock(blockNumber);
+                        requestsMade += 2000;
+                    }
+                }
+
+                if (block.timestamp >= higherLimitStamp) {
+                    while (block.timestamp >= higherLimitStamp) {
+                        blockNumber -= 2000;
+
+                        block = await web3.eth.getBlock(blockNumber);
+                        requestsMade += 1;
+                    }
+                }
+
+                // console.log("tgt timestamp   ->", targetTimestamp);
+                // console.log("block timestamp ->", block.timestamp);
+                // console.log("block number    ->", block);
+                // console.log("");
+
+                console.log("requests made   ->", requestsMade);
+
+                const govAlpha = new web3.eth.Contract(
+                    contract.abi,
+                    contract["networks"]["421611"]["address"]
+                );
+
+                govAlpha.getPastEvents(
+                    0xda95691a, // method id
+                    {
+                        fromBlock: block.number - 5000,
+                        toBlock: block.number + 5000,
+                    },
+                    this.processEvent
+                );
+
+                return block.number;
+            } catch (error) {
+                console.error("Something exploded here");
+                await this.sleep(200);
             }
-
-            blockNumber -= decreaseBlocks;
-
-            block = await web3.eth.getBlock(blockNumber);
-            requestsMade += 1;
         }
-
-        // if we undershoot the day
-        if (block.timestamp < lowerLimitStamp) {
-            while (block.timestamp < lowerLimitStamp) {
-                blockNumber += 2000;
-                //console.log("UnderShot target, adding to block number");
-                block = await web3.eth.getBlock(blockNumber);
-                requestsMade += 2000;
-            }
-        }
-
-        if (block.timestamp >= higherLimitStamp) {
-            while (block.timestamp >= higherLimitStamp) {
-                blockNumber -= 2000;
-
-                block = await web3.eth.getBlock(blockNumber);
-                requestsMade += 1;
-            }
-        }
-
-        // console.log("tgt timestamp   ->", targetTimestamp);
-        // console.log("block timestamp ->", block.timestamp);
-        // console.log("block number    ->", block);
-        // console.log("");
-
-        console.log("requests made   ->", requestsMade);
-
-        const govAlpha = new web3.eth.Contract(
-            contract.abi,
-            contract["networks"]["421611"]["address"]
-        );
-
-        govAlpha.getPastEvents(
-            0xda95691a, // method id
-            {
-                fromBlock: block.number - 5000,
-                toBlock: block.number + 5000,
-            },
-            this.processEvent
-        );
-
-        return block.number;
     };
 
-    getAverageBlockTime = async (web3) => {
-        const n = 25;
-        const latest = await web3.eth.getBlockNumber();
-        const blockNumbers = this.createArrayWithRange(
-            latest - n,
-            latest + 1,
-            1
-        );
-        const batch = new web3.eth.BatchRequest();
+    // getAverageBlockTime = async (web3) => {
+    //     const n = 25;
+    //     const latest = await web3.eth.getBlockNumber();
+    //     const blockNumbers = this.createArrayWithRange(
+    //         latest - n,
+    //         latest + 1,
+    //         1
+    //     );
+    //     const batch = new web3.eth.BatchRequest();
 
-        blockNumbers.forEach((blockNumber) => {
-            batch.add(
-                web3.eth.getBlock.request(blockNumber, this.storeLocalCopy)
-            );
-        });
+    //     blockNumbers.forEach((blockNumber) => {
+    //         batch.add(
+    //             web3.eth.getBlock.request(blockNumber, this.storeLocalCopy)
+    //         );
+    //     });
 
-        batch.execute();
-    };
+    //     batch.execute();
+    // };
 
     storeLocalCopy = (err, data) => {
         if (err === null) {
@@ -702,6 +709,7 @@ class Proposals extends Component {
 
     getProposalTimeFromBlock = async (block) => {
         let timestamp = await this.props.getBlockTimeStamp(block);
+        console.log("Block: ", block);
         console.log("timestamp in proposals 1:", timestamp);
         let expiryDate;
         let latestBlock = "";

@@ -149,7 +149,7 @@ class Nav extends Component {
                                         : ""
                                 }
                             >
-                                Create Dai Payment Proposal
+                                Create Payment Proposal
                             </button>
                             <button
                                 onClick={() => {
