@@ -212,7 +212,6 @@ class App extends Component {
         //console.log("PROVIDER: ", web3.eth.currentProvider);
 
         // Get the contract instance.
-        const deployedNetwork = "421611";
         const instance = new web3.eth.Contract(
             contract.abi,
             appConfig["contractAddresses"]["governorAlpha"]
@@ -309,7 +308,7 @@ class App extends Component {
             const { web3 } = this.state;
             const networkId = await web3.eth.net.getId();
             if (this.state.connected) {
-                if (networkId === Number("42161")) {
+                if (networkId === Number(appConfig["chainId"])) {
                     this.setState({ chainId, networkId });
                     this.getNetworkName(networkId);
                     this.determineButtonsDisabled(this.state.web3);
@@ -374,22 +373,30 @@ class App extends Component {
 
     getLatestBlock = async () => {
         let gotLatestBlock = false;
+        let url = "";
+        if (appConfig["testnetMode"] === "true") {
+            console.log("IN Testnet MODE");
+            url =
+                "http://" +
+                window.location.hostname +
+                ":8888" +
+                "/.netlify/functions/l1-latest-blocknumber";
+        } else {
+            console.log("IN Live MODE");
+            url =
+                "https://" +
+                window.location.hostname +
+                "/.netlify/functions/l1-latest-blocknumber";
+        }
         while (gotLatestBlock === false) {
             try {
-                await axios
-                    .get(
-                        "https://" +
-                            window.location.hostname +
-                            //":8888" +
-                            "/.netlify/functions/l1-latest-blocknumber"
-                    )
-                    .then((resp) => {
-                        //console.log("Raw data: ", Number(resp.data));
-                        this.setState({
-                            latestBlock: Number(resp.data),
-                        });
-                        return Number(resp.data);
+                await axios.get(url).then((resp) => {
+                    //console.log("Raw data: ", Number(resp.data));
+                    this.setState({
+                        latestBlock: Number(resp.data),
                     });
+                    return Number(resp.data);
+                });
                 gotLatestBlock = true;
             } catch (error) {
                 console.error("Error executing getLatestBlock");
@@ -404,6 +411,23 @@ class App extends Component {
                 console.log("Waiting for blocknumber");
                 await this.sleep(500);
             }
+            let url = "";
+            if (appConfig["testnetMode"] === "true") {
+                console.log("IN Testnet MODE");
+                url =
+                    "http://" +
+                    window.location.hostname +
+                    ":8888" +
+                    "/.netlify/functions/mainnet-timestamp?blocknumber=" +
+                    blockNumber.toString();
+            } else {
+                console.log("IN Live MODE");
+                url =
+                    "https://" +
+                    window.location.hostname +
+                    "/.netlify/functions/mainnet-timestamp?blocknumber=" +
+                    blockNumber.toString();
+            }
             console.log("Latest Block: ", this.state.latestBlock);
             //console.log("Block to find: ", blockNumber);
             //console.log("web3Mainnet: ", this.state.web3Mainnet);
@@ -412,13 +436,7 @@ class App extends Component {
                 //     blockNumber
                 // );
                 // console.log("Block Info: ", blockInfo["timestamp"]);
-                let resp = await axios.get(
-                    "https://" +
-                        window.location.hostname +
-                        //":8888" +
-                        "/.netlify/functions/mainnet-timestamp?blocknumber=" +
-                        blockNumber.toString()
-                );
+                let resp = await axios.get(url);
 
                 console.log("Raw data: ", Number(resp.data));
 
@@ -454,7 +472,7 @@ class App extends Component {
             this.setState({ network: "Goerli" });
         } else if (networkId === 42) {
             this.setState({ network: "Kovan" });
-        } else if (networkId === Number("42161")) {
+        } else if (networkId === Number(appConfig["chainId"])) {
             this.setState({ network: "Arbitrum" });
             return "Arbitrum";
         } else {
