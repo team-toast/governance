@@ -920,6 +920,7 @@ class App extends Component {
             firetext={this.state.firetext}
           ></Status>
         )} */}
+
                 <Nav
                     {...this.state}
                     onConnect={this.onConnect}

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Message from "./Message";
 import "../layout/components/nav.sass";
-import logo from "../images/levrLogoOnly.svg";
 import appConfig from "../app-config.json";
 
 class Nav extends Component {
@@ -9,6 +8,7 @@ class Nav extends Component {
         super(props);
         this.state = {
             showMobileMenu: false,
+            logo: appConfig["logoFileName"],
         };
     }
     toggleMobileMenu = (data) => {
@@ -83,8 +83,8 @@ class Nav extends Component {
                     <nav className="nav top-nav">
                         <a className="nav__brand" href="/">
                             <img
-                                src={logo}
-                                alt="Compound"
+                                src={this.state.logo}
+                                alt="Home"
                                 className="nav__brand-logo"
                             />
                             <h1 className="nav__brand-name">
@@ -101,8 +101,8 @@ class Nav extends Component {
             <nav className="nav top-nav">
                 <a className="nav__brand" href="/">
                     <img
-                        src={logo}
-                        alt="Compound"
+                        src={this.state.logo}
+                        alt="Home"
                         className="nav__brand-logo"
                     />
                     <h1 className="nav__brand-name">
