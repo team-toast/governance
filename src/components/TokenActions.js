@@ -454,10 +454,14 @@ class TokenActions extends Component {
                                 <div className="inner-box">
                                     Voting Power
                                     <div className="value-display">
-                                        {(
-                                            parseInt(this.props.votingPower) /
-                                            10 ** 18
-                                        ).toFixed(2)}
+                                        {this.props.numberWithCommas(
+                                            (
+                                                parseInt(
+                                                    this.props.votingPower
+                                                ) /
+                                                10 ** 18
+                                            ).toFixed(2)
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex-actions">

@@ -303,7 +303,7 @@ class Proposals extends Component {
                         (block.timestamp - targetTimestamp) / averageBlockTime;
                     decreaseBlocks = parseInt(decreaseBlocks);
 
-                    console.log("Decreasing blocks by: ", decreaseBlocks);
+                    // console.log("Decreasing blocks by: ", decreaseBlocks);
 
                     if (decreaseBlocks < 1000) {
                         break;

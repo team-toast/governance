@@ -95,9 +95,9 @@ class App extends Component {
         if (this.state.delegatedAddress.toLowerCase() === "self") {
             this.setState({
                 votingPower: this.state.web3.utils.toWei(
-                    (
+                    this.numberWithCommas(
                         parseFloat(this.state.web3.utils.fromWei(tmpVP)) +
-                        parseFloat(gLevrMod)
+                            parseFloat(gLevrMod)
                     ).toString()
                 ),
                 totalSupply: this.state.web3.utils.toWei(
@@ -212,7 +212,7 @@ class App extends Component {
         //console.log("PROVIDER: ", web3.eth.currentProvider);
 
         // Get the contract instance.
-        const deployedNetwork = appConfig["chainId"];
+        const deployedNetwork = "421611";
         const instance = new web3.eth.Contract(
             contract.abi,
             appConfig["contractAddresses"]["governorAlpha"]
@@ -309,7 +309,7 @@ class App extends Component {
             const { web3 } = this.state;
             const networkId = await web3.eth.net.getId();
             if (this.state.connected) {
-                if (networkId === appConfig["chainId"]) {
+                if (networkId === Number("42161")) {
                     this.setState({ chainId, networkId });
                     this.getNetworkName(networkId);
                     this.determineButtonsDisabled(this.state.web3);
@@ -378,9 +378,9 @@ class App extends Component {
             try {
                 await axios
                     .get(
-                        "http://" +
+                        "https://" +
                             window.location.hostname +
-                            ":8888" +
+                            //":8888" +
                             "/.netlify/functions/l1-latest-blocknumber"
                     )
                     .then((resp) => {
@@ -413,9 +413,9 @@ class App extends Component {
                 // );
                 // console.log("Block Info: ", blockInfo["timestamp"]);
                 let resp = await axios.get(
-                    "http://" +
+                    "https://" +
                         window.location.hostname +
-                        ":8888" +
+                        //":8888" +
                         "/.netlify/functions/mainnet-timestamp?blocknumber=" +
                         blockNumber.toString()
                 );
@@ -442,6 +442,8 @@ class App extends Component {
             networkId = netID;
         }
 
+        console.log("NETWORK ID: ", networkId);
+
         if (networkId === 1) {
             this.setState({ network: "Mainnet" });
         } else if (networkId === 3) {
@@ -452,7 +454,7 @@ class App extends Component {
             this.setState({ network: "Goerli" });
         } else if (networkId === 42) {
             this.setState({ network: "Kovan" });
-        } else if (networkId === 421611) {
+        } else if (networkId === Number("42161")) {
             this.setState({ network: "Arbitrum" });
             return "Arbitrum";
         } else {
@@ -496,15 +498,13 @@ class App extends Component {
 
                     balance = this.state.web3.utils.fromWei(balance);
                     console.log("BALANCE: ", balance);
-                    balance = this.numberWithCommas(
-                        parseFloat(balance).toFixed(2)
-                    );
+                    balance = this.numberWithCommas(parseFloat(balance));
                     //if (balance > 0) {
                     return balance;
                     //}
                     balanceUpdated = true;
                 } catch (error) {
-                    this.sleep(1000);
+                    await this.sleep(1000);
                     console.error("Error Setting token balance: ", error);
                 }
             }
@@ -541,7 +541,7 @@ class App extends Component {
                     this.setState({ treasuryBalance: balance });
                 } catch (error) {
                     console.error("Error getting treasury balance: ", error);
-                    this.sleep(1000);
+                    await this.sleep(1000);
                 }
             }
         }
