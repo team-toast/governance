@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import "../layout/components/createproposalform.sass";
 import { Form, FloatingLabel } from "react-bootstrap";
 import governorABI from "../contracts/GovernorAlpha.json";
+import appConfig from "../app-config.json";
 import Forwarder from "../contracts/Forwarder.json";
 import Dai from "../contracts/Dai.json";
 
@@ -14,7 +15,7 @@ class CreateProposalForm extends Component {
 
         this.state = {
             toAddress: "",
-            tokenAddress: governorABI.contractAddresses["levr"]["address"],
+            tokenAddress: appConfig["contractAddresses"]["projectToken"],
             tokenName: "",
             tokenSymbol: "",
             tokenBalance: "",
@@ -35,7 +36,8 @@ class CreateProposalForm extends Component {
         // this.props.setStatusOf("Creating proposal ...", true);
 
         if (this.props.network === "Arbitrum") {
-            const governAddress = governorABI.networks[42161]["address"];
+            const governAddress =
+                appConfig["contractAddresses"]["governorAlpha"];
             const governContract = new this.props.web3.eth.Contract(
                 governorABI.abi,
                 governAddress
@@ -56,9 +58,7 @@ class CreateProposalForm extends Component {
 
             let callDatasDynamic = [forwardFuncCall];
 
-            let targets = [
-                governorABI.contractAddresses["forwarder"]["address"],
-            ];
+            let targets = [appConfig["contractAddresses"]["treasuryForwarder"]];
             let values = [0];
             let signatures = [""];
 
@@ -150,9 +150,7 @@ class CreateProposalForm extends Component {
             const tokenInst = new this.props.web3.eth.Contract(Dai, address);
             let tokenName = await tokenInst.methods.name().call();
             let tokenBalance = await tokenInst.methods
-                .balanceOf(
-                    governorABI.contractAddresses["forwarder"]["address"]
-                )
+                .balanceOf(appConfig["contractAddresses"]["treasuryForwarder"])
                 .call();
             let tokenSymbol = await tokenInst.methods.symbol().call();
             let tokenDecimals = await tokenInst.methods.decimals().call();
@@ -257,7 +255,7 @@ class CreateProposalForm extends Component {
                             step="0.01"
                             placeholder="0x..."
                             defaultValue={
-                                governorABI.contractAddresses["levr"]["address"]
+                                appConfig["contractAddresses"]["projectToken"]
                             }
                             value={this.state.value}
                             onChange={this.handleTokenAddressChange}

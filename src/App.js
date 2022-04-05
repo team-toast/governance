@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import Web3 from "web3";
 import Web3Connect from "web3connect";
 import contract from "./contracts/GovernorAlpha.json";
+import appConfig from "./app-config.json";
 import compTokenContract from "./contracts/Comp.json";
 import Dai from "./contracts/Dai.json";
 import Nav from "./components/Nav";
@@ -31,15 +32,6 @@ function initWeb3(provider) {
     });
     return web3;
 }
-
-const providerOptions = {
-    walletconnect: {
-        package: WalletConnectProvider,
-        rpc: {
-            421611: "https://rinkeby.arbitrum.io/rpc",
-        },
-    },
-};
 
 class App extends Component {
     web3Connect;
@@ -81,7 +73,7 @@ class App extends Component {
         this.web3Connect = new Web3Connect.Core({
             network: "mainnet",
             cacheProvider: true,
-            providerOptions,
+            //providerOptions,
         });
     }
 
@@ -220,10 +212,10 @@ class App extends Component {
         //console.log("PROVIDER: ", web3.eth.currentProvider);
 
         // Get the contract instance.
-        const deployedNetwork = contract.networks[42161];
+        const deployedNetwork = appConfig["chainId"];
         const instance = new web3.eth.Contract(
             contract.abi,
-            deployedNetwork && deployedNetwork.address
+            appConfig["contractAddresses"]["governorAlpha"]
         );
 
         //console.log("CONTRACT ADDRESS: ", deployedNetwork.address);
@@ -260,12 +252,12 @@ class App extends Component {
             this.getTotalSupply();
             this.setState({
                 balance: await this.getTokenBalance(
-                    contract.contractAddresses["token"]["address"]
+                    appConfig["contractAddresses"]["governanceToken"]
                 ),
             });
             this.setState({
                 levrBalance: await this.getTokenBalance(
-                    contract.contractAddresses["levr"]["address"]
+                    appConfig["contractAddresses"]["projectToken"]
                 ),
             });
             this.getDelegateToAddress();
@@ -302,12 +294,12 @@ class App extends Component {
             this.determineButtonsDisabled(this.state.web3);
             this.setState({
                 balance: await this.getTokenBalance(
-                    contract.contractAddresses["token"]["address"]
+                    appConfig["contractAddresses"]["governanceToken"]
                 ),
             });
             this.setState({
                 levrBalance: await this.getTokenBalance(
-                    contract.contractAddresses["levr"]["address"]
+                    appConfig["contractAddresses"]["projectToken"]
                 ),
             });
             await this.getDelegateToAddress(accounts2[0]);
@@ -317,7 +309,7 @@ class App extends Component {
             const { web3 } = this.state;
             const networkId = await web3.eth.net.getId();
             if (this.state.connected) {
-                if (networkId === 421611) {
+                if (networkId === appConfig["chainId"]) {
                     this.setState({ chainId, networkId });
                     this.getNetworkName(networkId);
                     this.determineButtonsDisabled(this.state.web3);
@@ -386,9 +378,9 @@ class App extends Component {
             try {
                 await axios
                     .get(
-                        "https://" +
+                        "http://" +
                             window.location.hostname +
-                            //":8888" +
+                            ":8888" +
                             "/.netlify/functions/l1-latest-blocknumber"
                     )
                     .then((resp) => {
@@ -421,9 +413,9 @@ class App extends Component {
                 // );
                 // console.log("Block Info: ", blockInfo["timestamp"]);
                 let resp = await axios.get(
-                    "https://" +
+                    "http://" +
                         window.location.hostname +
-                        //":8888" +
+                        ":8888" +
                         "/.netlify/functions/mainnet-timestamp?blocknumber=" +
                         blockNumber.toString()
                 );
@@ -521,7 +513,7 @@ class App extends Component {
 
     getTreasuryBalance = async () => {
         if (this.state.network === "Arbitrum") {
-            const daiAddress = contract.contractAddresses["dai"]["address"];
+            const daiAddress = appConfig["contractAddresses"]["daiAddress"];
 
             const daiContract = new this.state.web3.eth.Contract(
                 Dai,
@@ -529,8 +521,8 @@ class App extends Component {
             );
 
             let overrideAccount =
-                contract.contractAddresses["forwarder"][
-                    "address"
+                appConfig["contractAddresses"][
+                    "treasuryForwarder"
                 ].toLowerCase();
 
             let balanceUpdated = false;
@@ -561,7 +553,8 @@ class App extends Component {
 
     getVotingPower = async (account = "none") => {
         if (this.state.network === "Arbitrum") {
-            const tokenAddress = contract.contractAddresses["token"]["address"];
+            const tokenAddress =
+                appConfig["contractAddresses"]["governanceToken"];
 
             const tokenContract = new this.state.web3.eth.Contract(
                 compTokenContract,
@@ -596,7 +589,8 @@ class App extends Component {
 
     getTotalSupply = async (account = "none") => {
         if (this.state.network === "Arbitrum") {
-            const tokenAddress = contract.contractAddresses["token"]["address"];
+            const tokenAddress =
+                appConfig["contractAddresses"]["governanceToken"];
 
             const tokenContract = new this.state.web3.eth.Contract(
                 compTokenContract,
@@ -624,7 +618,8 @@ class App extends Component {
 
     getDelegateToAddress = async (account = "none") => {
         if (this.state.network === "Arbitrum") {
-            const tokenAddress = contract.contractAddresses["token"]["address"];
+            const tokenAddress =
+                appConfig["contractAddresses"]["governanceToken"];
 
             const tokenContract = new this.state.web3.eth.Contract(
                 compTokenContract,
@@ -717,7 +712,7 @@ class App extends Component {
         });
         this.setProgress([]);
 
-        const tokenAddress = contract.contractAddresses["token"]["address"];
+        const tokenAddress = appConfig["contractAddresses"]["governanceToken"];
 
         const tokenContract = new this.state.web3.eth.Contract(
             compTokenContract,
@@ -980,6 +975,7 @@ class App extends Component {
                                         }
                                         getGasPrice={this.getGasPrice}
                                         setStatusOf={this.setStatusOf}
+                                        appConfig={appConfig}
                                     />
                                 </div>
                             </div>

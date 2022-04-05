@@ -5,7 +5,7 @@ import PopupHint from "./PopupHint";
 import governatorContract from "../contracts/Governator.json";
 import compTokenContract from "../contracts/Comp.json";
 import contract from "../contracts/GovernorAlpha.json";
-import incrementerABI from "../contracts/Incrementer.json";
+import appConfig from "../app-config.json";
 
 class TokenActions extends Component {
     constructor(props) {
@@ -41,14 +41,14 @@ class TokenActions extends Component {
 
             const levrToken = new this.props.web3.eth.Contract(
                 compTokenContract,
-                contract.contractAddresses["levr"]["address"]
+                appConfig["contractAddresses"]["projectToken"]
             );
 
             // Check allowance
             let levrAllowance = await levrToken.methods
                 .allowance(
                     this.props.account,
-                    contract.contractAddresses["governator"]["address"]
+                    appConfig["contractAddresses"]["governator"]
                 )
                 .call();
 
@@ -59,7 +59,7 @@ class TokenActions extends Component {
 
                 await levrToken.methods
                     .approve(
-                        contract.contractAddresses["governator"]["address"],
+                        appConfig["contractAddresses"]["governator"],
                         this.state.uintMaxHex
                     )
                     .send(
@@ -97,7 +97,7 @@ class TokenActions extends Component {
             this.props.setStatus("Converting LEVR to gLEVR", true);
             const governator = new this.props.web3.eth.Contract(
                 governatorContract,
-                contract.contractAddresses["governator"]["address"]
+                appConfig["contractAddresses"]["governator"]
             );
             await governator.methods
                 .governate(
@@ -152,8 +152,8 @@ class TokenActions extends Component {
 
                 if (
                     tmpAddress.toLowerCase() ===
-                        contract.contractAddresses["token"][
-                            "address"
+                        appConfig["contractAddresses"][
+                            "governanceToken"
                         ].toLowerCase() &&
                     tmpAccount.toLowerCase() ===
                         this.props.account.toLowerCase()
@@ -174,7 +174,7 @@ class TokenActions extends Component {
             this.props.setStatus("Converting gLEVR to LEVR", true);
             const governator = new this.props.web3.eth.Contract(
                 governatorContract,
-                contract.contractAddresses["governator"]["address"]
+                appConfig["contractAddresses"]["governator"]
             );
             await governator.methods
                 .degovernate(
@@ -231,8 +231,8 @@ class TokenActions extends Component {
 
                 if (
                     tmpAddress.toLowerCase() ===
-                        contract.contractAddresses["token"][
-                            "address"
+                        appConfig["contractAddresses"][
+                            "governanceToken"
                         ].toLowerCase() &&
                     tmpAccount.toLowerCase() ===
                         this.props.account.toLowerCase()
@@ -309,7 +309,7 @@ class TokenActions extends Component {
                         <div className="flex xs-xs-noflex">
                             <div className="margin-top-1">
                                 <div className="inner-box">
-                                    LEVR Balance
+                                    {appConfig["projectTokenName"]} Balance
                                     <div className="value-display">
                                         {this.props.levrBalance}
                                     </div>
@@ -322,14 +322,21 @@ class TokenActions extends Component {
                                                 ? "flex-input"
                                                 : "inactive flex-input"
                                         }
-                                        data-title="Your LEVR balance is 0 and therefor you can't use this function."
+                                        data-title={
+                                            "Your " +
+                                            appConfig["projectTokenName"] +
+                                            " balance is 0 and therefor you can't use this function."
+                                        }
                                     >
                                         <input
                                             type="number"
                                             step="1"
                                             min="0"
                                             onChange={this.updateLevrAmount}
-                                            placeholder="Amount of LEVR"
+                                            placeholder={
+                                                "Amount of " +
+                                                appConfig["projectTokenName"]
+                                            }
                                         />
                                         <button
                                             className={
@@ -350,23 +357,33 @@ class TokenActions extends Component {
                                                             this.state
                                                                 .levrConvertAmount
                                                         ).toFixed(2)
-                                                    )} LEVR</span> to <span>${this.props.numberWithCommas(
+                                                    )} ${
+                                                        appConfig[
+                                                            "projectTokenName"
+                                                        ]
+                                                    }</span> to <span>${this.props.numberWithCommas(
                                                         parseFloat(
                                                             this.state
                                                                 .levrConvertAmount
                                                         ).toFixed(2)
-                                                    )} gLEVR</span>`
+                                                    )} ${
+                                                        appConfig[
+                                                            "governanceTokenName"
+                                                        ]
+                                                    }</span>`
                                                 )
                                             }
                                         >
-                                            LEVR {">"} gLEVR
+                                            {appConfig["governanceTokenName"]}{" "}
+                                            {">"}
+                                            {appConfig["projectTokenName"]}
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             <div className="margin-top-1">
                                 <div className="inner-box">
-                                    gLEVR Balance{" "}
+                                    {appConfig["governanceTokenName"]} Balance{" "}
                                     <div className="value-display">
                                         {this.props.balance}
                                     </div>
@@ -378,14 +395,21 @@ class TokenActions extends Component {
                                                 ? "flex-input justify-right"
                                                 : "inactive flex-input justify-right"
                                         }
-                                        data-title="Your gLEVR balance is 0 and therefor you can't use this function."
+                                        data-title={
+                                            "Your " +
+                                            appConfig["governanceTokenName"] +
+                                            " balance is 0 and therefor you can't use this function."
+                                        }
                                     >
                                         <input
                                             type="number"
                                             step="1"
                                             min="0"
                                             onChange={this.updateGLevrAmount}
-                                            placeholder="Amount of gLEVR"
+                                            placeholder={
+                                                "Amount of " +
+                                                appConfig["governanceTokenName"]
+                                            }
                                         />
                                         <button
                                             className={
@@ -411,11 +435,17 @@ class TokenActions extends Component {
                                                             this.state
                                                                 .gLevrConvertAmount
                                                         ).toFixed(2)
-                                                    )} LEVR</span>`
+                                                    )} ${
+                                                        appConfig[
+                                                            "projectTokenName"
+                                                        ]
+                                                    }</span>`
                                                 )
                                             }
                                         >
-                                            gLEVR {">"} LEVR
+                                            {appConfig["governanceTokenName"]}{" "}
+                                            {">"}
+                                            {appConfig["projectTokenName"]}
                                         </button>
                                     </div>
                                 </div>
@@ -438,7 +468,11 @@ class TokenActions extends Component {
                                                 ? "flex-input"
                                                 : "inactive flex-input"
                                         }
-                                        data-title="Your gLEVR balance is 0 and therefor you can't use this function."
+                                        data-title={
+                                            "Your " +
+                                            appConfig["governanceTokenName"] +
+                                            " balance is 0 and therefor you can't use this function."
+                                        }
                                     >
                                         <input
                                             onChange={
@@ -482,7 +516,9 @@ class TokenActions extends Component {
                             this.props.balance === "0" && (
                                 <div>
                                     <h3 className="sectionHeader text-center">
-                                        You need LEVR tokens to use this app.
+                                        {"You need " +
+                                            appConfig["projectTokenName"] +
+                                            " tokens to use this app."}
                                     </h3>
                                 </div>
                             )}

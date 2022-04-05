@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import TokenActions from "./TokenActions";
 import "../layout/components/header.sass";
+import appConfig from "../app-config.json";
 //0x7E1d0353063F01CfFa92f4a9C8A100cFE37d8264
 //0x0000000000000000000000000000000000000000
 class Header extends Component {
@@ -24,7 +25,9 @@ class Header extends Component {
             >
                 {this.props.delegatedAddress !== "Unknown" ? (
                     <div>
-                        <h1 className="header__title">Levr Governance</h1>
+                        <h1 className="header__title">
+                            {appConfig["name"]} Governance
+                        </h1>
                         <div className="header__balance__white flex-power">
                             <TokenActions
                                 {...this.props.stateprops}
@@ -87,7 +90,7 @@ class Header extends Component {
                     </div>
                 ) : (
                     <div className="connect-wallet">
-                        <h1>Levr Governance</h1>
+                        <h1>{appConfig["name"]} Governance</h1>
                         <div>
                             <p className="connect-wallet-p">
                                 Connect a wallet to view actions & balances

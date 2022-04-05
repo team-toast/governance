@@ -343,7 +343,7 @@ class Proposals extends Component {
 
                 const govAlpha = new web3.eth.Contract(
                     contract.abi,
-                    contract["networks"]["421611"]["address"]
+                    this.props.appConfig["contractAddresses"]["governorAlpha"]
                 );
 
                 govAlpha.getPastEvents(
@@ -395,7 +395,9 @@ class Proposals extends Component {
     isPaymentProposal = (
         calldata,
         contractAddress,
-        paymentTokenAddress = contract["contractAddresses"]["dai"]["address"],
+        paymentTokenAddress = this.props.appConfig["contractAddresses"][
+            "daiAddress"
+        ],
         tokenName = "Dai"
     ) => {
         const expectedCalldataLength = 458;
@@ -438,8 +440,8 @@ class Proposals extends Component {
                 .toString()
                 .toLowerCase()
                 .includes(
-                    contract["contractAddresses"]["forwarder"][
-                        "address"
+                    this.props.appConfig["contractAddresses"][
+                        "treasuryForwarder"
                     ].toLowerCase()
                 ) &&
             calldata[0].length === expectedCalldataLength
@@ -517,7 +519,7 @@ class Proposals extends Component {
     getAllProposalObjects = async (web3) => {
         const govAlpha = new web3.eth.Contract(
             contract.abi,
-            contract["networks"]["421611"]["address"]
+            this.props.appConfig["contractAddresses"]["governorAlpha"]
         );
         let numOfProposals = await govAlpha.methods.proposalCount().call();
         if (numOfProposals === "0") {
@@ -535,15 +537,6 @@ class Proposals extends Component {
         } else {
             start = numOfProposals - this.state.pageBookmark;
         }
-
-        // console.log(
-        //   "Objects Bookmark Start: ",
-        //   numOfProposals - this.state.pageBookmark
-        // );
-        // console.log(
-        //   "Objects Bookmark End: ",
-        //   numOfProposals - this.state.pageBookmark + this.state.proposalsPerPage
-        // );
         for (
             let i = start;
             i <
@@ -555,10 +548,6 @@ class Proposals extends Component {
             tmpProposal = await govAlpha.methods.proposals(i + 1).call();
             proposals.push(tmpProposal);
         }
-        // console.log("Proposal Objects: ");
-        // proposals.forEach((element) => {
-        //   console.log(element);
-        // });
         return proposals;
     };
 
@@ -595,7 +584,7 @@ class Proposals extends Component {
     getQuorumVotes = async (web3) => {
         const govAlpha = new web3.eth.Contract(
             contract.abi,
-            contract["networks"]["421611"]["address"]
+            this.props.appConfig["contractAddresses"]["governorAlpha"]
         );
         let quorumVotes;
         try {
@@ -610,7 +599,7 @@ class Proposals extends Component {
     getGracePeriod = async (web3) => {
         const timelock = new web3.eth.Contract(
             timelockContract,
-            contract["contractAddresses"]["timelock"]["address"]
+            this.props.appConfig["contractAddresses"]["timelock"]
         );
         let gracePeriod;
         try {

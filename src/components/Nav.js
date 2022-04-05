@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-
 import Message from "./Message";
-
 import "../layout/components/nav.sass";
-
 import logo from "../images/levrLogoOnly.svg";
+import appConfig from "../app-config.json";
 
 class Nav extends Component {
     constructor(props) {
@@ -75,7 +73,9 @@ class Nav extends Component {
                                     target="_blank"
                                     href="https://metamask.io/"
                                 >
-                                    {`Note: To use Levr Governance you need MetaMask`}
+                                    {`Note: To use ` +
+                                        appConfig["name"] +
+                                        ` Governance you need MetaMask`}
                                 </a>
                             </p>
                         </div>
@@ -87,7 +87,9 @@ class Nav extends Component {
                                 alt="Compound"
                                 className="nav__brand-logo"
                             />
-                            <h1 className="nav__brand-name">Levr Governance</h1>
+                            <h1 className="nav__brand-name">
+                                {appConfig["name"]} Governance
+                            </h1>
                         </a>
                         {button}
                     </nav>
@@ -103,7 +105,9 @@ class Nav extends Component {
                         alt="Compound"
                         className="nav__brand-logo"
                     />
-                    <h1 className="nav__brand-name">Levr Governance</h1>
+                    <h1 className="nav__brand-name">
+                        {appConfig["name"]} Governance
+                    </h1>
                 </a>
                 {this.props.connected && (
                     <div
