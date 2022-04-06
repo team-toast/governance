@@ -375,7 +375,7 @@ class TokenActions extends Component {
                                             }
                                         >
                                             {appConfig["governanceTokenName"]}{" "}
-                                            {">"}
+                                            {">"}{" "}
                                             {appConfig["projectTokenName"]}
                                         </button>
                                     </div>
@@ -444,7 +444,7 @@ class TokenActions extends Component {
                                             }
                                         >
                                             {appConfig["governanceTokenName"]}{" "}
-                                            {">"}
+                                            {">"}{" "}
                                             {appConfig["projectTokenName"]}
                                         </button>
                                     </div>

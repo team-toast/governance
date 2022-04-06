@@ -5,7 +5,7 @@
     "governanceTokenName": "gLEVR",
     "logoFileName": "levrLogoOnly.svg",
     "testnetMode": "true",
-    "localhostMode": "false",
+    "localhostMode": "true",
     "contractAddresses": {
         "governorAlpha": "0xddED8bb36716E0f2a4278B2Eb5E4d0e171E82758",
         "projectToken": "0x346b78249fEF6b508e0D0656fd61CA9A907E55E9",
