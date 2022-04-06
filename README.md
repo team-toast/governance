@@ -30,3 +30,14 @@ Governance Remix deployment steps:
 5. Verify the contract code of governorAlpha on Arbiscan.
 
 6. Execute \_\_acceptAdmin function of governorAlpha using the guardian multisig.
+
+### User Interface
+
+The user interface has to be configured using the format specified in the app-config.json file.
+The project depends on the following environment variables:
+
+-   INFURA_URL_TESTNET: Infura rinkeby rpc
+
+-   RIVET_URL: Rivet mainnet rpc
+
+-   REACT_APP_CONFIG_FILE: Config file for the UI.

@@ -14,7 +14,7 @@ class CreateProposalForm extends Component {
 
         this.state = {
             toAddress: "",
-            tokenAddress: appConfig["contractAddresses"]["projectToken"],
+            tokenAddress: appConfig["contractAddresses"]["defaultPaymentToken"],
             tokenName: "",
             tokenSymbol: "",
             tokenBalance: "",
