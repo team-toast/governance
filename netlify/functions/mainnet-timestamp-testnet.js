@@ -2,7 +2,7 @@ exports.handler = async (event) => {
     const Web3 = require("web3");
     //console.log("environment var: ", process.env.INFURA_URL);
     const web3Mainnet = new Web3(
-        new Web3.providers.HttpProvider(process.env.RIVET_URL)
+        new Web3.providers.HttpProvider(process.env.INFURA_URL_TESTNET)
     );
 
     const { blocknumber } = event.queryStringParameters;

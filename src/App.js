@@ -376,17 +376,37 @@ class App extends Component {
         let url = "";
         if (appConfig["testnetMode"] === "true") {
             console.log("IN Testnet MODE");
-            url =
-                "http://" +
-                window.location.hostname +
-                ":8888" +
-                "/.netlify/functions/l1-latest-blocknumber";
+            // url =
+            //     "http://" +
+            //     window.location.hostname +
+            //     ":8888" +
+            //     "/.netlify/functions/l1-latest-blocknumber-testnet";
+            url = "http";
+            if (appConfig["localhostMode"] !== "true") {
+                url += "s";
+            }
+            url += "://";
+            url += window.location.hostname;
+            if (appConfig["localhostMode"] === "true") {
+                url += ":8888";
+            }
+            url += "/.netlify/functions/l1-latest-blocknumber-testnet";
         } else {
             console.log("IN Live MODE");
-            url =
-                "https://" +
-                window.location.hostname +
-                "/.netlify/functions/l1-latest-blocknumber";
+            // url =
+            //     "https://" +
+            //     window.location.hostname +
+            //     "/.netlify/functions/l1-latest-blocknumber";
+            url = "http";
+            if (appConfig["localhostMode"] !== "true") {
+                url += "s";
+            }
+            url += "://";
+            url += window.location.hostname;
+            if (appConfig["localhostMode"] === "true") {
+                url += ":8888";
+            }
+            url += "/.netlify/functions/l1-latest-blocknumber";
         }
         while (gotLatestBlock === false) {
             try {
@@ -414,17 +434,41 @@ class App extends Component {
             let url = "";
             if (appConfig["testnetMode"] === "true") {
                 console.log("IN Testnet MODE");
-                url =
-                    "http://" +
-                    window.location.hostname +
-                    ":8888" +
-                    "/.netlify/functions/mainnet-timestamp?blocknumber=" +
+                // url =
+                //     "http://" +
+                //     window.location.hostname +
+                //     ":8888" +
+                //     "/.netlify/functions/mainnet-timestamp-testnet?blocknumber=" +
+                //     blockNumber.toString();
+                url = "http";
+                if (appConfig["localhostMode"] !== "true") {
+                    url += "s";
+                }
+                url += "://";
+                url += window.location.hostname;
+                if (appConfig["localhostMode"] === "true") {
+                    url += ":8888";
+                }
+                url +=
+                    "/.netlify/functions/mainnet-timestamp-testnet?blocknumber=" +
                     blockNumber.toString();
             } else {
                 console.log("IN Live MODE");
-                url =
-                    "https://" +
-                    window.location.hostname +
+                // url =
+                //     "https://" +
+                //     window.location.hostname +
+                //     "/.netlify/functions/mainnet-timestamp?blocknumber=" +
+                //     blockNumber.toString();
+                url = "http";
+                if (appConfig["localhostMode"] !== "true") {
+                    url += "s";
+                }
+                url += "://";
+                url += window.location.hostname;
+                if (appConfig["localhostMode"] === "true") {
+                    url += ":8888";
+                }
+                url +=
                     "/.netlify/functions/mainnet-timestamp?blocknumber=" +
                     blockNumber.toString();
             }
