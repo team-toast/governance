@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import Web3 from "web3";
 import Web3Connect from "web3connect";
 import contract from "./contracts/GovernorAlpha.json";
-import appConfig from "./app-config.json";
 import compTokenContract from "./contracts/Comp.json";
 import Dai from "./contracts/Dai.json";
 import Nav from "./components/Nav";
@@ -17,6 +16,7 @@ import "./layout/config/_base.sass";
 import CustomHeader from "./components/CustomHeader";
 import ProgressBar from "./components/ProgressBar";
 const axios = require("axios");
+const appConfig = require(process.env.REACT_APP_CONFIG_FILE);
 
 function initWeb3(provider) {
     const web3 = new Web3(provider);

@@ -5,7 +5,7 @@ import PopupHint from "./PopupHint";
 import governatorContract from "../contracts/Governator.json";
 import compTokenContract from "../contracts/Comp.json";
 import contract from "../contracts/GovernorAlpha.json";
-import appConfig from "../app-config.json";
+const appConfig = require("." + process.env.REACT_APP_CONFIG_FILE);
 
 class TokenActions extends Component {
     constructor(props) {

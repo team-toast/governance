@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Message from "./Message";
 import "../layout/components/nav.sass";
-import appConfig from "../app-config.json";
+const appConfig = require("." + process.env.REACT_APP_CONFIG_FILE);
 
 class Nav extends Component {
     constructor(props) {

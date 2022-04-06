@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import TokenActions from "./TokenActions";
 import "../layout/components/header.sass";
-import appConfig from "../app-config.json";
+const appConfig = require("." + process.env.REACT_APP_CONFIG_FILE);
 
 class Header extends Component {
     constructor(props) {

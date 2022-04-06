@@ -3,11 +3,10 @@ import React, { Component } from "react";
 import "../layout/components/createproposalform.sass";
 import { Form, FloatingLabel } from "react-bootstrap";
 import governorABI from "../contracts/GovernorAlpha.json";
-import appConfig from "../app-config.json";
 import Forwarder from "../contracts/Forwarder.json";
 import Dai from "../contracts/Dai.json";
-
 import PopupHint from "./PopupHint";
+const appConfig = require("." + process.env.REACT_APP_CONFIG_FILE);
 
 class CreateProposalForm extends Component {
     constructor(props) {

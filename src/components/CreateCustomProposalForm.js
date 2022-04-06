@@ -3,7 +3,7 @@ import "../layout/components/createcustomproposal.sass";
 import { Form, FloatingLabel } from "react-bootstrap";
 import governorABI from "../contracts/GovernorAlpha.json";
 import PopupHint from "./PopupHint";
-import appConfig from "../app-config.json";
+const appConfig = require("." + process.env.REACT_APP_CONFIG_FILE);
 
 class CreateCustomProposalForm extends React.Component {
     constructor() {
