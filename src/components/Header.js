@@ -44,7 +44,17 @@ class Header extends Component {
                             />
                         </div>
                     </div>
-                ) : this.props.metamaskLoadError === false ? (
+                ) : this.props.metamaskLoadError === true ? (
+                    <div className="connect-wallet">
+                        <h1>{appConfig["name"]} Governance</h1>
+                        <div>
+                            <p className="error-red">
+                                Metamask did not initialize correctly. Please
+                                refresh the page.
+                            </p>
+                        </div>{" "}
+                    </div>
+                ) : (
                     <div className="connect-wallet">
                         <h1>{appConfig["name"]} Governance</h1>
                         <div>
@@ -57,16 +67,6 @@ class Header extends Component {
                             >
                                 CONNECT WALLET
                             </button>
-                        </div>{" "}
-                    </div>
-                ) : (
-                    <div className="connect-wallet">
-                        <h1>{appConfig["name"]} Governance</h1>
-                        <div>
-                            <p className="error-red">
-                                Metamask did not initialize correctly. Please
-                                refresh the page.
-                            </p>
                         </div>{" "}
                     </div>
                 )}
