@@ -68,6 +68,7 @@ class App extends Component {
             page: "page__proposals",
             processStage: [],
             convertedAddress: "",
+            metamaskLoadError: false,
         };
 
         this.web3Connect = new Web3Connect.Core({
@@ -151,22 +152,11 @@ class App extends Component {
             // Todo default connect
             //this.defaultConnect();
         }
+
+        if (window.ethereum._state.initialized === false) {
+            this.setState({ metamaskLoadError: true });
+        }
     };
-
-    // defaultConnect = async () => {
-    //     console.log("Default Connect");
-    //     const web3 = new Web3(
-    //         new Web3.providers.HttpProvider("https://rinkeby.arbitrum.io/rpc")
-    //     );
-    //     const netId = await web3.eth.net.getId();
-
-    //     console.log("Net ID test: ", netId);
-    //     await this.setState({
-    //         web3,
-    //         network: "Arbitrum",
-    //     });
-    //     this.getLatestBlock();
-    // };
 
     mainnetConnect = async () => {
         console.log("Mainnet Connect");
@@ -199,8 +189,10 @@ class App extends Component {
             }
         }
 
-        const provider = await this.web3Connect.connect();
+        console.log("HELLO 1");
 
+        const provider = await this.web3Connect.connect();
+        //const provider = Web3.givenProvider;
         await this.subscribeProvider(provider);
         const web3 = initWeb3(provider);
 
@@ -209,7 +201,7 @@ class App extends Component {
         const networkId = await web3.eth.net.getId();
         const chainId = await web3.eth.chainId();
 
-        //console.log("PROVIDER: ", web3.eth.currentProvider);
+        console.log("CHAIN ID: ", chainId);
 
         // Get the contract instance.
         const instance = new web3.eth.Contract(
