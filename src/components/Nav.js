@@ -1,16 +1,14 @@
 import React, { Component } from "react";
-
 import Message from "./Message";
-
 import "../layout/components/nav.sass";
-
-import logo from "../images/levrLogoOnly.svg";
+const appConfig = require("." + process.env.REACT_APP_CONFIG_FILE);
 
 class Nav extends Component {
     constructor(props) {
         super(props);
         this.state = {
             showMobileMenu: false,
+            logo: appConfig["logoFileName"],
         };
     }
     toggleMobileMenu = (data) => {
@@ -75,7 +73,9 @@ class Nav extends Component {
                                     target="_blank"
                                     href="https://metamask.io/"
                                 >
-                                    {`Note: To use Levr Governance you need MetaMask`}
+                                    {`Note: To use ` +
+                                        appConfig["name"] +
+                                        ` Governance you need MetaMask`}
                                 </a>
                             </p>
                         </div>
@@ -83,11 +83,13 @@ class Nav extends Component {
                     <nav className="nav top-nav">
                         <a className="nav__brand" href="/">
                             <img
-                                src={logo}
-                                alt="Compound"
+                                src={this.state.logo}
+                                alt="Home"
                                 className="nav__brand-logo"
                             />
-                            <h1 className="nav__brand-name">Levr Governance</h1>
+                            <h1 className="nav__brand-name">
+                                {appConfig["name"]} Governance
+                            </h1>
                         </a>
                         {button}
                     </nav>
@@ -99,11 +101,13 @@ class Nav extends Component {
             <nav className="nav top-nav">
                 <a className="nav__brand" href="/">
                     <img
-                        src={logo}
-                        alt="Compound"
+                        src={this.state.logo}
+                        alt="Home"
                         className="nav__brand-logo"
                     />
-                    <h1 className="nav__brand-name">Levr Governance</h1>
+                    <h1 className="nav__brand-name">
+                        {appConfig["name"]} Governance
+                    </h1>
                 </a>
                 {this.props.connected && (
                     <div
@@ -149,7 +153,7 @@ class Nav extends Component {
                                         : ""
                                 }
                             >
-                                Create Dai Payment Proposal
+                                Create Payment Proposal
                             </button>
                             <button
                                 onClick={() => {

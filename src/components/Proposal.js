@@ -24,6 +24,9 @@ class Proposal extends Component {
     handleVoteFor = async () => {
         // this.props.setStatusOf("Voting In Favour ...", true);
         const gasPrice = await this.props.getGasPrice();
+
+        this.estimateGas("voteFor");
+
         this.props.contract.methods
             .castVote(this.props.id, true)
             .send(
@@ -66,6 +69,9 @@ class Proposal extends Component {
     handleVoteAgainst = async () => {
         //this.props.setStatusOf("Voting Against ...", true);
         const gasPrice = await this.props.getGasPrice();
+
+        this.estimateGas("voteAgainst");
+
         this.props.contract.methods
             .castVote(this.props.id, false)
             .send(
@@ -111,6 +117,9 @@ class Proposal extends Component {
         let gasPrice = await this.props.getGasPrice();
         if (this.props.status === "Succeeded") {
             // this.props.setStatusOf("Adding proposal to Queue ...", true);
+
+            this.estimateGas("queue");
+
             this.props.contract.methods
                 .queue(this.props.id)
                 .send(
@@ -153,28 +162,28 @@ class Proposal extends Component {
                     // this.props.setProgress([1, 2, 3, 4]);
                 });
         } else if (this.props.status === "Queued") {
-            this.props.contract.methods.execute(this.props.id).estimateGas(
-                {
-                    from: this.props.account,
-                    gasPrice: gasPrice,
-                },
-                function (error, result) {
-                    if (error) {
-                        if (
-                            error.message.indexOf(
-                                "Transaction hasn't surpassed time lock."
-                            ) !== -1
-                        ) {
-                            alert(
-                                "This proposal has not surpassed the timelock period of two days. Execution will fail. Please try again later."
-                            );
-                        } else {
-                            alert(error);
-                        }
-                    }
-                }
-            );
-
+            // this.props.contract.methods.execute(this.props.id).estimateGas(
+            //     {
+            //         from: this.props.account,
+            //         gasPrice: gasPrice,
+            //     },
+            //     function (error, result) {
+            //         if (error) {
+            //             if (
+            //                 error.message.indexOf(
+            //                     "Transaction hasn't surpassed time lock."
+            //                 ) !== -1
+            //             ) {
+            //                 alert(
+            //                     "This proposal has not surpassed the timelock period of two days. Execution will fail. Please try again later."
+            //                 );
+            //             } else {
+            //                 alert(error);
+            //             }
+            //         }
+            //     }
+            // );
+            this.estimateGas("execute");
             // this.props.setStatusOf("Executing proposal ...", true);
             this.props.contract.methods
                 .execute(this.props.id)
@@ -220,6 +229,76 @@ class Proposal extends Component {
         } else {
             console.log(
                 "This proposal is not in the succeeded or queued states"
+            );
+        }
+    };
+
+    estimateGas = (method) => {
+        if (method === "voteFor") {
+            this.props.contract.methods
+                .castVote(this.props.id, true)
+                .estimateGas(
+                    {
+                        from: this.props.account,
+                        //asPrice: gasPrice,
+                    },
+                    function (error, result) {
+                        if (error) {
+                            alert(error.message);
+                            console.log("Error: ", error.message);
+                        }
+                    }
+                );
+        } else if (method === "voteAgainst") {
+            this.props.contract.methods
+                .castVote(this.props.id, false)
+                .estimateGas(
+                    {
+                        from: this.props.account,
+                        //gasPrice: gasPrice,
+                    },
+                    function (error, result) {
+                        if (error) {
+                            alert(error.message);
+                            console.log("Error: ", error.message);
+                        }
+                    }
+                );
+        } else if (method === "queue") {
+            this.props.contract.methods.queue(this.props.id).estimateGas(
+                {
+                    from: this.props.account,
+                    //gasPrice: gasPrice,
+                },
+                function (error, result) {
+                    if (error) {
+                        alert(error.message);
+                        console.log("Error: ", error.message);
+                    }
+                }
+            );
+        } else if (method === "execute") {
+            this.props.contract.methods.execute(this.props.id).estimateGas(
+                {
+                    from: this.props.account,
+                    //gasPrice: gasPrice,
+                },
+                function (error, result) {
+                    if (error) {
+                        if (
+                            error.message.indexOf(
+                                "Transaction hasn't surpassed time lock."
+                            ) !== -1
+                        ) {
+                            console.log("Error: ", error.message);
+                            alert(
+                                "This proposal has not surpassed the timelock period of two days. Execution will fail. Please try again later."
+                            );
+                        } else {
+                            alert(error);
+                        }
+                    }
+                }
             );
         }
     };

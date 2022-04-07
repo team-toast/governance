@@ -1,7 +1,7 @@
 exports.handler = async () => {
     const Web3 = require("web3");
     const web3 = new Web3(
-        new Web3.providers.HttpProvider(process.env.RIVET_URL)
+        new Web3.providers.HttpProvider(process.env.INFURA_URL_TESTNET)
     );
     const blockNumber = await web3.eth.getBlockNumber();
     console.log("blockNumber: ", blockNumber);

@@ -16,6 +16,7 @@ import "./layout/config/_base.sass";
 import CustomHeader from "./components/CustomHeader";
 import ProgressBar from "./components/ProgressBar";
 const axios = require("axios");
+const appConfig = require(process.env.REACT_APP_CONFIG_FILE);
 
 function initWeb3(provider) {
     const web3 = new Web3(provider);
@@ -31,15 +32,6 @@ function initWeb3(provider) {
     });
     return web3;
 }
-
-const providerOptions = {
-    walletconnect: {
-        package: WalletConnectProvider,
-        rpc: {
-            421611: "https://rinkeby.arbitrum.io/rpc",
-        },
-    },
-};
 
 class App extends Component {
     web3Connect;
@@ -81,7 +73,7 @@ class App extends Component {
         this.web3Connect = new Web3Connect.Core({
             network: "mainnet",
             cacheProvider: true,
-            providerOptions,
+            //providerOptions,
         });
     }
 
@@ -103,9 +95,9 @@ class App extends Component {
         if (this.state.delegatedAddress.toLowerCase() === "self") {
             this.setState({
                 votingPower: this.state.web3.utils.toWei(
-                    (
+                    this.numberWithCommas(
                         parseFloat(this.state.web3.utils.fromWei(tmpVP)) +
-                        parseFloat(gLevrMod)
+                            parseFloat(gLevrMod)
                     ).toString()
                 ),
                 totalSupply: this.state.web3.utils.toWei(
@@ -220,10 +212,9 @@ class App extends Component {
         //console.log("PROVIDER: ", web3.eth.currentProvider);
 
         // Get the contract instance.
-        const deployedNetwork = contract.networks[42161];
         const instance = new web3.eth.Contract(
             contract.abi,
-            deployedNetwork && deployedNetwork.address
+            appConfig["contractAddresses"]["governorAlpha"]
         );
 
         //console.log("CONTRACT ADDRESS: ", deployedNetwork.address);
@@ -260,12 +251,12 @@ class App extends Component {
             this.getTotalSupply();
             this.setState({
                 balance: await this.getTokenBalance(
-                    contract.contractAddresses["token"]["address"]
+                    appConfig["contractAddresses"]["governanceToken"]
                 ),
             });
             this.setState({
                 levrBalance: await this.getTokenBalance(
-                    contract.contractAddresses["levr"]["address"]
+                    appConfig["contractAddresses"]["projectToken"]
                 ),
             });
             this.getDelegateToAddress();
@@ -302,12 +293,12 @@ class App extends Component {
             this.determineButtonsDisabled(this.state.web3);
             this.setState({
                 balance: await this.getTokenBalance(
-                    contract.contractAddresses["token"]["address"]
+                    appConfig["contractAddresses"]["governanceToken"]
                 ),
             });
             this.setState({
                 levrBalance: await this.getTokenBalance(
-                    contract.contractAddresses["levr"]["address"]
+                    appConfig["contractAddresses"]["projectToken"]
                 ),
             });
             await this.getDelegateToAddress(accounts2[0]);
@@ -317,7 +308,7 @@ class App extends Component {
             const { web3 } = this.state;
             const networkId = await web3.eth.net.getId();
             if (this.state.connected) {
-                if (networkId === 421611) {
+                if (networkId === Number(appConfig["chainId"])) {
                     this.setState({ chainId, networkId });
                     this.getNetworkName(networkId);
                     this.determineButtonsDisabled(this.state.web3);
@@ -382,22 +373,50 @@ class App extends Component {
 
     getLatestBlock = async () => {
         let gotLatestBlock = false;
+        let url = "";
+        if (appConfig["testnetMode"] === "true") {
+            console.log("IN Testnet MODE");
+            // url =
+            //     "http://" +
+            //     window.location.hostname +
+            //     ":8888" +
+            //     "/.netlify/functions/l1-latest-blocknumber-testnet";
+            url = "http";
+            if (appConfig["localhostMode"] !== "true") {
+                url += "s";
+            }
+            url += "://";
+            url += window.location.hostname;
+            if (appConfig["localhostMode"] === "true") {
+                url += ":8888";
+            }
+            url += "/.netlify/functions/l1-latest-blocknumber-testnet";
+        } else {
+            console.log("IN Live MODE");
+            // url =
+            //     "https://" +
+            //     window.location.hostname +
+            //     "/.netlify/functions/l1-latest-blocknumber";
+            url = "http";
+            if (appConfig["localhostMode"] !== "true") {
+                url += "s";
+            }
+            url += "://";
+            url += window.location.hostname;
+            if (appConfig["localhostMode"] === "true") {
+                url += ":8888";
+            }
+            url += "/.netlify/functions/l1-latest-blocknumber";
+        }
         while (gotLatestBlock === false) {
             try {
-                await axios
-                    .get(
-                        "https://" +
-                            window.location.hostname +
-                            //":8888" +
-                            "/.netlify/functions/l1-latest-blocknumber"
-                    )
-                    .then((resp) => {
-                        //console.log("Raw data: ", Number(resp.data));
-                        this.setState({
-                            latestBlock: Number(resp.data),
-                        });
-                        return Number(resp.data);
+                await axios.get(url).then((resp) => {
+                    //console.log("Raw data: ", Number(resp.data));
+                    this.setState({
+                        latestBlock: Number(resp.data),
                     });
+                    return Number(resp.data);
+                });
                 gotLatestBlock = true;
             } catch (error) {
                 console.error("Error executing getLatestBlock");
@@ -406,13 +425,54 @@ class App extends Component {
         }
     };
 
-    getBlockTimeStamp = async (blockNumber) => {
+    getBlockTimeStamp = async (blockNumber = 0) => {
         try {
             while (this.state.latestBlock === "") {
                 console.log("Waiting for blocknumber");
                 await this.sleep(500);
             }
-            //console.log("Latest Block: ", this.state.latestBlock);
+            let url = "";
+            if (appConfig["testnetMode"] === "true") {
+                console.log("IN Testnet MODE");
+                // url =
+                //     "http://" +
+                //     window.location.hostname +
+                //     ":8888" +
+                //     "/.netlify/functions/mainnet-timestamp-testnet?blocknumber=" +
+                //     blockNumber.toString();
+                url = "http";
+                if (appConfig["localhostMode"] !== "true") {
+                    url += "s";
+                }
+                url += "://";
+                url += window.location.hostname;
+                if (appConfig["localhostMode"] === "true") {
+                    url += ":8888";
+                }
+                url +=
+                    "/.netlify/functions/mainnet-timestamp-testnet?blocknumber=" +
+                    blockNumber.toString();
+            } else {
+                console.log("IN Live MODE");
+                // url =
+                //     "https://" +
+                //     window.location.hostname +
+                //     "/.netlify/functions/mainnet-timestamp?blocknumber=" +
+                //     blockNumber.toString();
+                url = "http";
+                if (appConfig["localhostMode"] !== "true") {
+                    url += "s";
+                }
+                url += "://";
+                url += window.location.hostname;
+                if (appConfig["localhostMode"] === "true") {
+                    url += ":8888";
+                }
+                url +=
+                    "/.netlify/functions/mainnet-timestamp?blocknumber=" +
+                    blockNumber.toString();
+            }
+            console.log("Latest Block: ", this.state.latestBlock);
             //console.log("Block to find: ", blockNumber);
             //console.log("web3Mainnet: ", this.state.web3Mainnet);
             if (blockNumber < this.state.latestBlock) {
@@ -420,13 +480,7 @@ class App extends Component {
                 //     blockNumber
                 // );
                 // console.log("Block Info: ", blockInfo["timestamp"]);
-                let resp = await axios.get(
-                    "https://" +
-                        window.location.hostname +
-                        //":8888" +
-                        "/.netlify/functions/mainnet-timestamp?blocknumber=" +
-                        blockNumber.toString()
-                );
+                let resp = await axios.get(url);
 
                 console.log("Raw data: ", Number(resp.data));
 
@@ -450,6 +504,8 @@ class App extends Component {
             networkId = netID;
         }
 
+        console.log("NETWORK ID: ", networkId);
+
         if (networkId === 1) {
             this.setState({ network: "Mainnet" });
         } else if (networkId === 3) {
@@ -460,7 +516,7 @@ class App extends Component {
             this.setState({ network: "Goerli" });
         } else if (networkId === 42) {
             this.setState({ network: "Kovan" });
-        } else if (networkId === 421611) {
+        } else if (networkId === Number(appConfig["chainId"])) {
             this.setState({ network: "Arbitrum" });
             return "Arbitrum";
         } else {
@@ -504,15 +560,13 @@ class App extends Component {
 
                     balance = this.state.web3.utils.fromWei(balance);
                     console.log("BALANCE: ", balance);
-                    balance = this.numberWithCommas(
-                        parseFloat(balance).toFixed(2)
-                    );
+                    balance = this.numberWithCommas(parseFloat(balance));
                     //if (balance > 0) {
                     return balance;
                     //}
                     balanceUpdated = true;
                 } catch (error) {
-                    this.sleep(1000);
+                    await this.sleep(1000);
                     console.error("Error Setting token balance: ", error);
                 }
             }
@@ -521,7 +575,7 @@ class App extends Component {
 
     getTreasuryBalance = async () => {
         if (this.state.network === "Arbitrum") {
-            const daiAddress = contract.contractAddresses["dai"]["address"];
+            const daiAddress = appConfig["contractAddresses"]["daiAddress"];
 
             const daiContract = new this.state.web3.eth.Contract(
                 Dai,
@@ -529,8 +583,8 @@ class App extends Component {
             );
 
             let overrideAccount =
-                contract.contractAddresses["forwarder"][
-                    "address"
+                appConfig["contractAddresses"][
+                    "treasuryForwarder"
                 ].toLowerCase();
 
             let balanceUpdated = false;
@@ -549,7 +603,7 @@ class App extends Component {
                     this.setState({ treasuryBalance: balance });
                 } catch (error) {
                     console.error("Error getting treasury balance: ", error);
-                    this.sleep(1000);
+                    await this.sleep(1000);
                 }
             }
         }
@@ -561,7 +615,8 @@ class App extends Component {
 
     getVotingPower = async (account = "none") => {
         if (this.state.network === "Arbitrum") {
-            const tokenAddress = contract.contractAddresses["token"]["address"];
+            const tokenAddress =
+                appConfig["contractAddresses"]["governanceToken"];
 
             const tokenContract = new this.state.web3.eth.Contract(
                 compTokenContract,
@@ -596,7 +651,8 @@ class App extends Component {
 
     getTotalSupply = async (account = "none") => {
         if (this.state.network === "Arbitrum") {
-            const tokenAddress = contract.contractAddresses["token"]["address"];
+            const tokenAddress =
+                appConfig["contractAddresses"]["governanceToken"];
 
             const tokenContract = new this.state.web3.eth.Contract(
                 compTokenContract,
@@ -624,7 +680,8 @@ class App extends Component {
 
     getDelegateToAddress = async (account = "none") => {
         if (this.state.network === "Arbitrum") {
-            const tokenAddress = contract.contractAddresses["token"]["address"];
+            const tokenAddress =
+                appConfig["contractAddresses"]["governanceToken"];
 
             const tokenContract = new this.state.web3.eth.Contract(
                 compTokenContract,
@@ -717,7 +774,7 @@ class App extends Component {
         });
         this.setProgress([]);
 
-        const tokenAddress = contract.contractAddresses["token"]["address"];
+        const tokenAddress = appConfig["contractAddresses"]["governanceToken"];
 
         const tokenContract = new this.state.web3.eth.Contract(
             compTokenContract,
@@ -925,6 +982,7 @@ class App extends Component {
             firetext={this.state.firetext}
           ></Status>
         )} */}
+
                 <Nav
                     {...this.state}
                     onConnect={this.onConnect}
@@ -980,6 +1038,7 @@ class App extends Component {
                                         }
                                         getGasPrice={this.getGasPrice}
                                         setStatusOf={this.setStatusOf}
+                                        appConfig={appConfig}
                                     />
                                 </div>
                             </div>

@@ -3,6 +3,7 @@ import "../layout/components/createcustomproposal.sass";
 import { Form, FloatingLabel } from "react-bootstrap";
 import governorABI from "../contracts/GovernorAlpha.json";
 import PopupHint from "./PopupHint";
+const appConfig = require("." + process.env.REACT_APP_CONFIG_FILE);
 
 class CreateCustomProposalForm extends React.Component {
     constructor() {
@@ -36,7 +37,8 @@ class CreateCustomProposalForm extends React.Component {
         this.props.setStatusOf("Creating custom proposal ...", true);
 
         if (this.props.network === "Arbitrum") {
-            const governAddress = governorABI.networks[42161]["address"];
+            const governAddress =
+                appConfig["contractAddresses"]["governorAlpha"];
             const governContract = new this.props.web3.eth.Contract(
                 governorABI.abi,
                 governAddress
@@ -82,10 +84,10 @@ class CreateCustomProposalForm extends React.Component {
                                 "Transaction Pending...",
                                 transactionHash
                             );
-                            this.props.setStatusOf(
-                                "Transaction Pending ...",
-                                true
-                            );
+                            // this.props.setStatusOf(
+                            //     "Transaction Pending ...",
+                            //     true
+                            // );
                         }
                     )
                     .on("confirmation", (number, receipt) => {
@@ -99,10 +101,10 @@ class CreateCustomProposalForm extends React.Component {
                                 "Transaction Confirmed!",
                                 receipt.transactionHash
                             );
-                            this.props.setStatusOf(
-                                "Transaction Confirmed!",
-                                true
-                            );
+                            // this.props.setStatusOf(
+                            //     "Transaction Confirmed!",
+                            //     true
+                            // );
                         }
                         setTimeout(() => {
                             this.props.clearMessage();
@@ -114,16 +116,13 @@ class CreateCustomProposalForm extends React.Component {
                             receipt ? receipt.transactionHash : null
                         );
                         console.log("Transaction Failed!");
-                        this.props.setStatusOf(
-                            "Transaction Failed! Please try again.",
-                            true
-                        );
+                        // this.props.setStatusOf(
+                        //     "Transaction Failed! Please try again.",
+                        //     true
+                        // );
                     });
             } catch (error) {
-                this.props.setStatusOf(
-                    "Transaction Failed! Please try again.",
-                    true
-                );
+                this.props.setMessage("Transaction Failed.", null);
                 console.error("Error in create proposal method: ", error);
             }
         }

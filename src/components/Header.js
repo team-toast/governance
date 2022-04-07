@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import TokenActions from "./TokenActions";
 import "../layout/components/header.sass";
-//0x7E1d0353063F01CfFa92f4a9C8A100cFE37d8264
-//0x0000000000000000000000000000000000000000
+const appConfig = require("." + process.env.REACT_APP_CONFIG_FILE);
+
 class Header extends Component {
     constructor(props) {
         super(props);
@@ -24,11 +24,12 @@ class Header extends Component {
             >
                 {this.props.delegatedAddress !== "Unknown" ? (
                     <div>
-                        <h1 className="header__title">Levr Governance</h1>
+                        <h1 className="header__title">
+                            {appConfig["name"]} Governance
+                        </h1>
                         <div className="header__balance__white flex-power">
                             <TokenActions
                                 {...this.props.stateprops}
-                                // stateprops={this.props.stateprops}
                                 delegate={this.props.delegate}
                                 updateDelegateeAddress={
                                     this.props.updateDelegateeAddress
@@ -40,54 +41,11 @@ class Header extends Component {
                                 convertedAddress={this.props.convertedAddress}
                                 numberWithCommas={this.props.numberWithCommas}
                             />
-                            {/* <div>
-                {"Voting Power"}
-                <span
-                  className={
-                    this.props.votingPower === "0"
-                      ? "header__balance__orange"
-                      : "header__balance__white"
-                  }
-                >
-                  {` ${
-                    this.props.votingPower !== "0" &&
-                    this.props.votingPower !== 0 &&
-                    this.props.votingPower !== "Unknown"
-                      ? (
-                          (this.props.votingPower / this.props.totalSupply) *
-                          100
-                        )
-                          .toFixed(2)
-                          .toString() + "%"
-                      : this.props.votingPower !== "Unknown"
-                      ? "0% (Delegation Required)"
-                      : "Unknown"
-                  }`}
-                </span>
-              </div>
-              <div>
-                {`Token Balance`}
-                <span>{this.props.balance}</span>
-              </div>
-              <div>
-                Delegating to
-                <span>
-                  {this.props.delegatedAddress.length === 42
-                    ? `${this.props.delegatedAddress.slice(
-                        0,
-                        4
-                      )}...${this.props.delegatedAddress.slice(
-                        this.props.delegatedAddress.length - 4,
-                        this.props.delegatedAddress.length
-                      )}`
-                    : `${this.props.delegatedAddress}`}
-                </span>
-              </div> */}
                         </div>
                     </div>
                 ) : (
                     <div className="connect-wallet">
-                        <h1>Levr Governance</h1>
+                        <h1>{appConfig["name"]} Governance</h1>
                         <div>
                             <p className="connect-wallet-p">
                                 Connect a wallet to view actions & balances
@@ -101,39 +59,6 @@ class Header extends Component {
                         </div>
                     </div>
                 )}
-                {/* {!this.state.showDelegate && this.props.delegatedAddress !== "Unknown" && (
-          <div onClick={this.toggleDelegate} className="delegate-block__button">
-            <h5>Delegate</h5>
-          </div>
-        )}
-        {this.state.showDelegate && this.props.delegatedAddress !== "Unknown" && (
-          <div className="delegate-block">
-            <input
-              onChange={this.props.updateDelegateeAddress}
-              placeholder="0x... Address to Delegate to"
-            />
-            <PopupHint
-              message={
-                this.props.balance === "0.00"
-                  ? "You don't have governance tokens"
-                  : ""
-              }
-            >
-              <button
-                className="header__button"
-                onClick={this.props.delegate}
-                disabled={
-                  !this.props.connected ||
-                  (this.props.disableButtons &&
-                    this.props.balance === "0.00") ||
-                  this.props.network !== "Arbitrum"
-                }
-              >
-                Delegate
-              </button>
-            </PopupHint>
-          </div>
-        )} */}
             </section>
         );
     }
