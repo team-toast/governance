@@ -152,9 +152,15 @@ class App extends Component {
             // Todo default connect
             //this.defaultConnect();
         }
-
+        await this.sleep(1000);
         if (window.ethereum._state.initialized === false) {
             this.setState({ metamaskLoadError: true });
+            console.log(
+                "Mettamasj not initialised",
+                window.ethereum._state.initialized
+            );
+        } else {
+            this.setState({ metamaskLoadError: false });
         }
     };
 
