@@ -5,7 +5,7 @@
     "governanceTokenName": "gLEVR",
     "logoFileName": "levrLogoOnly.svg",
     "testnetMode": "true",
-    "localhostMode": "true",
+    "localhostMode": "false",
     "smartContractLink": "https://testnet.arbiscan.io/address/0xddED8bb36716E0f2a4278B2Eb5E4d0e171E82758",
     "contractAddresses": {
         "governorAlpha": "0xddED8bb36716E0f2a4278B2Eb5E4d0e171E82758",
