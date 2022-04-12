@@ -5,7 +5,7 @@
     "governanceTokenName": "gFry",
     "logoFileName": "foundryWhiteLogo.png",
     "testnetMode": "false",
-    "localhostMode": "true",
+    "localhostMode": "false",
     "smartContractLink": "https://arbiscan.io/address/0xa9f0501b1e9B795F3597571B1B2634278d0fD843",
     "contractAddresses": {
         "governorAlpha": "0xa9f0501b1e9B795F3597571B1B2634278d0fD843",
