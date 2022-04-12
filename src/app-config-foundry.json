@@ -6,6 +6,7 @@
     "logoFileName": "foundryWhiteLogo.png",
     "testnetMode": "false",
     "localhostMode": "false",
+    "smartContractLink": "https://arbiscan.io/address/0xa9f0501b1e9B795F3597571B1B2634278d0fD843",
     "contractAddresses": {
         "governorAlpha": "0xa9f0501b1e9B795F3597571B1B2634278d0fD843",
         "projectToken": "0x633a3d2091dc7982597a0f635d23ba5eb1223f48",

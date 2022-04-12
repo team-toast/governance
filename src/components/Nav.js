@@ -21,6 +21,7 @@ class Nav extends Component {
 
         if (this.props.message) {
             button = <Message {...this.props} />;
+        } else if (this.props.metamaskLoadError) {
         } else {
             button = (
                 <p

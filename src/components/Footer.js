@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-
 import "../layout/components/footer.sass";
+const appConfig = require("." + process.env.REACT_APP_CONFIG_FILE);
 
 class Footer extends Component {
     render() {
@@ -17,7 +17,7 @@ class Footer extends Component {
                     className="source_code"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href="https://polygonscan.com/address/0x082B551ce61B15B036d0A3613545f0Afb838D629#code"
+                    href={appConfig["smartContractLink"]}
                 >
                     {`Smart Contracts`}
                 </a>

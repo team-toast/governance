@@ -6,6 +6,7 @@
     "logoFileName": "myLogo.png",
     "testnetMode": "false",
     "localhostMode": "false",
+    "smartContractLink": "https://testnet.arbiscan.io/address/0xddED8bb36716E0f2a4278B2Eb5E4d0e171E82758",
     "contractAddresses": {
         "governorAlpha": "0xa9f0501b1e9B795F3597571B1B2634278d0fD843",
         "projectToken": "0x633a3d2091dc7982597a0f635d23ba5eb1223f48",
