@@ -1,20 +1,20 @@
 {
     "name": "LEVR",
-    "chainId": "421611",
+    "chainId": "42161",
     "projectTokenName": "LEVR",
     "governanceTokenName": "gLEVR",
     "logoFileName": "levrLogoOnly.svg",
-    "testnetMode": "true",
+    "testnetMode": "false",
     "localhostMode": "false",
-    "smartContractLink": "https://testnet.arbiscan.io/address/0xddED8bb36716E0f2a4278B2Eb5E4d0e171E82758",
+    "smartContractLink": "https://arbiscan.io/address/0xcEd97234EeB709FD7866ed99F31B1452391Ef6aa",
     "contractAddresses": {
-        "governorAlpha": "0xddED8bb36716E0f2a4278B2Eb5E4d0e171E82758",
-        "projectToken": "0x346b78249fEF6b508e0D0656fd61CA9A907E55E9",
-        "governanceToken": "0x22E17aA0D92e5001f7BE313bA80A85B14512ffeE",
-        "defaultPaymentToken": "0x346b78249fEF6b508e0D0656fd61CA9A907E55E9",
-        "daiAddress": "0x0c03Cbda17a4FbdA5F95aB0787c2A242DC14313e",
-        "treasuryForwarder": "0x341e8F762989b57BF5500e3b15755a08B199f3b7",
-        "timelock": "0x942b9C97264295E59B7f68c3f56fF6634bec02BF",
-        "governator": "0x991BD32BE9D63530D159d05969917F1AbAe66Ae0"
+        "governorAlpha": "0xcEd97234EeB709FD7866ed99F31B1452391Ef6aa",
+        "projectToken": "0x77De4df6F2d87Cc7708959bCEa45d58B0E8b8315",
+        "governanceToken": "0xCD5E6585EB92d31da1A9373960F7275c1C866CbA",
+        "defaultPaymentToken": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+        "daiAddress": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
+        "treasuryForwarder": "0xE930864ED3B28445688c02F69e35A3D6CE3BCd14",
+        "timelock": "0xC06A4B9ecD217dd2023Ad68fA771CC1B7ac7bD55",
+        "governator": "0x33dcDd29eBCf54Fe0AA9D53Ff81447348C8B97fa"
     }
 }

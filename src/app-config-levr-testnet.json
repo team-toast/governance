@@ -1,0 +1,20 @@
+{
+    "name": "LEVR",
+    "chainId": "421611",
+    "projectTokenName": "LEVR",
+    "governanceTokenName": "gLEVR",
+    "logoFileName": "levrLogoOnly.svg",
+    "testnetMode": "true",
+    "localhostMode": "true",
+    "smartContractLink": "https://testnet.arbiscan.io/address/0xddED8bb36716E0f2a4278B2Eb5E4d0e171E82758",
+    "contractAddresses": {
+        "governorAlpha": "0xddED8bb36716E0f2a4278B2Eb5E4d0e171E82758",
+        "projectToken": "0x346b78249fEF6b508e0D0656fd61CA9A907E55E9",
+        "governanceToken": "0x22E17aA0D92e5001f7BE313bA80A85B14512ffeE",
+        "defaultPaymentToken": "0x346b78249fEF6b508e0D0656fd61CA9A907E55E9",
+        "daiAddress": "0x0c03Cbda17a4FbdA5F95aB0787c2A242DC14313e",
+        "treasuryForwarder": "0x341e8F762989b57BF5500e3b15755a08B199f3b7",
+        "timelock": "0x942b9C97264295E59B7f68c3f56fF6634bec02BF",
+        "governator": "0x991BD32BE9D63530D159d05969917F1AbAe66Ae0"
+    }
+}
